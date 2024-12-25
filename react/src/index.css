@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Jost", serif;
+    line-height: 1;
+    color: #2d2d2d;
+}
+
+p {
+    font-weight: 500;
+}
+
+body::-webkit-scrollbar {
+    width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+    background: #d6a4a4;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #dae2f8;
+}
+
+a {
+    text-decoration: none;
+}
+
+input {
+    outline: 0;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    background: #ffffff;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8dvh;
+    background: linear-gradient(115deg, #dae2f8, #d6a4a4);
+    padding: 10px 10%;
+}
+
+main {
+    /*margin-top: calc(8dvh + 20px);*/
+    flex: 1 0 auto;
+    display: flex;
+}
+
+footer {
+    flex: 0 0 auto;
+}
+
+@media (width <=1024px) {
+    header {
+        padding: 10px;
+    }
+}
+
+@media (width <=768px) {
+    header {
+        height: unset;
+    }
+}
+
+/*@media (width <=376px) {
+    #root {
+        padding-top: 140px;
+        min-height: calc(100dvh - 140px);
+    }
+}*/
