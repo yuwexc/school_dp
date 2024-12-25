@@ -124,13 +124,14 @@ export default SignUp;
 const Form = styled.form`
     width: calc(100% - 20px);
     max-width: 1024px;
-    background-color: #f9f9f9;
-    border-radius: 20px;
-    padding: 20px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 30px;
+    background-color: white;
+    border-radius: 30px;
+    box-shadow: 0 0 30px 0 lightgray;
 
     & > div {
         display: flex;
@@ -156,7 +157,8 @@ const Form = styled.form`
 `
 
 const StyledSection = styled.section`
-    flex: 1 0 auto;
+    background-color: #ebebeb;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

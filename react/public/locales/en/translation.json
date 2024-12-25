@@ -1,0 +1,12 @@
+{
+    "login": {
+        "title": "Hi there!",
+        "text": "Welcome to Limn. Online School",
+        "email": "Email",
+        "password": "Password",
+        "password_placeholder": "Your password",
+        "not_account": "Don't have an account?",
+        "log_in": "Log In",
+        "sign_up": "Sign up"
+    }
+}

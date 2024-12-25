@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { Button, Input, Message, Title } from "../styles/forms";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LangugageButton from "../components/LanguageButton";
 
 interface FormData {
     email: string,
@@ -11,6 +14,12 @@ const Login = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (language: string) => {
+        i18n.changeLanguage(language);
+    };
+
     const onSubmit: SubmitHandler<FormData> = (data) => {
         console.log(data);
     }
@@ -20,29 +29,34 @@ const Login = () => {
             <div>
                 <FormBlock>
                     <Head>
-                        <Title>LIMN.</Title>
+                        <Title translate="no">LIMN.</Title>
+                        <div style={{display: 'flex', gap: '5px'}}>
+                            <LangugageButton lang="en" onClick={() => changeLanguage("en")}>EN</LangugageButton>
+                            <LangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</LangugageButton>
+                        </div>
                     </Head>
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <h2>Hi there!</h2>
-                        <p>Welcome to Limn. Online School</p>
+                        <h2>{t('login.title')}</h2>
+                        <p>{t('login.text')}</p>
                         <div>
-                            <label htmlFor="email">Email</label>
+                            <label htmlFor="email">{t('login.email')}</label>
                             <Input {...register('email', { required: { value: true, message: 'The field must be filled in' } })} type="email" placeholder="example@gmail.com" autoComplete="email" id="email" />
                             {
                                 errors && <Message>{errors.email?.message}</Message>
                             }
                         </div>
                         <div>
-                            <label htmlFor="password">Password</label>
-                            <Input {...register('password', { required: { value: true, message: 'The field must be filled in' } })} type="password" placeholder="Your password" id="password" />
+                            <label htmlFor="password">{t('login.password')}</label>
+                            <Input {...register('password', { required: { value: true, message: 'The field must be filled in' } })} type="password" placeholder={t('login.password_placeholder')} id="password" />
                             {
                                 errors && <Message>{errors.password?.message}</Message>
                             }
                         </div>
-                        <Button>Log In</Button>
+                        <Button>{t('login.log_in')}</Button>
+                        <p>{t('login.not_account')} <Link style={{ color: '#2d55ff' }} to={'/sign-up'}>{t('login.sign_up')}</Link></p>
                     </Form>
                 </FormBlock>
-                <Image />
+                <Image translate="no" />
             </div>
         </StyledSection>
     )
@@ -111,7 +125,6 @@ const Head = styled.div`
 const FormBlock = styled.div`
     position: relative;
     padding: 30px;
-    height: 100%;
     min-width: 452px;
     max-width: 512px;
     display: flex;
@@ -143,7 +156,7 @@ const FormBlock = styled.div`
 const Image = styled.div`
     min-width: 512px;
     max-width: 512px;
-    background-image: url(/public/table.jpeg);
+    background-image: url(/public/images/table.jpeg);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

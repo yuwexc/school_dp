@@ -4,6 +4,8 @@ import './index.css'
 import App from './App'
 import { ContextProvider } from './contexts/ContextProvider'
 
+import './i18n';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ContextProvider>
