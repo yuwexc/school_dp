@@ -1,13 +1,23 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { setLanguage } from "../../public/locales/Language";
+import LangugageButton from "./LanguageButton";
 
 const Header = () => {
 
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (language: string) => {
+        i18n.changeLanguage(language);
+        setLanguage(language);
+    };
+
     const links = [
-        { id: 1, link: '/', text: 'Главная' },
-        { id: 2, link: '/courses', text: 'Курсы' },
-        { id: 3, link: '/topics', text: 'По категориям' },
-        { id: 4, link: '/profile', text: 'Личный кабинет' },
+        { id: 1, link: '/', text: t('header.main') },
+        { id: 2, link: '/courses', text: t('header.courses') },
+        { id: 3, link: '/topics', text: t('header.topics') },
+        { id: 4, link: '/profile', text: t('header.profile') },
     ]
 
     return (
@@ -16,6 +26,10 @@ const Header = () => {
                 {
                     links.map((link) => <HeaderLink to={link.link} key={link.id}>{link.text}</HeaderLink>)
                 }
+                <div style={{ display: 'flex', gap: '5px' }}>
+                    <LangugageButton lang="en" onClick={() => changeLanguage("en")}>EN</LangugageButton>
+                    <LangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</LangugageButton>
+                </div>
             </Nav>
         </header>
     )

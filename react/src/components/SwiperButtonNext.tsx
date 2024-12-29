@@ -1,11 +1,12 @@
 import { useSwiper } from "swiper/react"
 import { FC, useEffect, useState } from "react";
+import { Button } from "../styles/forms";
 
 interface Props {
-    children: string
+    children: string,
 }
 
-const SwiperButton: FC<Props> = ({ children }) => {
+const SwiperButtonNext: FC<Props> = ({ children }) => {
 
     const swiper = useSwiper();
     const [isLastPage, setIsLastPage] = useState<boolean>(false);
@@ -31,8 +32,8 @@ const SwiperButton: FC<Props> = ({ children }) => {
     if (isLastPage) return null;
 
     return (
-        <button onClick={hanldeClick}>{children}</button>
+        <Button onClick={hanldeClick}>{children}</Button>
     )
 }
 
-export default SwiperButton;
+export default SwiperButtonNext;

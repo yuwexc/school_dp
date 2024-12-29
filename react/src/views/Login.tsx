@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { Button, Input, Message, Title } from "../styles/forms";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LangugageButton from "../components/LanguageButton";
+import BackButton from "../components/BackButton";
+import { setLanguage } from "../../public/locales/Language";
 
 interface FormData {
     email: string,
@@ -18,10 +20,17 @@ const Login = () => {
 
     const changeLanguage = (language: string) => {
         i18n.changeLanguage(language);
+        setLanguage(language);
     };
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
         console.log(data);
+    }
+
+    const navigate = useNavigate();
+
+    const move = () => {
+        navigate('/');
     }
 
     return (
@@ -29,8 +38,11 @@ const Login = () => {
             <div>
                 <FormBlock>
                     <Head>
-                        <Title translate="no">LIMN.</Title>
-                        <div style={{display: 'flex', gap: '5px'}}>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <BackButton onClick={() => move()} />
+                            <Title translate="no">LIMN.</Title>
+                        </div>
+                        <div style={{ display: 'flex', gap: '5px' }}>
                             <LangugageButton lang="en" onClick={() => changeLanguage("en")}>EN</LangugageButton>
                             <LangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</LangugageButton>
                         </div>
@@ -40,14 +52,20 @@ const Login = () => {
                         <p>{t('login.text')}</p>
                         <div>
                             <label htmlFor="email">{t('login.email')}</label>
-                            <Input {...register('email', { required: { value: true, message: 'The field must be filled in' } })} type="email" placeholder="example@gmail.com" autoComplete="email" id="email" />
+                            <Input {...register('email', {
+                                required: { value: true, message: t('login.empty') },
+                                pattern: {
+                                    value: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: t('login.incorrect')
+                                }
+                            })} placeholder="example@gmail.com" autoComplete="email" id="email" />
                             {
                                 errors && <Message>{errors.email?.message}</Message>
                             }
                         </div>
                         <div>
                             <label htmlFor="password">{t('login.password')}</label>
-                            <Input {...register('password', { required: { value: true, message: 'The field must be filled in' } })} type="password" placeholder={t('login.password_placeholder')} id="password" />
+                            <Input {...register('password', { required: { value: true, message: t('login.empty') } })} type="password" placeholder={t('login.password_placeholder')} id="password" />
                             {
                                 errors && <Message>{errors.password?.message}</Message>
                             }
@@ -64,7 +82,7 @@ const Login = () => {
 
 export default Login;
 
-const Form = styled.form`
+export const Form = styled.form`
     margin-top: 25%;
     width: calc(100% - 60px);
     display: flex;
@@ -76,8 +94,8 @@ const Form = styled.form`
     padding-inline: 30px;
 
     h2 {
-        font-size: 76px;
-        line-height: 70px;
+        font-size: 65px;
+        line-height: 60px;
     }
 
     div {
@@ -105,13 +123,13 @@ const Form = styled.form`
         padding: 0;
 
         h2 {
-            font-size: 60px;
+            font-size: 45px;
             line-height: 54px;
         }
     }
 `
 
-const Head = styled.div`
+export const Head = styled.div`
     position: absolute;
     top: 30px;
     left: 30px;
@@ -122,38 +140,35 @@ const Head = styled.div`
     align-items: center;
 `
 
-const FormBlock = styled.div`
+export const FormBlock = styled.div`
     position: relative;
     padding: 30px;
+    height: 100%;
     min-width: 452px;
     max-width: 512px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    overflow: scroll;
-
-    &::-webkit-scrollbar {
-        width: 0;
-    }
 
     @media (width <= 1100px) {
         & {
             max-width: unset;
-            width: calc(100% - 60px);
+            width: calc(100% - 60px) !important;
             height: 100%;
             justify-content: center;
         }
     }
 
     @media (width <= 576px) {
-        min-width: unset;
+        min-width: unset !important;
         padding: 10px;
-        width: calc(100% - 20px);
+        width: calc(100% - 20px) !important;
     }
 `
 
-const Image = styled.div`
+export const Image = styled.div`
+    position: relative;
     min-width: 512px;
     max-width: 512px;
     background-image: url(/public/images/table.jpeg);
@@ -168,7 +183,7 @@ const Image = styled.div`
     }
 `
 
-const StyledSection = styled.section`
+export const StyledSection = styled.section`
     background-color: #ebebeb;
     width: 100%;
     display: flex;

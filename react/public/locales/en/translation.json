@@ -6,7 +6,42 @@
         "password": "Password",
         "password_placeholder": "Your password",
         "not_account": "Don't have an account?",
-        "log_in": "Log In",
-        "sign_up": "Sign up"
+        "log_in": "Sign In",
+        "sign_up": "Sign up",
+        "empty": "The field must be filled in",
+        "incorrect": "Incorrect field format"
+    },
+    "sign_up": {
+        "title": "Sign Up",
+        "text": "Welcome to Limn. Let's create an account",
+        "personal": "Personal information",
+        "additional": "Additional information",
+        "email": "Email",
+        "password": "Password",
+        "password_placeholder": "Your password",
+        "acc_exist": "Already have an account?",
+        "log_in": "Sign in",
+        "sign_up": "Sign up",
+        "empty": "The field must be filled in",
+        "nolevel": "Choose your language proficiency level",
+        "incorrect": "Incorrect field format",
+        "pattern": "The password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, without spaces, and consist of at least 8 characters",
+        "next": "Next",
+        "back": "Back",
+        "first_name": "First name",
+        "first_name_placeholder": "John",
+        "last_name": "Last name",
+        "last_name_placeholder": "Smith",
+        "middle_name": "Middle name (if you have)",
+        "middle_name_placeholder": "",
+        "phone": "Phone",
+        "phone_placeholder": "+7 (999) 999 99-99",
+        "level": "Your language proficiency"
+    },
+    "header": {
+        "main": "Main",
+        "courses": "Courses",
+        "topics": "Topics",
+        "profile": "Profile"
     }
 }
