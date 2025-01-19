@@ -1,11 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useStateContext } from "../contexts/ContextProvider";
 
 const StudentLayout = () => {
-
-    const { token } = useStateContext();
-
-    if (token == '') {
+    if (!localStorage.getItem('ACCESS_TOKEN')) {
         return <Navigate to="/login" />
     }
 

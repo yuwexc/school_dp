@@ -4,7 +4,7 @@ import StudentLayout from "./layouts/StudentLayout";
 import Courses from "./views/Courses";
 import Profile from "./views/Profile";
 import Topics from "./views/Topics";
-import Main from "./views/Main";
+import Home from "./views/Home";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./views/Login";
 import SignUp from "./views/SignUp";
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <GuestLayout />,
         children: [
-            { path: '/', element: <Main /> },
+            { path: '/', element: <Home /> },
             { path: '/courses', element: <Courses /> },
             { path: '/topics', element: <Topics /> }
         ]
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <StudentLayout />,
         children: [
-            { path: '/', element: <Main /> },
+            { path: '/', element: <Home /> },
             { path: '/profile', element: <Profile /> }
         ]
     }

@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import { Button, Input, Message, Title } from "../styles/forms";
+import { Button, Error, Input, Message, Title } from "../styles/forms";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LangugageButton from "../components/LanguageButton";
 import BackButton from "../components/BackButton";
 import { setLanguage } from "../../public/locales/Language";
+import { useState } from "react";
 
 interface FormData {
     email: string,
@@ -23,8 +24,38 @@ const Login = () => {
         setLanguage(language);
     };
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log(data);
+    const [error, setError] = useState<string>('');
+
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "email": data.email,
+            "password": data.password
+        });
+
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        await fetch("https://dp-chernaev.xn--80ahdri7a.site/api/login", requestOptions)
+            .then(async (response) => await response.json())
+            .then((result) => {
+                if (result.token) {
+                    setError('');
+                    localStorage.setItem('ACCESS_TOKEN', result.token);
+                    navigate('/profile');
+                } else {
+                    setError(t('login.failed_login'));
+                }
+            })
+            .catch(() => {
+                setError(t('error'));
+            });
     }
 
     const navigate = useNavigate();
@@ -70,7 +101,8 @@ const Login = () => {
                                 errors && <Message>{errors.password?.message}</Message>
                             }
                         </div>
-                        <Button>{t('login.log_in')}</Button>
+                        <Button type="submit">{t('login.log_in')}</Button>
+                        {error && <Error>{error}</Error>}
                         <p>{t('login.not_account')} <Link style={{ color: '#2d55ff' }} to={'/sign-up'}>{t('login.sign_up')}</Link></p>
                     </Form>
                 </FormBlock>
@@ -171,7 +203,7 @@ export const Image = styled.div`
     position: relative;
     min-width: 512px;
     max-width: 512px;
-    background-image: url(/public/images/table.jpeg);
+    background-image: url(/images/table.jpeg);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

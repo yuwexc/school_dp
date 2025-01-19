@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import LangugageButton from "../components/LanguageButton";
-import { Annotation, Button, Input, Message, Select, Span, Title } from "../styles/forms";
+import { Annotation, Button, Error, Input, Message, Select, Span, Title } from "../styles/forms";
 import { Form, FormBlock, Head, Image, StyledSection } from "./Login";
 import { useTranslation } from "react-i18next";
 import { setLanguage } from "../../public/locales/Language";
@@ -13,16 +13,11 @@ import "swiper/swiper-bundle.css";
 import { EffectFade } from "swiper/modules";
 import { useEffect, useState } from "react";
 import SwiperButtonPrev from "../components/SwiperButtonPrev";
-
-interface FormData {
-    email: string,
-    password: string,
-    first_name: string,
-    last_name: string,
-    middle_name: string,
-    phone: string,
-    level: number
-}
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { postUser } from "../features/userSlice";
+import { User } from "../interfaces/requests";
+import Loader from "../components/Loader";
 
 interface Level {
     id_level: number
@@ -33,9 +28,19 @@ interface Level {
     updated_at: string | null
 }
 
+interface Response {
+    user: User,
+    error: string | null,
+    status: string | null
+}
+
+interface State {
+    user: Response
+}
+
 const SignUp = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+    const { register, handleSubmit, formState: { errors } } = useForm<User>();
 
     const [levels, setLevels] = useState<Level[] | null>(null);
 
@@ -46,15 +51,13 @@ const SignUp = () => {
         setLanguage(language);
     };
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log(data);
-    }
-
     const navigate = useNavigate();
 
     const move = () => {
         navigate('/');
     }
+
+    const [errorLevel, setErrorLevel] = useState<boolean>(true);
 
     const onLoad = () => {
         const requestOptions: RequestInit = {
@@ -65,13 +68,90 @@ const SignUp = () => {
         fetch("https://dp-chernaev.xn--80ahdri7a.site/api/levels", requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                console.log(result);
+                setErrorLevel(true);
                 setLevels(result);
             })
-            .catch((error) => console.error(error));
+            .catch(() => {
+                setErrorLevel(false);
+            });
     }
 
     useEffect(onLoad, []);
+
+    const dispatch = useDispatch<AppDispatch>();
+    const user = useSelector<RootState, User>((state) => state.user.user);
+    const { status, error } = useSelector((state: State) => state.user);
+
+
+    const onSubmit: SubmitHandler<User> = async (data) => {
+        if (data.phone![0] === '8') {
+            data.phone = '+7' + data.phone!.split('').splice(1).join('');
+        }
+        /*const key = CryptoJS.lib.WordArray.random(16);
+        data.password = CryptoJS.AES.encrypt(data.password!, key, { iv: key }).toString();*/
+        await dispatch(postUser(data));
+    }
+
+    useEffect(() => {
+        if (user.remember_token != undefined && user.remember_token != null && user.remember_token != '') {
+            localStorage.setItem('ACCESS_TOKEN', user.remember_token!);
+            navigate('/profile');
+        }
+    }, [navigate, user]);
+
+    const [existencePhone, setExistencePhone] = useState<boolean>(false);
+
+    const phone = async (phone: string) => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "phone": phone
+        });
+
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        await fetch("https://dp-chernaev.xn--80ahdri7a.site/api/users/phone/exist", requestOptions)
+            .then(async (response) => await response.json())
+            .then((result) => {
+                setExistencePhone(result.phone);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    const [existenceEmail, setExistenceEmail] = useState<boolean>(false);
+
+    const email = async (email: string) => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "email": email
+        });
+
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        await fetch("https://dp-chernaev.xn--80ahdri7a.site/api/users/email/exist", requestOptions)
+            .then(async (response) => await response.json())
+            .then((result) => {
+                setExistenceEmail(result.email);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
 
     return (
         <StyledSwiper modules={[EffectFade]} effect="cube" allowTouchMove={false} >
@@ -96,7 +176,7 @@ const SignUp = () => {
                                 <p>{t('sign_up.acc_exist')} <Link style={{ color: '#2d55ff' }} to={'/login'}>{t('sign_up.log_in')}</Link></p>
                             </SignUpForm>
                         </SignUpFormBlock>
-                        <Image style={{ backgroundImage: 'url(/public/images/man.jpeg)' }} translate="no" />
+                        <Image style={{ backgroundImage: 'url(/images/man.jpeg)' }} translate="no" />
                     </div>
                 </StyledSection>
             </SwiperSlide>
@@ -119,7 +199,7 @@ const SignUp = () => {
                                 <div>
                                     <div>
                                         <label htmlFor="first_name">{t('sign_up.first_name')}</label>
-                                        <Input {...register('first_name', { required: { value: true, message: t('sign_up.empty') } })} type="text" placeholder={t('sign_up.first_name_placeholder')} autoComplete="given-name" id="first_name" />
+                                        <Input {...register('first_name', { required: { value: true, message: t('sign_up.empty') } })} type="text" placeholder={t('sign_up.first_name_placeholder')} autoComplete="name" id="first_name" />
                                         {
                                             errors && <Message>{errors.first_name?.message}</Message>
                                         }
@@ -144,12 +224,17 @@ const SignUp = () => {
                                             required: { value: true, message: t('sign_up.empty') },
                                             pattern: {
                                                 value: /((8|\+7)[- ]?)?(\(?\d{3}\)?[- ]?)?[\d\- ]{11}$/,
-                                                message: t('sign-up.incorrect')
+                                                message: t('sign_up.incorrect')
                                             }
-                                        })} type="tel" placeholder={t('sign_up.phone_placeholder')} autoComplete="tel-national" id="phone" />
+                                        })} type="tel" placeholder={t('sign_up.phone_placeholder')} autoComplete="tel-national" id="phone"
+                                            onBlur={(e) => phone(e.target.value)} />
+                                        {
+                                            existencePhone && <Message>{t('sign_up.phone_existence')}</Message>
+                                        }
                                         {
                                             errors && <Message>{errors.phone?.message}</Message>
                                         }
+
                                     </div>
                                     <div>
                                         <label htmlFor="email">{t('sign_up.email')}</label>
@@ -160,7 +245,10 @@ const SignUp = () => {
                                                 message: t('login.incorrect')
                                             }
                                         })} placeholder="example@gmail.com" autoComplete="email" id="email"
-                                        />
+                                            onBlur={(e) => email(e.target.value)} />
+                                        {
+                                            existenceEmail && <Message>{t('sign_up.email_existence')}</Message>
+                                        }
                                         {
                                             errors && <Message>{errors.email?.message}</Message>
                                         }
@@ -186,24 +274,40 @@ const SignUp = () => {
                                         }
                                     </div>
                                 </div>
-                                <h3>{t('sign_up.additional')}</h3>
-                                <div>
+                                {
+                                    errorLevel && <h3>{t('sign_up.additional')}</h3>
+                                }
+                                {
+                                    errorLevel &&
                                     <div>
-                                        <label htmlFor="level">{t('sign_up.level')}</label>
-                                        <Select {...register('level', { required: { value: true, message: t('sign_up.nolevel') } })} id="level">
-                                            <option value={''}></option>
+                                        <div>
+                                            <label htmlFor="level">{t('sign_up.level')}</label>
+                                            <Select {...register('level_id')} id="level">
+                                                <option value={''}></option>
+                                                {
+                                                    levels && levels.map((level) => <option value={level.id_level} key={level.id_level}>{level.level_code} {level.level_title} {localStorage.getItem('INTERFACE_LANGUAGE') == 'ru' ? '- ' + level.level_name.toLocaleLowerCase() : null}</option>)
+                                                }
+                                            </Select>
                                             {
-                                                levels && levels.map((level) => <option value={level.id_level} key={level.id_level}>{level.level_code} {level.level_title} {localStorage.getItem('INTERFACE_LANGUAGE') == 'ru' ? '- ' + level.level_name.toLocaleLowerCase() : null}</option>)
+                                                errors && <Message>{errors.level_id?.message}</Message>
                                             }
-                                        </Select>
-                                        {
-                                            errors && <Message>{errors.level?.message}</Message>
-                                        }
+                                        </div>
                                     </div>
-                                </div>
-                                <div style={{ display: 'flex', gap: '20px' }}>
-                                    <Button>{t('sign_up.sign_up')}</Button>
-                                    <SwiperButtonPrev>{t('sign_up.back')}</SwiperButtonPrev>
+                                }
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                    {
+                                        status === 'loading' ? <Button disabled><Loader /></Button> :
+                                            (existenceEmail === false && existencePhone === false ?
+                                                <Button type="submit">{t('sign_up.sign_up')}</Button>
+                                                :
+                                                <Button disabled type="submit">{t('sign_up.sign_up')}</Button>)
+                                    }
+                                    {
+                                        status === 'failed' && <Error>{t('error') + error}</Error>
+                                    }
+                                    {
+                                        status != 'loading' && status != 'failed' && <SwiperButtonPrev>{t('sign_up.back')}</SwiperButtonPrev>
+                                    }
                                 </div>
                             </FullForm>
                         </FullFormBlock>
@@ -244,13 +348,13 @@ const FullForm = styled.form`
         align-self: flex-start;
     }
 
-    div {
+    & > div {
         width: 100%;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 10px;
 
-        div {
+        & > div {
             width: 100%;
             display: flex;
             flex-direction: column;

@@ -15,7 +15,7 @@ export default BackButton;
 
 const Button = styled.button`
     background-color: #ffffffb8;
-    background-image: url(/public/images/back.png);
+    background-image: url(/images/back.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

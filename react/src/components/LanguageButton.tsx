@@ -29,7 +29,7 @@ const Span = styled.span`
 `
 
 const Button = styled.button<{ $lang: string }>`
-    background-image: ${props => props.$lang == 'en' ? 'url(/public/images/uk.png)' : 'url(/public/images/russia.png)'};
+    background-image: ${props => props.$lang == 'en' ? 'url(/images/uk.png)' : 'url(/images/russia.png)'};
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

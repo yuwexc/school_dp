@@ -13,6 +13,17 @@ export const Button = styled.button`
     width: fit-content;
     padding: 13px 35px;
     cursor: pointer;
+    font-size: 14px;
+    min-height: 40px;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:disabled {
+        cursor: unset;
+        background-color: gray;
+    }
 `
 
 export const Input = styled.input`
@@ -79,4 +90,8 @@ export const Span = styled.span`
     &:hover ${Annotation} {
         display: block;
     }
+`
+
+export const Error = styled(Message)`
+    align-self: center;
 `

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('levels', [LevelController::class, 'index']);
+Route::get('/levels', [LevelController::class, 'index']);
+
+Route::controller(UserController::class)->group(function () {
+    Route::post('/users', 'create');
+    Route::post('/login', 'login');
+    Route::post('/users/phone/exist', 'ifPhoneExists');
+    Route::post('/users/email/exist', 'ifEmailExists');
+});

@@ -1,4 +1,5 @@
 {
+    "error": "Sorry, our server is sad today :(",
     "login": {
         "title": "Hi there!",
         "text": "Welcome to Limn. Online School",
@@ -9,7 +10,8 @@
         "log_in": "Sign In",
         "sign_up": "Sign up",
         "empty": "The field must be filled in",
-        "incorrect": "Incorrect field format"
+        "incorrect": "Incorrect field format",
+        "failed_login": "Incorrect email or password"
     },
     "sign_up": {
         "title": "Sign Up",
@@ -17,6 +19,7 @@
         "personal": "Personal information",
         "additional": "Additional information",
         "email": "Email",
+        "email_existence": "The email has already been taken",
         "password": "Password",
         "password_placeholder": "Your password",
         "acc_exist": "Already have an account?",
@@ -26,7 +29,7 @@
         "nolevel": "Choose your language proficiency level",
         "incorrect": "Incorrect field format",
         "pattern": "The password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, without spaces, and consist of at least 8 characters",
-        "next": "Next",
+        "next": "Let's go!",
         "back": "Back",
         "first_name": "First name",
         "first_name_placeholder": "John",
@@ -36,10 +39,11 @@
         "middle_name_placeholder": "",
         "phone": "Phone",
         "phone_placeholder": "+7 (999) 999 99-99",
+        "phone_existence": "The phone has already been taken",
         "level": "Your language proficiency"
     },
     "header": {
-        "main": "Main",
+        "main": "Home",
         "courses": "Courses",
         "topics": "Topics",
         "profile": "Profile"

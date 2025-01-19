@@ -43,4 +43,5 @@ const BackButton = styled(Button)`
     border: 2px solid #2d2d2d;
     background-color: #f9f9f9;
     color: #2d2d2d;
+    min-width: unset;
 `
