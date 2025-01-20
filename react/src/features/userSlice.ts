@@ -4,6 +4,7 @@ import { User } from "../interfaces/requests";
 
 interface UserState {
     user: User,
+    token: string | null,
     status: 'loading' | 'succeeded' | 'failed' | null;
     error: string | null;
 }
@@ -24,6 +25,7 @@ const user: User = {
 
 const initialState: UserState = {
     user,
+    token: null,
     status: null,
     error: null,
 };
@@ -44,13 +46,13 @@ export const fetchUser = createAsyncThunk<User>(
     }
 );
 
-export const postUser = createAsyncThunk<User, User>(
+export const postUser = createAsyncThunk<string | null, User>(
     'user/postUser',
     async (user, { rejectWithValue }) => {
         try {
 
             const { data } = await axios.post(PROJECT_URL + '/users', user);
-            return data.user;
+            return data.token;
 
         } catch {
             return rejectWithValue("Не удалось зарегистрироваться!");
@@ -89,9 +91,9 @@ const userSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(postUser.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(postUser.fulfilled, (state, action: PayloadAction<string | null>) => {
                 state.status = 'succeeded';
-                state.user = Object.assign({}, action.payload);
+                state.token = action.payload;
             })
             .addCase(postUser.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
@@ -104,6 +106,7 @@ const userSlice = createSlice({
 });
 
 export const selectUser = (state: { user: UserState }) => state.user.user;
+export const selectToken = (state: { user: UserState }) => state.user.token;
 export const selectUserStatus = (state: { user: UserState }) => state.user.status;
 export const selectUserError = (state: { user: UserState }) => state.user.error;
 

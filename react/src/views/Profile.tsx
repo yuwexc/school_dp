@@ -1,7 +1,7 @@
 const Profile = () => {
     return (
         <section>
-            Profile
+            1
         </section>
     )
 }

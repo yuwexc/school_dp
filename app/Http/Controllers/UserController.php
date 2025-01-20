@@ -53,8 +53,8 @@ class UserController extends Controller
             $user->password = Hash::make($input['password']);
             $user->save();
             $user = User::where('email', $input['email'])->get()->first();
-            unset($user->password, $user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at);
-            return response(["user" => $user], 200);
+            //unset($user->password, $user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at);
+            return response(["token" => $user->remember_token], 200);
         }
     }
 

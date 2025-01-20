@@ -79,7 +79,7 @@ const SignUp = () => {
     useEffect(onLoad, []);
 
     const dispatch = useDispatch<AppDispatch>();
-    const user = useSelector<RootState, User>((state) => state.user.user);
+    const token = useSelector<RootState, string | null>((state) => state.user.token);
     const { status, error } = useSelector((state: State) => state.user);
 
 
@@ -93,11 +93,11 @@ const SignUp = () => {
     }
 
     useEffect(() => {
-        if (user.remember_token != undefined && user.remember_token != null && user.remember_token != '') {
-            localStorage.setItem('ACCESS_TOKEN', user.remember_token!);
+        if (token != undefined && token != null && token != '') {
+            localStorage.setItem('ACCESS_TOKEN', token!);
             navigate('/profile');
         }
-    }, [navigate, user]);
+    }, [navigate, token]);
 
     const [existencePhone, setExistencePhone] = useState<boolean>(false);
 
