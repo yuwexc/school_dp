@@ -72,7 +72,7 @@ class UserController extends Controller
                 return response(["error" => "Login failed"], 401);
             }
         } else {
-            return response(["error" => 'Login failed'], 404);
+            return response(["error" => 'Login failed'], 401);
         }
     }
 

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
-import { User } from "../interfaces/requests";
+import axios, { isAxiosError } from "axios";
+import { Login, User } from "../interfaces/requests";
 
 interface UserState {
     user: User,
@@ -60,6 +60,27 @@ export const postUser = createAsyncThunk<string | null, User>(
     }
 )
 
+export const loginUser = createAsyncThunk<string | null, Login>(
+    'user/loginUser',
+    async (user, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.post(PROJECT_URL + '/login', user);
+            return data.token;
+
+        } catch (error: unknown) {
+            if (isAxiosError(error)) {
+                if (error.status === 404) {
+                    return rejectWithValue(null)
+                } else {
+                    return rejectWithValue("Не удалось войти в систему!");
+                }
+            }
+            return rejectWithValue(null)
+        }
+    }
+)
+
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -98,6 +119,23 @@ const userSlice = createSlice({
             .addCase(postUser.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
+                } else {
+                    state.status = 'failed';
+                }
+            })
+
+            .addCase(loginUser.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(loginUser.fulfilled, (state, action: PayloadAction<string | null>) => {
+                state.status = 'succeeded';
+                state.token = action.payload;
+            })
+            .addCase(loginUser.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                    state.status = null;
                 } else {
                     state.status = 'failed';
                 }

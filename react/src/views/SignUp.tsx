@@ -16,7 +16,7 @@ import SwiperButtonPrev from "../components/SwiperButtonPrev";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { postUser } from "../features/userSlice";
-import { User } from "../interfaces/requests";
+import { State, User } from "../interfaces/requests";
 import Loader from "../components/Loader";
 
 interface Level {
@@ -26,16 +26,6 @@ interface Level {
     level_title: string
     created_at: string
     updated_at: string | null
-}
-
-interface Response {
-    user: User,
-    error: string | null,
-    status: string | null
-}
-
-interface State {
-    user: Response
 }
 
 const SignUp = () => {

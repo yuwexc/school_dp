@@ -11,3 +11,19 @@ export interface User {
     check_email: boolean | null,
     created_at: Date | null
 }
+
+export interface Login {
+    email: string | null,
+    password: string | null,
+}
+
+interface Response {
+    user: User,
+    token: string | null,
+    error: string | null,
+    status: string | null
+}
+
+export interface State {
+    user: Response
+}

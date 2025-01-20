@@ -6,7 +6,12 @@ import { useTranslation } from "react-i18next";
 import LangugageButton from "../components/LanguageButton";
 import BackButton from "../components/BackButton";
 import { setLanguage } from "../../public/locales/Language";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { State } from "../interfaces/requests";
+import { loginUser } from "../features/userSlice";
+import Loader from "../components/Loader";
 
 interface FormData {
     email: string,
@@ -24,45 +29,26 @@ const Login = () => {
         setLanguage(language);
     };
 
-    const [error, setError] = useState<string>('');
-
-    const onSubmit: SubmitHandler<FormData> = async (data) => {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        const raw = JSON.stringify({
-            "email": data.email,
-            "password": data.password
-        });
-
-        const requestOptions: RequestInit = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow"
-        };
-
-        await fetch("https://dp-chernaev.xn--80ahdri7a.site/api/login", requestOptions)
-            .then(async (response) => await response.json())
-            .then((result) => {
-                if (result.token) {
-                    setError('');
-                    localStorage.setItem('ACCESS_TOKEN', result.token);
-                    navigate('/profile');
-                } else {
-                    setError(t('login.failed_login'));
-                }
-            })
-            .catch(() => {
-                setError(t('error'));
-            });
-    }
-
     const navigate = useNavigate();
 
     const move = () => {
         navigate('/');
     }
+
+    const dispatch = useDispatch<AppDispatch>();
+    const token = useSelector<RootState, string | null>((state) => state.user.token);
+    const { status, error } = useSelector((state: State) => state.user);
+
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        await dispatch(loginUser(data));
+    }
+
+    useEffect(() => {
+        if (token != undefined && token != null && token != '') {
+            localStorage.setItem('ACCESS_TOKEN', token!);
+            navigate('/profile');
+        }
+    }, [navigate, token]);
 
     return (
         <StyledSection>
@@ -100,9 +86,18 @@ const Login = () => {
                             {
                                 errors && <Message>{errors.password?.message}</Message>
                             }
+                            {
+                                status === 'failed' && <Error>{t('error')}</Error>
+                            }
+                            {
+                                error && <Error>{t('login.failed_login')}</Error>
+                            }
                         </div>
-                        <Button type="submit">{t('login.log_in')}</Button>
-                        {error && <Error>{error}</Error>}
+                        {
+                            status === 'loading' ? <Button disabled><Loader /></Button>
+                                :
+                                <Button type="submit">{t('login.log_in')}</Button>
+                        }
                         <p>{t('login.not_account')} <Link style={{ color: '#2d55ff' }} to={'/sign-up'}>{t('login.sign_up')}</Link></p>
                     </Form>
                 </FormBlock>
