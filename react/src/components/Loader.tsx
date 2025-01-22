@@ -21,7 +21,6 @@ const flash = keyframes`
         background-color: #FFF2;
         box-shadow: 20px 0 #FFF, -20px 0 #FFF2;
     }
-    }
 `
 
 const SpanLoader = styled.span`

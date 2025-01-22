@@ -12,6 +12,10 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json');
+        http_response_code(403);
+        die(json_encode(['message' => 'Forbidden for you'], 403));
+        //return $request->expectsJson() ? null : route('login');
     }
 }

@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
+import AsideMenu from "../components/AsideMenu";
 
 const StudentLayout = () => {
     if (!localStorage.getItem('ACCESS_TOKEN')) {
@@ -9,12 +10,10 @@ const StudentLayout = () => {
     return (
         <>
             <StyledStudentLayout>
-                <aside>
-
-                </aside>
-                <main>
+                <AsideMenu />
+                <StyledMain>
                     <Outlet />
-                </main>
+                </StyledMain>
             </StyledStudentLayout>
         </>
     )
@@ -22,10 +21,14 @@ const StudentLayout = () => {
 
 export default StudentLayout;
 
+const StyledMain = styled.main`
+    padding: 24px;
+`
+
 const StyledStudentLayout = styled.div`
     width: 100%;
     min-height: 100dvh;
-    background-color: white;
+    background-color: #ebebeb;
     display: flex;
     flex-direction: row;
     align-items: stretch;

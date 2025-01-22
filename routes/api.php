@@ -22,9 +22,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/levels', [LevelController::class, 'index']);
 
+//Route::get('/logout','App\Http\Controllers\UserController@logout')->middleware('auth:api');
+
 Route::controller(UserController::class)->group(function () {
     Route::post('/users', 'create');
     Route::post('/login', 'login');
+    Route::get('/logout', 'logout')->middleware('auth:api');
+
     Route::post('/users/phone/exist', 'ifPhoneExists');
     Route::post('/users/email/exist', 'ifEmailExists');
 });

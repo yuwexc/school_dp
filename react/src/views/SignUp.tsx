@@ -85,7 +85,7 @@ const SignUp = () => {
     useEffect(() => {
         if (token != undefined && token != null && token != '') {
             localStorage.setItem('ACCESS_TOKEN', token!);
-            navigate('/profile');
+            navigate('/dashboard');
         }
     }, [navigate, token]);
 

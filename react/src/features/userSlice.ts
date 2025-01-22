@@ -18,7 +18,7 @@ const user: User = {
     'photo': null,
     'level_id': null,
     'password': null,
-    'remember_token': null,
+    'api_token': null,
     'check_email': null,
     'created_at': null
 }
@@ -76,7 +76,33 @@ export const loginUser = createAsyncThunk<string | null, Login>(
                     return rejectWithValue("Не удалось войти в систему!");
                 }
             }
-            return rejectWithValue(null)
+            return rejectWithValue(null);
+        }
+    }
+)
+
+export const logoutUser = createAsyncThunk<null>(
+    'user/logoutUser',
+    async (_, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.get(PROJECT_URL + '/logout', {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
+
+            return data.token;
+
+        } catch (error: unknown) {
+            if (isAxiosError(error)) {
+                if (error.status === 404) {
+                    return rejectWithValue(null)
+                } else {
+                    return rejectWithValue("Не удалось выйти из системы!");
+                }
+            }
+            return rejectWithValue(null);
         }
     }
 )
@@ -133,6 +159,23 @@ const userSlice = createSlice({
                 state.token = action.payload;
             })
             .addCase(loginUser.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                    state.status = null;
+                } else {
+                    state.status = 'failed';
+                }
+            })
+
+            .addCase(logoutUser.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(logoutUser.fulfilled, (state, action: PayloadAction<null>) => {
+                state.status = 'succeeded';
+                state.token = action.payload;
+            })
+            .addCase(logoutUser.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
                     state.status = null;

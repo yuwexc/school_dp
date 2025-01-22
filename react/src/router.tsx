@@ -2,12 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import GuestLayout from "./layouts/GuestLayout";
 import StudentLayout from "./layouts/StudentLayout";
 import Courses from "./views/Courses";
-import Profile from "./views/Profile";
 import Topics from "./views/Topics";
 import Home from "./views/Home";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./views/Login";
 import SignUp from "./views/SignUp";
+import Dashboard from "./views/Dashboard";
+import Settings from "./views/Settings";
 
 const router = createBrowserRouter([
     {
@@ -32,7 +33,8 @@ const router = createBrowserRouter([
         element: <StudentLayout />,
         children: [
             { path: '/', element: <Home /> },
-            { path: '/profile', element: <Profile /> }
+            { path: '/dashboard', element: <Dashboard /> },
+            { path: '/settings', element: <Settings /> },
         ]
     }
 ])

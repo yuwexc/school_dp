@@ -32,7 +32,7 @@ class User extends Model
      */
     /*protected $hidden = [
         'password',
-        'remember_token',
+        'api_token',
     ];*/
 
     /**

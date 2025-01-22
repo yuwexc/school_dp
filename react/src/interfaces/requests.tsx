@@ -7,7 +7,7 @@ export interface User {
     photo: string | null,
     level_id: number | null,
     password?: string | null,
-    remember_token: string | null,
+    api_token: string | null,
     check_email: boolean | null,
     created_at: Date | null
 }

@@ -48,13 +48,13 @@ class UserController extends Controller
             $user->phone = $input['phone'];
             $user->email = $input['email'];
             $user->level_id = $input['level_id'];
-            $user->remember_token = Str::random(80);
+            $user->api_token = Str::random(80);
             //$user->password = Crypt::encryptString($input['password']);
             $user->password = Hash::make($input['password']);
             $user->save();
             $user = User::where('email', $input['email'])->get()->first();
             //unset($user->password, $user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at);
-            return response(["token" => $user->remember_token], 200);
+            return response(["token" => $user->api_token], 200);
         }
     }
 
@@ -65,15 +65,23 @@ class UserController extends Controller
         if ($user) {
             $check = Hash::check($input['password'], $user->password);
             if ($check) {
-                User::where('email', $input['email'])->update(['remember_token' => Str::random(80)]);
+                User::where('email', $input['email'])->update(['api_token' => Str::random(80)]);
                 $user = User::where('email', $input['email'])->get()->first();
-                return response(["token" => $user->remember_token], 200);
+                return response(["token" => $user->api_token], 200);
             } else {
                 return response(["error" => "Login failed"], 401);
             }
         } else {
             return response(["error" => 'Login failed'], 401);
         }
+    }
+
+    public function logout()
+    {
+        $user = auth()->user();
+        User::where('id_user', $user->id_user)->update(['api_token' => null]);
+        $user = User::where('id_user', $user->id_user)->get()->first();
+        return response(["token" => $user->api_token], 200);
     }
 
     /**
