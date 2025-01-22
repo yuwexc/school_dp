@@ -39,35 +39,8 @@ input {
     background: #ffffff;
 }
 
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 8dvh;
-    background: linear-gradient(115deg, #dae2f8, #d6a4a4);
-    padding: 10px 10%;
-}
-
-main {
-    flex: 1 0 auto;
-    display: flex;
-}
-
 footer {
     flex: 0 0 auto;
-}
-
-@media (width <=1024px) {
-    header {
-        padding: 10px;
-    }
-}
-
-@media (width <=768px) {
-    header {
-        height: unset;
-    }
 }
 
 /*@media (width <=376px) {

@@ -37,7 +37,11 @@ export const fetchUser = createAsyncThunk<User>(
     async (_, { rejectWithValue }) => {
         try {
 
-            const { data } = await axios.get<User>(PROJECT_URL);
+            const { data } = await axios.get<User>(PROJECT_URL + '/user', {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
             return data;
 
         } catch {
@@ -122,7 +126,7 @@ const userSlice = createSlice({
             })
             .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
                 state.status = 'succeeded';
-                state.user = action.payload;
+                state.user = action.payload;                
             })
             .addCase(fetchUser.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {

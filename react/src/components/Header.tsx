@@ -21,7 +21,7 @@ const Header = () => {
     ]
 
     return (
-        <header>
+        <StyledHeader>
             <Nav>
                 {
                     links.map((link) => <HeaderLink to={link.link} key={link.id}>{link.text}</HeaderLink>)
@@ -31,11 +31,33 @@ const Header = () => {
                     <LangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</LangugageButton>
                 </div>
             </Nav>
-        </header>
+        </StyledHeader>
     )
 }
 
 export default Header;
+
+const StyledHeader = styled.header`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8dvh;
+    background: linear-gradient(115deg, #dae2f8, #d6a4a4);
+    padding: 10px 10%;
+
+    @media (width <=1024px) {
+        & {
+            padding: 10px;
+        }
+    }
+
+    @media (width <=768px) {
+        & {
+            height: unset;
+        }
+    }
+`;
 
 const HeaderLink = styled(Link)`
     width: calc(25% - 5px);

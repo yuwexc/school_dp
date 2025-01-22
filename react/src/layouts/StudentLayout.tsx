@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import AsideMenu from "../components/AsideMenu";
+import DashboardHeader from "../components/DashboardHeader";
 
 const StudentLayout = () => {
     if (!localStorage.getItem('ACCESS_TOKEN')) {
@@ -11,9 +12,10 @@ const StudentLayout = () => {
         <>
             <StyledStudentLayout>
                 <AsideMenu />
-                <StyledMain>
+                <Dashboard>
+                    <DashboardHeader />
                     <Outlet />
-                </StyledMain>
+                </Dashboard>
             </StyledStudentLayout>
         </>
     )
@@ -21,8 +23,10 @@ const StudentLayout = () => {
 
 export default StudentLayout;
 
-const StyledMain = styled.main`
-    padding: 24px;
+const Dashboard = styled.div`
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 `
 
 const StyledStudentLayout = styled.div`

@@ -9,6 +9,7 @@ import Login from "./views/Login";
 import SignUp from "./views/SignUp";
 import Dashboard from "./views/Dashboard";
 import Settings from "./views/Settings";
+import MyCourses from "./views/MyCourses";
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
         children: [
             { path: '/', element: <Home /> },
             { path: '/dashboard', element: <Dashboard /> },
+            { path: '/my-courses', element: <MyCourses /> },
             { path: '/settings', element: <Settings /> },
         ]
     }

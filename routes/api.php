@@ -25,6 +25,8 @@ Route::get('/levels', [LevelController::class, 'index']);
 //Route::get('/logout','App\Http\Controllers\UserController@logout')->middleware('auth:api');
 
 Route::controller(UserController::class)->group(function () {
+    Route::get('/user', 'index')->middleware('auth:api');
+
     Route::post('/users', 'create');
     Route::post('/login', 'login');
     Route::get('/logout', 'logout')->middleware('auth:api');

@@ -1,14 +1,15 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
+import styled from "styled-components";
 
 const GuestLayout = () => {
 
     return (
         <>
             <Header />
-            <main>
+            <Main>
                 <Outlet />
-            </main>
+            </Main>
             <footer>
                 footer
             </footer>
@@ -17,3 +18,8 @@ const GuestLayout = () => {
 }
 
 export default GuestLayout;
+
+const Main = styled.main`
+    flex: 1 0 auto;
+    display: flex;
+`

@@ -19,7 +19,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        unset($user->password, $user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at, $user->api_token);
+        return response($user, 200);
     }
 
     /**
@@ -53,7 +55,6 @@ class UserController extends Controller
             $user->password = Hash::make($input['password']);
             $user->save();
             $user = User::where('email', $input['email'])->get()->first();
-            //unset($user->password, $user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at);
             return response(["token" => $user->api_token], 200);
         }
     }
