@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoneController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -33,4 +34,8 @@ Route::controller(UserController::class)->group(function () {
 
     Route::post('/users/phone/exist', 'ifPhoneExists');
     Route::post('/users/email/exist', 'ifEmailExists');
+});
+
+Route::controller(DoneController::class)->group(function () {
+    Route::get('/dashboard', 'dashboard')->middleware('auth:api');
 });

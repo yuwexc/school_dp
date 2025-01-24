@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user();
-        unset($user->password, $user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at, $user->api_token);
+        unset($user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at, $user->api_token);
         return response($user, 200);
     }
 

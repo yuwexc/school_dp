@@ -28,7 +28,7 @@ const DashboardHeader = () => {
 export default DashboardHeader;
 
 const StyledDashboardHeader = styled.header`
-    background-color: #ebebeb;
+    background-color: white;
     height: 20px;
     padding: 28px;
     display: flex;
