@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDoneRequest;
 use App\Http\Requests\UpdateDoneRequest;
+use App\Models\Done;
+use App\Models\User;
 
 class DoneController extends Controller
 {
@@ -18,10 +20,45 @@ class DoneController extends Controller
 
     public function dashboard()
     {
-        $user = auth()->user();
-        //$dones = ;
+        $user = User::find(auth()->user()->id_user);
+        $dones = $user->dones()->whereNot('mark')->get();
+        $courses = $user->enrolled()->get();
+        $lessons = 0;
+
+        foreach ($courses as $course) {
+            $lessons += $course->lessons()->count();
+        }
+
+        $words = 0;
+        $marks = 0;
+
+        foreach ($dones as $done) {
+            $words += $done->lesson()->get()->first()->word_amount;
+            $marks += $done->mark;
+        }
+
         return response([
-            //'dones' => $dones
+            [
+                'background' => '#fdebd0',
+                'image' => '/images/book.png',
+                'title' => $dones->count(),
+                'subtitle' => $words . ' words',
+                'additional' => 'Completed lessons'
+            ],
+            [
+                'background' => '#f4ecf7',
+                'image' => '/images/star.png',
+                'title' => $marks / $dones->count() . '/5.0',
+                'subtitle' => null,
+                'additional' => 'Average score'
+            ],
+            [
+                'background' => '#eafaf1',
+                'image' => '/images/videogames.png',
+                'title' => $dones->count() / $lessons * 100 . '%',
+                'subtitle' => null,
+                'additional' => 'Progress'
+            ]
         ], 200);
     }
 

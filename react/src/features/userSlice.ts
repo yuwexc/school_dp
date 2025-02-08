@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { isAxiosError } from "axios";
-import { Login, User } from "../interfaces/requests";
+import { Login, PROJECT_URL, User } from "../interfaces/requests";
 
 interface UserState {
     user: User,
@@ -29,8 +29,6 @@ const initialState: UserState = {
     status: null,
     error: null,
 };
-
-export const PROJECT_URL: string = "https://dp-chernaev.xn--80ahdri7a.site/api";
 
 export const fetchUser = createAsyncThunk<User>(
     'user/fetchUser',

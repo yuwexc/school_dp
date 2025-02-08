@@ -1,8 +1,14 @@
+import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 
-const FieldLoader = () => {
+interface Props {
+    flexGrow?: number,
+    borderRadius?: number
+}
+
+const FieldLoader: FC<Props> = ({ flexGrow, borderRadius }) => {
     return (
-        <StyledFieldLoader></StyledFieldLoader>
+        <StyledFieldLoader $flexGrow={flexGrow} $borderRadius={borderRadius}></StyledFieldLoader>
     )
 }
 
@@ -14,10 +20,11 @@ const Animation = keyframes`
     }
 `
 
-const StyledFieldLoader = styled.div`
+const StyledFieldLoader = styled.div<{ $flexGrow?: number, $borderRadius?: number }>`
+    ${$props => $props.$flexGrow ? 'flex-grow: 1;' : 'width: 100%;'}
+    ${$props => $props.$borderRadius ? 'border-radius: 24px;' : null}
     display: inline-block;
-    width: 100%;
-    height: 100%;
+    min-height: 100%;
     background: linear-gradient(90deg, #0000 33%, #0001 50%, #0000 66%) #f2f2f2;
     background-size: 300% 100%;
     animation: ${Animation} 1.75s infinite linear;
