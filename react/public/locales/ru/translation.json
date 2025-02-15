@@ -47,5 +47,22 @@
         "courses": "Курсы",
         "topics": "По категориям",
         "profile": "Личный кабинет"
+    },
+    "aside": {
+        "dashboard": "Личный кабинет",
+        "courses": "Мои курсы",
+        "settings": "Настройки",
+        "log_out": "Выйти"
+    },
+    "dashboard_header": {
+        "welcome": "Здравствуйте"
+    },
+    "dashboard": {
+        "achievements": {
+            "lessons": "Выполнено уроков",
+            "words": "слов",
+            "score": "Средний балл",
+            "progress": "Прогресс"
+        }
     }
 }

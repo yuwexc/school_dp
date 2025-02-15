@@ -14,7 +14,7 @@ class LevelController extends Controller
     public function index()
     {
         $levels = Level::all();
-        return $levels;
+        return response($levels, 200);
     }
 
     /**

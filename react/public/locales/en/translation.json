@@ -47,5 +47,22 @@
         "courses": "Courses",
         "topics": "Topics",
         "profile": "Profile"
+    },
+    "aside": {
+        "dashboard": "Dashboard",
+        "courses": "My courses",
+        "settings": "Settings",
+        "log_out": "Log out"
+    },
+    "dashboard_header": {
+        "welcome": "Welcome"
+    },
+    "dashboard": {
+        "achievements": {
+            "lessons": "Completed lessons",
+            "words": "words",
+            "score": "Average score",
+            "progress": "Progress"
+        }
     }
 }

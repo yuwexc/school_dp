@@ -33,6 +33,10 @@ export const Dashboard = styled.div<{ $isHovered: boolean }>`
     display: flex;
     flex-direction: column;
     transition: margin-left .5s 1.5s;
+
+    @media (425px >= width) {
+        margin-left: 54px;
+    }
 `
 
 const StyledStudentLayout = styled.div`

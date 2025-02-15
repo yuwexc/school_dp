@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DoneController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
@@ -23,7 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/levels', [LevelController::class, 'index']);
 
-//Route::get('/logout','App\Http\Controllers\UserController@logout')->middleware('auth:api');
+//Route::get('/email/verify/{id}/{hash}', fn() => 'verify')->middleware(['auth:api', 'signed'])->name('verification.verify');
+
 
 Route::controller(UserController::class)->group(function () {
     Route::get('/user', 'index')->middleware('auth:api');
@@ -38,4 +40,8 @@ Route::controller(UserController::class)->group(function () {
 
 Route::controller(DoneController::class)->group(function () {
     Route::get('/dashboard', 'dashboard')->middleware('auth:api');
+});
+
+Route::controller(CourseController::class)->group(function () {
+    Route::get('/my-courses', 'index')->middleware('auth:api');
 });

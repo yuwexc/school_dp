@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AchievementItemInterface, PROJECT_URL } from "../interfaces/requests";
+import { PROJECT_URL } from "../interfaces/requests";
 import axios from "axios";
+import { AchievementItemInterface } from "../interfaces/achievement";
 
 interface AchievementState {
     achievements: AchievementItemInterface[] | null,

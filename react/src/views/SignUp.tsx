@@ -16,17 +16,10 @@ import SwiperButtonPrev from "../components/SwiperButtonPrev";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { postUser } from "../features/userSlice";
-import { State, User } from "../interfaces/requests";
+import { State } from "../interfaces/requests";
 import Loader from "../components/Loader";
-
-interface Level {
-    id_level: number
-    level_code: string
-    level_name: string
-    level_title: string
-    created_at: string
-    updated_at: string | null
-}
+import { User } from "../interfaces/user";
+import { Level } from "../interfaces/level";
 
 const SignUp = () => {
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -55,6 +56,7 @@ class UserController extends Controller
             $user->password = Hash::make($input['password']);
             $user->save();
             $user = User::where('email', $input['email'])->get()->first();
+            //event(new Registered($user));
             return response(["token" => $user->api_token], 200);
         }
     }

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreDoneRequest;
 use App\Http\Requests\UpdateDoneRequest;
 use App\Models\Done;
 use App\Models\User;
+use DivisionByZeroError;
 
 class DoneController extends Controller
 {
@@ -37,27 +38,30 @@ class DoneController extends Controller
             $marks += $done->mark;
         }
 
+        try {
+            $average_score = $marks / $dones->count();
+        } catch (DivisionByZeroError $e) {
+            $average_score = 0;
+        }
+
+        try {
+            $progress = $dones->count() / $lessons * 100;
+        } catch (DivisionByZeroError $e) {
+            $progress = 0;
+        }
+
         return response([
             [
-                'background' => '#fdebd0',
-                'image' => '/images/book.png',
                 'title' => $dones->count(),
-                'subtitle' => $words . ' words',
-                'additional' => 'Completed lessons'
+                'subtitle' => $words . ' ',
             ],
             [
-                'background' => '#f4ecf7',
-                'image' => '/images/star.png',
-                'title' => $marks / $dones->count() . '/5.0',
+                'title' => $average_score . '/5.0',
                 'subtitle' => null,
-                'additional' => 'Average score'
             ],
             [
-                'background' => '#eafaf1',
-                'image' => '/images/videogames.png',
-                'title' => $dones->count() / $lessons * 100 . '%',
+                'title' => $progress . '%',
                 'subtitle' => null,
-                'additional' => 'Progress'
             ]
         ], 200);
     }

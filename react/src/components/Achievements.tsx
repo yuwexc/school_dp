@@ -1,21 +1,34 @@
 import styled from "styled-components";
 import Achievement from "./Achievement";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store";
-import { AchievementItemInterface, State } from "../interfaces/requests";
-import { fetchAchievement } from "../features/achievementsSlice";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { State } from "../interfaces/requests";
 import FieldLoader from "./FieldLoader";
+import { t } from "i18next";
+import { AchievementItemInterface } from "../interfaces/achievement";
 
 const Achievements = () => {
 
-    const dispatch = useDispatch<AppDispatch>();
     const achievements = useSelector<RootState, AchievementItemInterface[] | null>((state) => state.achievements.achievements);
     const status = useSelector((state: State) => state.achievements.status);
 
-    useEffect(() => {
-        dispatch(fetchAchievement());
-    }, [dispatch]);
+    const items: AchievementItemInterface[] = [
+        {
+            background: '#fdebd0',
+            image: '/images/book.png',
+            additional: t('dashboard.achievements.lessons')
+        },
+        {
+            background: '#f4ecf7',
+            image: '/images/star.png',
+            additional: t('dashboard.achievements.score')
+        },
+        {
+            background: '#eafaf1',
+            image: '/images/videogames.png',
+            additional: t('dashboard.achievements.progress')
+        }
+    ]
 
     return (
         <Section>
@@ -28,11 +41,11 @@ const Achievements = () => {
                     </>
                     :
                     achievements && achievements.map((item, i) => <Achievement
-                        background={item.background}
-                        image={item.image}
+                        background={items[i].background}
+                        image={items[i].image}
                         title={item.title}
                         subtitle={item.subtitle}
-                        additional={item.additional}
+                        additional={items[i].additional}
                         key={i}
                     />)
             }
@@ -47,4 +60,16 @@ const Section = styled.section`
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
+
+    @media (577px <= width <= 768px) {
+        gap: 20px;
+    }
+
+    @media (425px <= width <= 576px) {
+        gap: 16px;
+    }
+
+    @media (425px >= width) {
+        gap: 12px;
+    }
 `

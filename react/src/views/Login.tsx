@@ -9,18 +9,13 @@ import { setLanguage } from "../../public/locales/Language";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
-import { State } from "../interfaces/requests";
+import { LoginInterface, State } from "../interfaces/requests";
 import { loginUser } from "../features/userSlice";
 import Loader from "../components/Loader";
 
-interface FormData {
-    email: string,
-    password: string
-}
-
 const Login = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginInterface>();
 
     const { t, i18n } = useTranslation();
 
@@ -39,7 +34,7 @@ const Login = () => {
     const token = useSelector<RootState, string | null>((state) => state.user.token);
     const { status, error } = useSelector((state: State) => state.user);
 
-    const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const onSubmit: SubmitHandler<LoginInterface> = async (data) => {
         await dispatch(loginUser(data));
     }
 

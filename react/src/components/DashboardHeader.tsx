@@ -1,16 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { State, User } from "../interfaces/requests";
+import { State } from "../interfaces/requests";
 import { AppDispatch, RootState } from "../store";
 import { useEffect } from "react";
 import { fetchUser } from "../features/userSlice";
 import FieldLoader from "./FieldLoader";
+import { useTranslation } from "react-i18next";
+import { User } from "../interfaces/user";
 
 const DashboardHeader = () => {
 
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector<RootState, User>((state) => state.user.user);
     const status = useSelector((state: State) => state.user.status);
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         dispatch(fetchUser());
@@ -19,7 +23,7 @@ const DashboardHeader = () => {
     return (
         <StyledDashboardHeader>
             {
-                status === 'loading' ? <FieldLoader /> : <p>Welcome, {user.last_name + ' ' + user.first_name}!</p>
+                status === 'loading' ? <FieldLoader /> : <p>{t('dashboard_header.welcome')}, {user.last_name + ' ' + user.first_name}!</p>
             }
         </StyledDashboardHeader>
     )

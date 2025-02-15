@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $table = 'users';
     protected $primaryKey = 'id_user';
@@ -87,5 +91,22 @@ class User extends Model
     public function dones(): HasMany
     {
         return $this->hasMany(Done::class, 'student', 'id_user');
+    }
+
+    function getEmailForVerification()
+    {
+
+    }
+    function hasVerifiedEmail()
+    {
+
+    }
+    function markEmailAsVerified()
+    {
+
+    }
+    function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 }
