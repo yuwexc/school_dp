@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseAccessController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DoneController;
 use App\Http\Controllers\LevelController;
@@ -44,4 +45,8 @@ Route::controller(DoneController::class)->group(function () {
 
 Route::controller(CourseController::class)->group(function () {
     Route::get('/my-courses', 'index')->middleware('auth:api');
+});
+
+Route::controller(CourseAccessController::class)->group(function () {
+    Route::delete('/my-courses/delete/{id}', 'delete')->middleware('auth:api');
 });

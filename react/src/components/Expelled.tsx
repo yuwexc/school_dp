@@ -20,4 +20,8 @@ const ExpelledBlock = styled.div`
     background-color: #ffd7d7;
     border: 1px solid palevioletred;
     border-radius: 18px;
+
+    @media (576px >= width) {
+        min-width: 130px;
+    }
 `

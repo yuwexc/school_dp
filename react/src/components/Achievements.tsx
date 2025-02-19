@@ -70,6 +70,7 @@ const Section = styled.section`
     }
 
     @media (425px >= width) {
+        flex-direction: column;
         gap: 12px;
     }
 `

@@ -98,10 +98,6 @@ const Info = styled.div`
         @media (425px <= width <= 576px) {
             font-size: 14px;
         }
-
-        @media (425px >= width) {
-            font-size: 16px;
-        }
     }
 
     & > div {

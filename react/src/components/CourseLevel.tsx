@@ -17,7 +17,7 @@ const CourseLevel: FC<Props> = ({ level }) => {
 export default CourseLevel;
 
 const LevelBlock = styled.div`
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     margin-right: 10px;
     display: flex;
@@ -26,4 +26,8 @@ const LevelBlock = styled.div`
     align-items: center;
     border: 1px solid lightgray;
     border-radius: 50%;
+
+    @media (576px >= width) {
+        margin-right: unset;
+    }
 `

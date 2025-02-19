@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
+use App\Models\Lesson;
 use App\Models\User;
 
 class CourseController extends Controller
@@ -18,7 +19,7 @@ class CourseController extends Controller
 
         switch ($user->role()->get()->first()->role_code) {
             case 'student':
-                $accesses = $user->accesses()->get();
+                $accesses = $user->accesses()->orderByDesc('created_at')->get();
                 $courses = [];
 
                 foreach ($accesses as $access) {
@@ -40,7 +41,18 @@ class CourseController extends Controller
             foreach ($courses as $course) {
                 $id_course_access = null;
                 $status = null;
+                $category = $course->category()->get()->first();
                 $access = $course->accesses()->where('student', $user->id_user)->get()->first();
+                $progress = 0;
+                $id_lessons = collect(Lesson::where('course_id', $course->id_course)->get('id_lesson'))
+                    ->map(function ($item) {
+                        return $item['id_lesson'];
+                    });
+                $dones = $user->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
+
+                if ($id_lessons && $dones) {
+                    $progress = $dones / $id_lessons->count() * 100;
+                }
 
                 if ($access) {
                     $id_course_access = $access->id_course_access;
@@ -52,12 +64,14 @@ class CourseController extends Controller
                     "course_name" => $course->course_name,
                     "course_description" => $course->course_description,
                     "level" => $course->level()->select(['level_code', 'level_title', 'level_name'])->get()->first(),
-                    "category" => $course->category()->get()->first()->category_name,
+                    "category" => $category ? $category->category_name : null,
+                    "image" => $course->image,
                     "author" => $course->user()->select(['first_name', 'last_name'])->get()->first(),
                     "access" => [
                         "id_course_access" => $id_course_access,
                         "access_status" => $status
                     ],
+                    "progress" => $progress,
                     "created_at" => $course->created_at,
                     "updated_at" => $course->updated_at
                 ]);

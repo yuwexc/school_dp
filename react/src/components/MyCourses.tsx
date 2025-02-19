@@ -5,27 +5,28 @@ import { State } from "../interfaces/requests";
 import Course from "./Course";
 import styled from "styled-components";
 import FieldLoader from "./FieldLoader";
+import Modal from "./Modal";
+import { ModalInterface } from "../interfaces/modal";
 
 const MyCourses = () => {
 
+    const modal = useSelector<RootState, ModalInterface>((state) => state.modal.modal);
     const myCourses = useSelector<RootState, CourseItemInterface[] | null>((state) => state.courses.myCourses);
     const status = useSelector((state: State) => state.courses.status);
 
     return (
         <Section>
-            <div style={{ display: 'flex', gap: '24px' }}>
-                <h2 style={{ width: '100%' }}>
-                    {
-                        status === 'loading' ?
-                            <FieldLoader borderRadius={24} />
-                            :
-                            <>
-                                {'My courses | '}
-                                <Look href={'/my-courses'}>view all my courses &#8594;</Look>
-                            </>
-                    }
-                </h2>
-            </div>
+            <Title>
+                {
+                    status === 'loading' ?
+                        <FieldLoader borderRadius={24} />
+                        :
+                        <>
+                            {'My courses | '}
+                            <Look href={'/my-courses'}><span>view all my courses</span> &#8594;</Look>
+                        </>
+                }
+            </Title>
             {
                 status === 'loading' ?
                     <>
@@ -33,17 +34,49 @@ const MyCourses = () => {
                         <FieldLoader flexGrow={1} borderRadius={24} />
                     </>
                     :
-                    myCourses && myCourses.map((course, index) => <Course course={course} key={index} />)
+                    <>
+                        {
+                            myCourses?.length != 0 ?
+                                myCourses?.slice(0, 3).map((course, index) =>
+                                    <Course
+                                        course={course}
+                                        key={index}
+                                    />
+                                )
+                                :
+                                <p>У вас нет курсов</p>
+                        }
+                    </>
             }
-        </Section >
+            {
+                modal.state && <Modal
+                    header={'Подтверждение удаления заявки'}
+                    main={'Вы действительно хотите отозвать заявку?'}
+                    access={modal.access}
+                />
+            }
+        </Section>
     )
 }
 
 export default MyCourses;
 
 const Look = styled.a`
-    &:hover {
+    & > span {
         text-decoration: underline;
+    }
+`
+
+const Title = styled.h2`
+    width: 100%;
+    text-wrap: nowrap;
+
+    @media (425px <= width <= 768px) {
+        font-size: 20px;
+    }
+
+    @media (425px >= width) {
+        font-size: 20px;
     }
 `
 

@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSlice from './features/userSlice';
 import achievementsSlice from './features/achievementsSlice';
 import coursesSlice from './features/courseSlice';
+import modalSlice from './features/modalSlice';
 
 const store = configureStore({
     reducer: {
         user: userSlice,
         achievements: achievementsSlice,
-        courses: coursesSlice
+        courses: coursesSlice,
+        modal: modalSlice
     },
 });
 

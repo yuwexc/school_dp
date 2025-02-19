@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CourseAccess;
 use App\Http\Requests\StoreCourseAccessRequest;
 use App\Http\Requests\UpdateCourseAccessRequest;
+use Request;
 
 class CourseAccessController extends Controller
 {
@@ -22,6 +23,15 @@ class CourseAccessController extends Controller
     public function create()
     {
         //
+    }
+
+    public function delete($id)
+    {
+        $access = CourseAccess::where('id_course_access', $id)->first();
+        if ($access) {
+            $access->delete();
+        }
+        return response($access->id_course_access, 200);
     }
 
     /**
