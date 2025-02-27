@@ -66,7 +66,7 @@ const CourseCard: FC<Props> = ({ course }) => {
                         <Progress $progress={course.progress} />
                         <p style={{ alignSelf: 'center', textWrap: 'nowrap' }}>{course.progress}%</p>
                     </div>
-                    <div style={{ display: 'flex', minHeight: '35px', alignItems: 'stretch', paddingTop: '8px' }}>
+                    <Buttons>
                         {
                             course.access!.access_status === 'requested' && <Requested access={course.access!.id_course_access} />
                         }
@@ -76,7 +76,7 @@ const CourseCard: FC<Props> = ({ course }) => {
                         {
                             course.access!.access_status === 'enrolled' && <Enrolled url={'/my-courses/' + course.id_course} />
                         }
-                    </div>
+                    </Buttons>
                 </Actions>
             </Info>
             {
@@ -91,6 +91,18 @@ const CourseCard: FC<Props> = ({ course }) => {
 }
 
 export default CourseCard;
+
+export const Buttons = styled.div`
+    min-height: 35px;
+    padding-top: 8px;
+    display: flex;
+    align-items: stretch;
+
+    @media (width <= 480px) {
+        flex-direction: column;
+        width: 100%;
+    }
+`
 
 const ProgressAnimation = keyframes<{ $progress: number }>`
     0% {
@@ -132,7 +144,7 @@ const Actions = styled.div`
     gap: 8px;
 `
 
-const Author = styled.div`
+export const Author = styled.div`
     text-wrap: nowrap;
     background-color: #2d2d2d;
     padding: 6px;
@@ -143,7 +155,7 @@ const Author = styled.div`
     gap: 6px;
 `
 
-const LinkToResources = styled(Link) <{ $backgroundColor?: string }>`
+export const LinkToResources = styled(Link) <{ $backgroundColor?: string }>`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -156,7 +168,7 @@ const LinkToResources = styled(Link) <{ $backgroundColor?: string }>`
     font-weight: 400;
 `
 
-const Characteristics = styled.div`
+export const Characteristics = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -171,6 +183,13 @@ const Description = styled.p`
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    @media (width <= 768px) {
+        min-height: unset;
+        display: block;
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
+    }
 `
 
 const Info = styled.div`
@@ -180,6 +199,22 @@ const Info = styled.div`
     flex-direction: column;
     gap: 12px;
     padding: 24px;
+
+    @media (width <= 768px) {
+        width: unset;
+
+        & > h2 {
+            font-size: 20px;
+        }
+    }
+
+    @media (425px <= width <= 576px) {
+        padding: 24px 20px 20px 20px;
+    }
+
+    @media (425px >= width) {
+        padding: 18px 12px 12px 12px;
+    }
 `
 
 const IMG = styled.div <{ $src: string | null }>`
@@ -188,6 +223,14 @@ const IMG = styled.div <{ $src: string | null }>`
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+
+    @media (377px <= width <= 768px) {
+        height: 300px;
+    }
+
+    @media (376px >= width) {
+        height: 200px;
+    }
 `
 
 const Article = styled.article`
@@ -200,4 +243,13 @@ const Article = styled.article`
     align-items: stretch;
     border: 1px solid lightgray;
     border-radius: 24px;
+
+    @media (width <= 1350px) {
+        width: 100%;
+    }
+
+    @media (width <= 768px) {
+        flex-direction: column;
+        min-width: unset;
+    }
 `

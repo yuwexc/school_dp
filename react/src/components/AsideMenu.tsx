@@ -197,7 +197,7 @@ const Aside = styled.aside`
     position: fixed;
     top: 0;
     width: 38px;
-    height: calc(100% - 48px);
+    height: calc(100dvh - 48px);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -206,20 +206,25 @@ const Aside = styled.aside`
     background-color: #e4e6ee;
     transition: width .5s 1.5s;
     border-right: 1px solid lightgray;
+    z-index: 998;
     
-    &:hover {
-        width: 300px;
-    }
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            width: 300px;
+        }
 
-    &:hover > ${GroupLinks} {
-        width: 100%;
+        &:hover > ${GroupLinks} {
+            width: 100%;
+        }
     }
 
     @media (425px >= width) {
         padding: 24px 8px;
 
-        &:hover {
-            width: 75vw;
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                width: 75vw;
+            }
         }
     }
 `

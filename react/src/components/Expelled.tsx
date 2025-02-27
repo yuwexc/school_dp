@@ -22,6 +22,7 @@ const ExpelledBlock = styled.div`
     border-radius: 18px;
 
     @media (576px >= width) {
+        height: 35px;
         min-width: 130px;
     }
 `

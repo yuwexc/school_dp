@@ -1,4 +1,5 @@
 import CourseAccessItemInterface from "./course_access";
+import { Lesson } from "./lesson";
 import { Level } from "./level";
 import { User } from "./user";
 
@@ -11,6 +12,7 @@ export interface CourseItemInterface {
     image: string | null,
     author: User,
     access: CourseAccessItemInterface | null,
+    lessons: Lesson[] | null,
     progress: number,
     created_at: Date,
     updated_at: Date | null

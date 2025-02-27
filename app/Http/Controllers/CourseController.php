@@ -6,14 +6,22 @@ use App\Models\Course;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Lesson;
+use App\Models\LessonStatus;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
     public function index()
+    {
+        //
+    }
+
+    public function my_courses()
     {
         $user = User::find(auth()->user()->id_user);
 
@@ -100,9 +108,71 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Course $course)
+    public function show($id)
     {
-        //
+        $course = Course::find($id);
+        $user = null;
+
+        if (request()->user('api')) {
+            $user = User::find(request()->user('api')->id_user);
+        }
+
+        $access = null;
+
+        if ($user) {
+            $access = $course->accesses()->where('student', $user->id_user)->get()->first();
+        }
+
+        $category = $course->category()->get()->first();
+        $id_course_access = null;
+        $status = '';
+
+        if ($access) {
+            $id_course_access = $access->id_course_access;
+            $status = $access->status()->get()->first()->status_code;
+        }
+
+        $lessons = $course->lessons()
+            ->where(
+                'lesson_status',
+                LessonStatus::where('status_code', 'published')->get()->first()->id_status
+            )
+            ->get()
+            ->sortBy('lesson_number');
+
+        foreach ($lessons as $lesson) {
+            $done = null;
+
+            if (request()->user('api')) {
+                $done = $lesson->dones()
+                    ->where('lesson_id', $lesson->id_lesson)
+                    ->where('student', request()->user('api')->id_user)
+                    ->get()->first();
+            }
+
+            if ($done != null) {
+                $lesson->mark = $done->mark;
+            } else {
+                $lesson->mark = null;
+            }
+        }
+
+        return response([
+            "id_course" => $course->id_course,
+            "course_name" => $course->course_name,
+            "course_description" => $course->course_description,
+            "level" => $course->level()->select(['level_code', 'level_title', 'level_name'])->get()->first(),
+            "category" => $category ? $category->category_name : null,
+            "image" => $course->image,
+            "author" => $course->user()->select(['first_name', 'last_name'])->get()->first(),
+            "access" => [
+                "id_course_access" => $id_course_access,
+                "access_status" => $status
+            ],
+            "lessons" => $lessons,
+            "created_at" => $course->created_at,
+            "updated_at" => $course->updated_at
+        ], 200);
     }
 
     /**

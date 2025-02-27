@@ -34,6 +34,7 @@ const StyledLink = styled(Link)`
     font-size: 14px;
 
     @media (576px >= width) {
+        height: 35px;
         min-width: 130px;
     }
 `

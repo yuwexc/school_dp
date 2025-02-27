@@ -10,6 +10,8 @@ import SignUp from "./views/SignUp";
 import Dashboard from "./views/Dashboard";
 import Settings from "./views/Settings";
 import MyCourses from "./views/MyCourses";
+import CourseItem from "./views/CourseItem";
+import Lesson from "./views/Lesson";
 
 const router = createBrowserRouter([
     {
@@ -18,7 +20,7 @@ const router = createBrowserRouter([
         children: [
             { path: '/', element: <Home /> },
             { path: '/courses', element: <Courses /> },
-            { path: '/courses/:id', element: <Courses /> },
+            { path: '/courses/:id', element: <CourseItem /> },
             { path: '/topics', element: <Topics /> },
         ]
     },
@@ -37,8 +39,9 @@ const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: '/dashboard', element: <Dashboard /> },
             { path: '/my-courses', element: <MyCourses /> },
-            { path: '/my-courses/:id', element: <MyCourses /> },
+            { path: '/my-courses/:id', element: <CourseItem /> },
             { path: '/settings', element: <Settings /> },
+            { path: '/lessons/:id', element: <Lesson /> },
         ]
     }
 ])

@@ -47,6 +47,7 @@ const Button = styled.button`
     cursor: pointer;
 
     @media (576px >= width) {
+        height: 35px;
         min-width: 130px;
     }
 `

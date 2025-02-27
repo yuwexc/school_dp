@@ -16,7 +16,7 @@ const initialState: AchievementState = {
 };
 
 export const fetchAchievement = createAsyncThunk<AchievementItemInterface[]>(
-    'user/fetchAchievement',
+    'achievements/fetchAchievement',
     async (_, { rejectWithValue }) => {
         try {
 

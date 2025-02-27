@@ -44,9 +44,11 @@ Route::controller(DoneController::class)->group(function () {
 });
 
 Route::controller(CourseController::class)->group(function () {
-    Route::get('/my-courses', 'index')->middleware('auth:api');
+    Route::get('/my-courses', 'my_courses')->middleware('auth:api');
+    Route::get('/courses/{id}', 'show');
 });
 
 Route::controller(CourseAccessController::class)->group(function () {
+    Route::post('/my-courses/{id}/request', 'create')->middleware('auth:api');
     Route::delete('/my-courses/delete/{id}', 'delete')->middleware('auth:api');
 });

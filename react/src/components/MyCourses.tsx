@@ -71,12 +71,8 @@ const Title = styled.h2`
     width: 100%;
     text-wrap: nowrap;
 
-    @media (425px <= width <= 768px) {
-        font-size: 20px;
-    }
-
-    @media (425px >= width) {
-        font-size: 20px;
+    @media (width <= 768px) {
+        font-size: 16px;
     }
 `
 

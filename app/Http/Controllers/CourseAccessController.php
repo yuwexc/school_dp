@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccessStatus;
 use App\Models\CourseAccess;
 use App\Http\Requests\StoreCourseAccessRequest;
 use App\Http\Requests\UpdateCourseAccessRequest;
@@ -20,18 +21,37 @@ class CourseAccessController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $attempt = CourseAccess::where('course_id', $id)
+            ->where('student', auth()->user()->id_user)
+            ->whereNotNull('status_id')->get()->first();
+
+        if (!$attempt) {
+
+            $access = new CourseAccess();
+            $access->course_id = (int) $id;
+            $access->student = auth()->user()->id_user;
+            $access->status_id = AccessStatus::where('status_code', 'requested')->get()->first()->id_access_status;
+
+            $access->save();
+            return response($access, 200);
+
+        } else {
+            return response(['message' => 'Forbidden for you'], 403);
+        }
     }
 
     public function delete($id)
     {
         $access = CourseAccess::where('id_course_access', $id)->first();
+
         if ($access) {
             $access->delete();
+            return response($access->id_course_access, 200);
+        } else {
+            return response(['message' => 'Forbidden for you'], 403);
         }
-        return response($access->id_course_access, 200);
     }
 
     /**

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { isAxiosError } from "axios";
-import { Login, PROJECT_URL } from "../interfaces/requests";
+import { LoginInterface, PROJECT_URL } from "../interfaces/requests";
 import { User } from "../interfaces/user";
 
 interface UserState {
@@ -63,7 +63,7 @@ export const postUser = createAsyncThunk<string | null, User>(
     }
 )
 
-export const loginUser = createAsyncThunk<string | null, Login>(
+export const loginUser = createAsyncThunk<string | null, LoginInterface>(
     'user/loginUser',
     async (user, { rejectWithValue }) => {
         try {
@@ -125,7 +125,7 @@ const userSlice = createSlice({
             })
             .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
                 state.status = 'succeeded';
-                state.user = action.payload;                
+                state.user = action.payload;
             })
             .addCase(fetchUser.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {

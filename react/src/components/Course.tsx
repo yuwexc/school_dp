@@ -7,7 +7,8 @@ import Enrolled from "./Enrolled";
 import CourseLevel from "./CourseLevel";
 
 interface Props {
-    course: CourseItemInterface}
+    course: CourseItemInterface
+}
 
 const Course: FC<Props> = ({ course }) => {
     return (
@@ -101,10 +102,12 @@ const Article = styled.article`
     }
 
     @media (425px <= width <= 576px) {
+        flex-direction: column;
         gap: 16px;
     }
 
     @media (425px >= width) {
+        flex-direction: column;
         gap: 12px;
     }
 `

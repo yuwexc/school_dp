@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Modal } from "../interfaces/modal";
+import { ModalInterface } from "../interfaces/modal";
 
 interface ModalState {
-    modal: Modal
+    modal: ModalInterface
     status: 'loading' | 'succeeded' | 'failed' | null;
     error: string | null;
 }
 
-const modal: Modal = {
+const modal: ModalInterface = {
     state: false,
     access: null
 }
@@ -18,7 +18,7 @@ const initialState: ModalState = {
     error: null,
 };
 
-export const handleModalState = createAsyncThunk<Modal, Modal>(
+export const handleModalState = createAsyncThunk<ModalInterface, ModalInterface>(
     'user/handleModalState',
     async (modal, { rejectWithValue }) => {
         try {
@@ -44,7 +44,7 @@ const modalSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(handleModalState.fulfilled, (state, action: PayloadAction<Modal>) => {
+            .addCase(handleModalState.fulfilled, (state, action: PayloadAction<ModalInterface>) => {
                 state.status = 'succeeded';
                 state.modal = action.payload;
             })
