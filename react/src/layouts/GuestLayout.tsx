@@ -19,9 +19,13 @@ const GuestLayout = () => {
 
 export default GuestLayout;
 
-const Main = styled.main`
+const Main = styled.div`
     padding-top: calc(8dvh + 20px);
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
+
+    @media (width <= 768px) {
+        padding-top: 82px;
+    }
 `

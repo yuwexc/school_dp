@@ -1,26 +1,36 @@
 import styled from "styled-components";
 import Achievements from "../components/Achievements";
 import MyCourses from "../components/MyCourses";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
 import { useEffect } from "react";
 import { fetchAchievement } from "../features/achievementsSlice";
 import { fetchMyCourses } from "../features/courseSlice";
+import { User } from "../interfaces/user";
 
 const Dashboard = () => {
 
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const dispatch = useDispatch<AppDispatch>();
 
+
     useEffect(() => {
-        dispatch(fetchAchievement());
+        if (user.role?.role_code === 'student') {
+            dispatch(fetchAchievement());
+        }
         dispatch(fetchMyCourses());
-    }, [dispatch]);
+    }, [dispatch, user.role?.role_code]);
 
     return (
         <StyledDashboard>
-            <Achievements />
+            {
+                user.role?.role_code === 'student' &&
+                <>
+                    <Achievements />
+                </>
+            }
             <MyCourses />
-        </StyledDashboard>
+        </StyledDashboard >
     )
 }
 

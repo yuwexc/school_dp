@@ -12,13 +12,20 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    public function generate()
+    {
+        $users = User::factory()->count(3)->create();
+        return $users;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $user = auth()->user();
-        unset($user->id_user, $user->email_verified_at, $user->role_id, $user->updated_at, $user->api_token);
+        $user->level = $user->level()->get()->first();
+        $user->role = $user->role()->get()->first();
+        unset($user->id_user, $user->email_verified_at, $user->level_id, $user->role_id, $user->updated_at, $user->api_token);
         return response($user, 200);
     }
 
@@ -36,7 +43,7 @@ class UserController extends Controller
             'phone' => ['required', 'unique:App\Models\User,phone'],
             'email' => ['required', 'email', 'unique:App\Models\User,email'],
             'password' => ['required', 'string'],
-            'level' => ['integer', 'nullable']
+            'level_id' => ['integer', 'nullable']
         ]);
         if ($validation->fails()) {
             return response(['success' => false, 'message' => $validation->errors()], 422);
@@ -111,9 +118,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(Request $request)
     {
-        //
+        $user = User::where('id_user', auth()->user()->id_user)->get()->first();
+        $user->update($request->all());
+        return response($user, 200);
     }
 
     /**
@@ -131,10 +140,46 @@ class UserController extends Controller
         return response(['phone' => $exist], 200);
     }
 
+    public function ifPhoneExistsOnUpdate(Request $request)
+    {
+        $phone = $request->phone;
+        $user = User::where('phone', $phone)->get()->first();
+
+        if ($user) {
+            if ($user->id_user === auth()->user()->id_user) {
+                $exist = false;
+            } else {
+                $exist = true;
+            }
+        } else {
+            $exist = false;
+        }
+
+        return response(['phone' => $exist], 200);
+    }
+
     public function ifEmailExists(Request $request)
     {
         $email = $request->email;
         $exist = User::where('email', $email)->exists();
+        return response(['email' => $exist], 200);
+    }
+
+    public function ifEmailExistsOnUpdate(Request $request)
+    {
+        $email = $request->email;
+        $user = User::where('email', $email)->get()->first();
+
+        if ($user) {
+            if ($user->id_user === auth()->user()->id_user) {
+                $exist = false;
+            } else {
+                $exist = true;
+            }
+        } else {
+            $exist = false;
+        }
+
         return response(['email' => $exist], 200);
     }
 }

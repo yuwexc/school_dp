@@ -4,7 +4,7 @@ import { Level } from "./level";
 import { User } from "./user";
 
 export interface CourseItemInterface {
-    id_course: number,
+    id_course: string,
     course_name: string,
     course_description: string,
     level: Level,

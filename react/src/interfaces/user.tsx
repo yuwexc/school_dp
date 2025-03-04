@@ -1,3 +1,6 @@
+import { Level } from "./level";
+import { Role } from "./role";
+
 export interface User {
     first_name: string | null,
     last_name: string | null,
@@ -5,9 +8,9 @@ export interface User {
     phone: string | null,
     email: string | null,
     photo: string | null,
-    level_id: number | null,
+    level: Level | null,
+    role: Role | null,
     password?: string | null,
     api_token?: string | null,
-    check_email: boolean | null,
     created_at: Date | null
 }

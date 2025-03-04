@@ -26,10 +26,10 @@ const Header = () => {
                 {
                     links.map((link) => <HeaderLink to={link.link} key={link.id}>{link.text}</HeaderLink>)
                 }
-                <div style={{ display: 'flex', gap: '5px' }}>
+                <Language>
                     <LangugageButton lang="en" onClick={() => changeLanguage("en")}>EN</LangugageButton>
                     <LangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</LangugageButton>
-                </div>
+                </Language>
             </Nav>
         </StyledHeader>
     )
@@ -37,13 +37,22 @@ const Header = () => {
 
 export default Header;
 
+export const Language = styled.div`
+    display: flex;
+    gap: 5px;
+
+    @media (width <=768px) {
+        display: none;
+    }
+`
+
 const StyledHeader = styled.header`
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 8dvh;
-    background: linear-gradient(115deg, #dae2f8, #d6a4a4);
+    background: #e4e6ee;
     padding: 10px 10%;
 
     @media (width <=1024px) {
@@ -70,7 +79,7 @@ const HeaderLink = styled(Link)`
     transition: background .4s;
 
     &:hover {
-        background-color:#e4e4e4;
+        background-color: #e4e6ee;
     }
 
     @media (width <=1024px) {
@@ -103,12 +112,6 @@ const Nav = styled.nav`
             display: grid;
             grid-template-columns: 1fr 1fr;
             justify-items: center;
-        }
-    }
-
-    @media (width <=376px) {
-        & {
-            grid-template-columns: 1fr;
         }
     }
 `

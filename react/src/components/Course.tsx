@@ -5,19 +5,23 @@ import Requested from "./Requested";
 import Expelled from "./Expelled";
 import Enrolled from "./Enrolled";
 import CourseLevel from "./CourseLevel";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     course: CourseItemInterface
 }
 
 const Course: FC<Props> = ({ course }) => {
+
+    const { t } = useTranslation();
+
     return (
         <Article>
             <div>
                 <IMG $src={course.image} />
                 <CourseLevel level={course.level} />
-                <h2>"{course.course_name}"</h2>
-                <Author>by {course.author.first_name + ' ' + course.author.last_name}</Author>
+                <h2>"{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}"</h2>
+                <Author>{t('dashboard.myCourses.author')} {course.author.first_name + ' ' + course.author.last_name}</Author>
             </div>
             {
                 course.access!.access_status === 'requested' && <Requested access={course.access!.id_course_access} />

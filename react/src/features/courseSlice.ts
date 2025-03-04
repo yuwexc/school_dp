@@ -4,21 +4,43 @@ import { PROJECT_URL } from "../interfaces/requests";
 import axios from "axios";
 import CourseAccessItemInterface from "../interfaces/course_access";
 
-interface CoursesState {
+export interface Request {
+    pageIndex: number,
+    level_id: number | '',
+    category_id: number | ''
+}
+
+export interface Courses {
+    courses: CourseItemInterface[] | null,
+    currentPage: number,
+    pageSize: number,
+    totalPages: number,
+}
+
+export interface CoursesState {
     myCourses: CourseItemInterface[] | null,
+    courses: Courses | null,
     course: CourseItemInterface | null,
     status: 'loading' | 'succeeded' | 'failed' | null;
-    error: string | null;
+    error: string | null,
+}
+
+const courses: Courses = {
+    courses: null,
+    currentPage: 0,
+    pageSize: 0,
+    totalPages: 0,
 }
 
 const initialState: CoursesState = {
     myCourses: null,
+    courses,
     course: null,
     status: null,
     error: null,
 };
 
-export const fetchMyCoursesItem = createAsyncThunk<CourseItemInterface, number>(
+export const fetchMyCoursesItem = createAsyncThunk<CourseItemInterface, string>(
     'courses/fetchMyCoursesItem',
     async (id, { rejectWithValue }) => {
         try {
@@ -32,6 +54,25 @@ export const fetchMyCoursesItem = createAsyncThunk<CourseItemInterface, number>(
 
         } catch {
             return rejectWithValue("Не удалось загрузить курс!");
+        }
+    }
+);
+
+export const fetchCourses = createAsyncThunk<Courses, Request>(
+    'courses/fetchCourses',
+    async ({ pageIndex, level_id, category_id }, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.get<Courses>(PROJECT_URL + '/courses?pageIndex=' + pageIndex + '&pageSize=6' +
+                '&level_id=' + level_id + '&category_id=' + category_id, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
+            return data;
+
+        } catch {
+            return rejectWithValue("Не удалось загрузить курсы!");
         }
     }
 );
@@ -54,7 +95,7 @@ export const fetchMyCourses = createAsyncThunk<CourseItemInterface[]>(
     }
 );
 
-export const requestAddMyCoursesItem = createAsyncThunk<CourseAccessItemInterface, number>(
+export const requestAddMyCoursesItem = createAsyncThunk<CourseAccessItemInterface, string>(
     'courses/requestAddMyCoursesItem',
     async (id, { rejectWithValue }) => {
         try {
@@ -72,12 +113,12 @@ export const requestAddMyCoursesItem = createAsyncThunk<CourseAccessItemInterfac
     }
 );
 
-export const deleteMyCoursesItem = createAsyncThunk<number, number>(
+export const deleteMyCoursesItem = createAsyncThunk<string, string>(
     'courses/deleteMyCoursesItem',
     async (id, { rejectWithValue }) => {
         try {
 
-            const { data } = await axios.delete<number>(PROJECT_URL + '/my-courses/delete/' + id, {
+            const { data } = await axios.delete<string>(PROJECT_URL + '/my-courses/delete/' + id, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
                 }
@@ -108,6 +149,7 @@ const coursesSlice = createSlice({
             .addCase(fetchMyCoursesItem.fulfilled, (state, action: PayloadAction<CourseItemInterface | null>) => {
                 state.status = 'succeeded';
                 state.course = action.payload;
+                state.myCourses = Array(action.payload!);
             })
             .addCase(fetchMyCoursesItem.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
@@ -118,6 +160,22 @@ const coursesSlice = createSlice({
             })
 
             //list
+
+            .addCase(fetchCourses.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(fetchCourses.fulfilled, (state, action: PayloadAction<Courses>) => {
+                state.status = 'succeeded';
+                state.courses = action.payload;
+            })
+            .addCase(fetchCourses.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                } else {
+                    state.status = 'failed';
+                }
+            })
 
             .addCase(fetchMyCourses.pending, (state) => {
                 state.status = 'loading';
@@ -160,8 +218,9 @@ const coursesSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(deleteMyCoursesItem.fulfilled, (state, action: PayloadAction<number>) => {
+            .addCase(deleteMyCoursesItem.fulfilled, (state, action: PayloadAction<string>) => {
                 state.status = 'succeeded';
+                state.course!.access!.access_status = '';
                 state.myCourses = state.myCourses!.filter((el) => el.access?.id_course_access !== action.payload);
             })
             .addCase(deleteMyCoursesItem.rejected, (state, action: PayloadAction<unknown>) => {

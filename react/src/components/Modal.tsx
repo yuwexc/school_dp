@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { AppDispatch } from "../store";
 import { deleteMyCoursesItem } from "../features/courseSlice";
 import { handleModalState } from "../features/modalSlice";
+import { t } from "i18next";
 
 interface Props {
     header: string
     main: string,
-    access: number | null,
+    access: string | null,
 }
 
 const Modal: FC<Props> = ({ header, main, access }) => {
@@ -39,11 +40,11 @@ const Modal: FC<Props> = ({ header, main, access }) => {
                 </Header>
                 <Main>
                     <p>{main}</p>
-                    <Confirm onClick={deleteCourseAccess}>Подтвердить</Confirm>
+                    <Confirm onClick={deleteCourseAccess}>{t('modal.confirm')}</Confirm>
                     <Cancel onClick={() => dispatch(handleModalState({
                         state: false,
                         access: null
-                    }))}>Отмена</Cancel>
+                    }))}>{t('modal.cancel')}</Cancel>
                 </Main>
             </StyledModal>
             <StyledBackground />

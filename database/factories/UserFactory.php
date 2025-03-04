@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Level;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -16,6 +17,8 @@ class UserFactory extends Factory
      */
     protected static ?string $password;
 
+    protected $model = User::class;
+
     /**
      * Define the model's default state.
      *
@@ -24,11 +27,19 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'middle_name' => fake()->firstName(),
+            'phone' => fake()->unique()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'api_token' => Str::random(10),
+            'photo' => null,
+            'level_id' => Level::all()->random(),
+            'role_id' => 1,
+            'api_token' => null,
+            'created_at' => now(),
+            'updated_at' => null
         ];
     }
 
@@ -37,7 +48,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

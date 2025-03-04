@@ -8,6 +8,12 @@ use App\Http\Requests\UpdateLessonRequest;
 
 class LessonController extends Controller
 {
+    public function generate()
+    {
+        $courses = Lesson::factory()->count(10)->create();
+        return $courses;
+    }
+
     /**
      * Display a listing of the resource.
      */

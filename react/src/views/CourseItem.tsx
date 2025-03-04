@@ -14,10 +14,11 @@ import Requested from "../components/Requested";
 
 import Modal from "../components/Modal";
 import { ModalInterface } from "../interfaces/modal";
+import { t } from "i18next";
 
 const CourseItem = () => {
 
-    const pageParameters = useParams();
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const course = useSelector<RootState, CourseItemInterface | null>((state) => state.courses.course);
     const limit = useSelector<RootState, number>((state) => state.lessonsLimit.limit);
@@ -27,18 +28,19 @@ const CourseItem = () => {
     const modal = useSelector<RootState, ModalInterface>((state) => state.modal.modal);
 
     useEffect(() => {
-        dispatch(fetchMyCoursesItem(Number(pageParameters.id)));
+        window.scrollTo(0, 0);
+        dispatch(fetchMyCoursesItem(id!));
 
-    }, [dispatch, pageParameters.id]);
+    }, [dispatch, id]);
 
     useEffect(() => {
         const pathname = window.location.pathname.slice(1);
 
         if (pathname.substring(0, pathname.indexOf('/')) === 'my-courses' && course?.access?.access_status == '') {
-            navigate('/courses/' + pageParameters.id);
+            navigate('/courses/' + id);
         }
 
-    }, [course, pageParameters.id, navigate])
+    }, [course, id, navigate])
 
 
     const handleClick = () => {
@@ -63,11 +65,11 @@ const CourseItem = () => {
                 status === 'succeeded' && course &&
                 <>
                     <Flex>
-                        <HeaderSection $access={course.access!.access_status}>
+                        <HeaderSection $access={course.access?.access_status}>
                             <CourseInfo>
                                 <h1>{course.course_name}</h1>
                                 {
-                                    course.access?.id_course_access && <p>{course.course_description}</p>
+                                    course.access?.access_status && <p>{course.course_description}</p>
                                 }
                                 <Characteristics>
                                     <LinkToResources
@@ -107,12 +109,12 @@ const CourseItem = () => {
                                 </Characteristics>
                                 {
                                     course.access?.access_status != 'enrolled' && course.access?.access_status != '' &&
-                                    <StyledButtons $access={course.access!.access_status}>
+                                    <StyledButtons $access={course.access?.access_status}>
                                         {
-                                            course.access!.access_status === 'requested' && <Requested access={course.access!.id_course_access} />
+                                            course.access?.access_status === 'requested' && <Requested access={course.access!.id_course_access} />
                                         }
                                         {
-                                            course.access!.access_status === 'expelled' && <p style={{ lineHeight: '1' }}>Вы были исключены</p>
+                                            course.access?.access_status === 'expelled' && <p style={{ lineHeight: '1' }}>Вы были исключены</p>
                                         }
                                     </StyledButtons>
                                 }
@@ -163,8 +165,8 @@ const CourseItem = () => {
                     </Program>
                     {
                         modal.state && <Modal
-                            header={'Подтверждение удаления заявки'}
-                            main={'Вы действительно хотите отозвать заявку?'}
+                            header={t('modal.header')}
+                            main={t('modal.main')}
                             access={modal.access}
                         />
                     }
@@ -203,7 +205,7 @@ const ShowMore = styled.button`
     cursor: pointer;
 `
 
-const StyledButtons = styled(Buttons) <{ $access: string }>`
+const StyledButtons = styled(Buttons) <{ $access: string | undefined }>`
     padding-top: 24px;
     min-height: ${props => props.$access === 'expelled' ? 'unset' : '35px'};
 
@@ -419,7 +421,7 @@ const CourseInfo = styled.div`
     }
 `
 
-const HeaderSection = styled.section <{ $access: string }>`
+const HeaderSection = styled.section <{ $access: string | undefined }>`
     width: ${props => props.$access ? '100%' : '70%'};
     max-width: ${props => props.$access ? '1288px' : 'unset'};
     display: flex;

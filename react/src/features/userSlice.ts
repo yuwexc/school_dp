@@ -17,10 +17,10 @@ const user: User = {
     'phone': null,
     'email': null,
     'photo': null,
-    'level_id': null,
+    'level': null,
+    'role': null,
     'password': null,
     'api_token': null,
-    'check_email': null,
     'created_at': null
 }
 
@@ -56,6 +56,25 @@ export const postUser = createAsyncThunk<string | null, User>(
 
             const { data } = await axios.post(PROJECT_URL + '/users', user);
             return data.token;
+
+        } catch {
+            return rejectWithValue("Не удалось зарегистрироваться!");
+        }
+    }
+)
+
+export const updateUser = createAsyncThunk<User, User>(
+    'user/updateUser',
+    async (user, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.post<User>(PROJECT_URL + '/user/update', user, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
+
+            return data;
 
         } catch {
             return rejectWithValue("Не удалось зарегистрироваться!");
@@ -146,6 +165,22 @@ const userSlice = createSlice({
                 state.token = action.payload;
             })
             .addCase(postUser.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                } else {
+                    state.status = 'failed';
+                }
+            })
+
+            .addCase(updateUser.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
+                state.status = 'succeeded';
+                state.user = action.payload;
+            })
+            .addCase(updateUser.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
                 } else {

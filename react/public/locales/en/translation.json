@@ -1,5 +1,11 @@
 {
     "error": "Sorry, our server is sad today :(",
+    "modal" : {
+        "header": "Confirmation of the deletion of the application",
+        "main": "Do you really want to withdraw the application?",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+    },
     "login": {
         "title": "Hi there!",
         "text": "Welcome to Limn. Online School",
@@ -63,6 +69,21 @@
             "words": "words",
             "score": "Average score",
             "progress": "Progress"
+        },
+        "myCourses": {
+            "title": "My courses",
+            "view": "view all my courses",
+            "author": "by",
+            "not": "You don't have any courses"
         }
+    },
+    "access": {
+        "requested": "Requested",
+        "enrolled": "Study",
+        "expelled": "Expelled"
+    },
+    "settings": {
+        "update": "Edit",
+        "language": "Language management"
     }
 }

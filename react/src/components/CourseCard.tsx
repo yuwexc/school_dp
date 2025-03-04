@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { ModalInterface } from "../interfaces/modal";
 import Modal from "./Modal";
+import { t } from "i18next";
 
 interface Props {
     course: CourseItemInterface
@@ -23,7 +24,7 @@ const CourseCard: FC<Props> = ({ course }) => {
         <Article>
             <IMG $src={course.image} />
             <Info>
-                <h2>{course.course_name}</h2>
+                <h2>{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}</h2>
                 <Description>{course.course_description}</Description>
                 <Characteristics>
                     <LinkToResources
@@ -81,8 +82,8 @@ const CourseCard: FC<Props> = ({ course }) => {
             </Info>
             {
                 modal.state && <Modal
-                    header={'Подтверждение удаления заявки'}
-                    main={'Вы действительно хотите отозвать заявку?'}
+                    header={t('modal.header')}
+                    main={t('modal.main')}
                     access={modal.access}
                 />
             }

@@ -7,12 +7,15 @@ import styled from "styled-components";
 import FieldLoader from "./FieldLoader";
 import Modal from "./Modal";
 import { ModalInterface } from "../interfaces/modal";
+import { useTranslation } from "react-i18next";
 
 const MyCourses = () => {
 
     const modal = useSelector<RootState, ModalInterface>((state) => state.modal.modal);
     const myCourses = useSelector<RootState, CourseItemInterface[] | null>((state) => state.courses.myCourses);
     const status = useSelector((state: State) => state.courses.status);
+
+    const { t } = useTranslation();
 
     return (
         <Section>
@@ -22,8 +25,8 @@ const MyCourses = () => {
                         <FieldLoader borderRadius={24} />
                         :
                         <>
-                            {'My courses | '}
-                            <Look href={'/my-courses'}><span>view all my courses</span> &#8594;</Look>
+                            {t('dashboard.myCourses.title') + ' | '}
+                            <Look href={'/my-courses'}><span>{t('dashboard.myCourses.view')}</span> &#8594;</Look>
                         </>
                 }
             </Title>
@@ -44,14 +47,14 @@ const MyCourses = () => {
                                     />
                                 )
                                 :
-                                <p>У вас нет курсов</p>
+                                <p>{t('dashboard.myCourses.not')}</p>
                         }
                     </>
             }
             {
                 modal.state && <Modal
-                    header={'Подтверждение удаления заявки'}
-                    main={'Вы действительно хотите отозвать заявку?'}
+                    header={t('modal.header')}
+                    main={t('modal.main')}
                     access={modal.access}
                 />
             }

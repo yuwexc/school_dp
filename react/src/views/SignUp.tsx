@@ -182,21 +182,44 @@ const SignUp = () => {
                                 <div>
                                     <div>
                                         <label htmlFor="first_name">{t('sign_up.first_name')}</label>
-                                        <Input {...register('first_name', { required: { value: true, message: t('sign_up.empty') } })} type="text" placeholder={t('sign_up.first_name_placeholder')} autoComplete="name" id="first_name" />
+                                        <Input {...register('first_name', {
+                                            required: {
+                                                value: true, message: t('sign_up.empty', {
+                                                    pattern: {
+                                                        value: /[a-zA-zа-яА-ЯёЁ]$/,
+                                                        message: t('sign_up.incorrect')
+                                                    }
+                                                })
+                                            }
+                                        })} type="text" placeholder={t('sign_up.first_name_placeholder')} autoComplete="name" id="first_name" />
                                         {
                                             errors && <Message>{errors.first_name?.message}</Message>
                                         }
                                     </div>
                                     <div>
                                         <label htmlFor="last_name">{t('sign_up.last_name')}</label>
-                                        <Input {...register('last_name', { required: { value: true, message: t('sign_up.empty') } })} type="text" placeholder={t('sign_up.last_name_placeholder')} autoComplete="family-name" id="last_name" />
+                                        <Input {...register('last_name', {
+                                            required: {
+                                                value: true, message: t('sign_up.empty', {
+                                                    pattern: {
+                                                        value: /[a-zA-zа-яА-ЯёЁ]$/,
+                                                        message: t('sign_up.incorrect')
+                                                    }
+                                                })
+                                            }
+                                        })} type="text" placeholder={t('sign_up.last_name_placeholder')} autoComplete="family-name" id="last_name" />
                                         {
                                             errors && <Message>{errors.last_name?.message}</Message>
                                         }
                                     </div>
                                     <div>
                                         <label htmlFor="middle_name">{t('sign_up.middle_name')}</label>
-                                        <Input {...register('middle_name')} type="text" placeholder={t('sign_up.middle_name_placeholder')} autoComplete="additional-name" id="middle_name" />
+                                        <Input {...register('middle_name', {
+                                            pattern: {
+                                                value: /[a-zA-zа-яА-ЯёЁ]$/,
+                                                message: t('sign_up.incorrect')
+                                            }
+                                        })} type="text" placeholder={t('sign_up.middle_name_placeholder')} autoComplete="additional-name" id="middle_name" />
                                         {
                                             errors && <Message>{errors.middle_name?.message}</Message>
                                         }

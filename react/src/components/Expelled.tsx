@@ -1,9 +1,13 @@
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 const Expelled = () => {
+
+    const { t } = useTranslation();
+
     return (
         <ExpelledBlock>
-            <p style={{ fontSize: '14px' }}>Expelled</p>
+            <p style={{ fontSize: '14px' }}>{t('access.expelled')}</p>
         </ExpelledBlock>
     )
 }

@@ -8,17 +8,82 @@ use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Lesson;
 use App\Models\LessonStatus;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
+    public function generate()
+    {
+        $courses = Course::factory()->has(
+            Lesson::factory()->count(7)->state(
+                function (array $attributes, Course $course) {
+                    return [
+                        'course_id' => $course->id_course
+                    ];
+                }
+            ),
+            'lessons'
+        )->count(10)->create();
+        return $courses;
+    }
+
     /**
      * Display a listing of the resource.
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $count = Course::all()->count();
+
+        if ($request->level_id && !$request->category_id) {
+            $courses = Course::whereLevelId($request->level_id);
+
+            $count = $courses->count();
+
+            $courses = $courses->orderByDesc('created_at')
+                ->limit($request->pageIndex * $request->pageSize)->get()->all();
+        }
+
+        if (!$request->level_id && $request->category_id) {
+            $courses = Course::whereCategoryId($request->category_id);
+
+            $count = $courses->count();
+
+            $courses = $courses->orderByDesc('created_at')
+                ->limit($request->pageIndex * $request->pageSize)->get()->all();
+        }
+
+        if ($request->level_id && $request->category_id) {
+            $courses = Course::whereCategoryId($request->category_id)
+                ->whereLevelId($request->level_id);
+
+            $count = $courses->count();
+
+            $courses = $courses->orderByDesc('created_at')
+                ->limit($request->pageIndex * $request->pageSize)->get()->all();
+        }
+
+        if (!$request->level_id && !$request->category_id) {
+            $courses = Course::orderByDesc('created_at')
+                ->orderByDesc('created_at')
+                ->limit($request->pageIndex * $request->pageSize)->get()->all();
+            ;
+        }
+
+        foreach ($courses as $course) {
+            $course->level = $course->level()->get()->first();
+            $category = $course->category()->get()->first();
+            $course->category = $category ? $category->category_name : null;
+            unset($course->level_id, $course->category_id);
+        }
+
+        return response([
+            "courses" => $courses,
+            "currentPage" => $request->pageIndex,
+            "pageSize" => $request->pageSize,
+            "totalPages" => ceil($count / $request->pageSize)
+        ], 200);
     }
 
     public function my_courses()
@@ -136,9 +201,8 @@ class CourseController extends Controller
             ->where(
                 'lesson_status',
                 LessonStatus::where('status_code', 'published')->get()->first()->id_status
-            )
-            ->get()
-            ->sortBy('lesson_number');
+            )->orderBy('lesson_number')
+            ->get();
 
         foreach ($lessons as $lesson) {
             $done = null;

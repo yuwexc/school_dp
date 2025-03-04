@@ -10,6 +10,12 @@ use Request;
 
 class CourseAccessController extends Controller
 {
+    public function generate()
+    {
+        $courses = CourseAccess::factory()->count(10)->create();
+        return $courses;
+    }
+
     /**
      * Display a listing of the resource.
      */

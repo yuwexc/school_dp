@@ -7,10 +7,15 @@ import FieldLoader from "../components/FieldLoader";
 import { useEffect } from "react";
 import { fetchMyCourses } from "../features/courseSlice";
 import CourseCard from "../components/CourseCard";
+import { useTranslation } from "react-i18next";
+import { User } from "../interfaces/user";
+import Course from "../components/Course";
 
 const MyCourses = () => {
 
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const dispatch = useDispatch<AppDispatch>();
+    const { t } = useTranslation();
 
     useEffect(() => {
         dispatch(fetchMyCourses());
@@ -26,7 +31,7 @@ const MyCourses = () => {
                     status === 'loading' ?
                         <FieldLoader borderRadius={24} />
                         :
-                        'My courses'
+                        t('dashboard.myCourses.title')
                 }
             </Title>
             <Courses>
@@ -40,11 +45,15 @@ const MyCourses = () => {
                         <>
                             {
                                 myCourses?.length != 0 ?
-                                    myCourses?.map((course, index) =>
-                                        <CourseCard course={course} key={index} />
-                                    )
+                                    myCourses?.map((course, index) => {
+                                        if (user.role?.role_code === 'student') {
+                                            return <CourseCard course={course} key={index} />
+                                        } else {
+                                            return <Course course={course} key={index} />
+                                        }
+                                    })
                                     :
-                                    <p>У вас нет курсов</p>
+                                    <p>{t('dashboard.myCourses.not')}</p>
                             }
                         </>
                 }

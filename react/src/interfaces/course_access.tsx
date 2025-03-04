@@ -1,5 +1,5 @@
 export default interface CourseAccessItemInterface {
-    id_course_access: number,
-    course_id: number,
+    id_course_access: string,
+    course_id: string,
     access_status: string
 }
