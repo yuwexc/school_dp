@@ -25,7 +25,7 @@ class UserController extends Controller
         $user = auth()->user();
         $user->level = $user->level()->get()->first();
         $user->role = $user->role()->get()->first();
-        unset($user->id_user, $user->email_verified_at, $user->level_id, $user->role_id, $user->updated_at, $user->api_token);
+        unset($user->email_verified_at, $user->level_id, $user->role_id, $user->updated_at, $user->api_token);
         return response($user, 200);
     }
 
@@ -54,7 +54,7 @@ class UserController extends Controller
             $user->middle_name = $input['middle_name'];
             $user->phone = $input['phone'];
             $user->email = $input['email'];
-            $user->level_id = $input['level_id'];
+            $user->level_id = $input['level']['id_level'];
             $user->api_token = Str::random(80);
             //$user->password = Crypt::encryptString($input['password']);
             $user->password = Hash::make($input['password']);
@@ -122,6 +122,9 @@ class UserController extends Controller
     {
         $user = User::where('id_user', auth()->user()->id_user)->get()->first();
         $user->update($request->all());
+        $user->level = $user->level()->get()->first();
+        $user->role = $user->role()->get()->first();
+        unset($user->email_verified_at, $user->level_id, $user->role_id, $user->updated_at, $user->api_token);
         return response($user, 200);
     }
 

@@ -36,7 +36,7 @@ class CourseAccessController extends Controller
         if (!$attempt) {
 
             $access = new CourseAccess();
-            $access->course_id = (int) $id;
+            $access->course_id = $id;
             $access->student = auth()->user()->id_user;
             $access->status_id = AccessStatus::where('status_code', 'requested')->get()->first()->id_access_status;
 

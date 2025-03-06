@@ -104,6 +104,10 @@ const Settings = () => {
     useEffect(onLoad, []);
 
     const onSubmit: SubmitHandler<User> = async (data) => {
+        if (data.phone![0] === '8') {
+            data.phone = '+7' + data.phone!.split('').splice(1).join('');
+        }
+        
         dispatch(updateUser(data));
     }
 
@@ -195,10 +199,10 @@ const Settings = () => {
                     </div>
                 </InfoBlock>
                 {
-                    user.level?.id_level == null && errorLevel && <h3>{t('sign_up.additional')}</h3>
+                    user.role?.role_code === 'student' && user.level?.id_level == null && errorLevel && <h3>{t('sign_up.additional')}</h3>
                 }
                 {
-                    user.level?.id_level == null && errorLevel &&
+                    user.role?.role_code === 'student' && user.level?.id_level == null && errorLevel &&
                     <Levels>
                         <div>
                             <label htmlFor="level">{t('sign_up.level')}</label>

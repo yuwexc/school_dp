@@ -15,11 +15,14 @@ import Requested from "../components/Requested";
 import Modal from "../components/Modal";
 import { ModalInterface } from "../interfaces/modal";
 import { t } from "i18next";
+import { User } from "../interfaces/user";
 
 const CourseItem = () => {
 
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const course = useSelector<RootState, CourseItemInterface | null>((state) => state.courses.course);
     const limit = useSelector<RootState, number>((state) => state.lessonsLimit.limit);
     const status = useSelector((state: State) => state.courses.status);
@@ -40,12 +43,14 @@ const CourseItem = () => {
             navigate('/courses/' + id);
         }
 
-    }, [course, id, navigate])
+    }, [course, id, navigate, user.id_user])
 
 
     const handleClick = () => {
         if (localStorage.getItem('ACCESS_TOKEN')) {
-            dispatch(requestAddMyCoursesItem(course!.id_course));
+            dispatch(requestAddMyCoursesItem(course!.id_course)).then(() => {
+                dispatch(fetchMyCoursesItem(id!));
+            });
         } else {
             navigate('/login');
         }
@@ -67,7 +72,7 @@ const CourseItem = () => {
                     <Flex>
                         <HeaderSection $access={course.access?.access_status}>
                             <CourseInfo>
-                                <h1>{course.course_name}</h1>
+                                <h1>{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}</h1>
                                 {
                                     course.access?.access_status && <p>{course.course_description}</p>
                                 }
@@ -94,7 +99,7 @@ const CourseItem = () => {
                                                     <path d="M3291 2275 c-224 -41 -406 -224 -446 -450 -20 -113 -20 -767 0 -879 30 -167 146 -321 299 -396 125 -62 152 -65 596 -65 439 0 474 4 594 68 79 41 192 154 233 233 64 120 68 155 68 594 0 444 -3 471 -65 596 -75 153 -229 269 -396 299 -109 20 -775 19 -883 0z" />
                                                 </g>
                                             </svg>
-                                            <p>{course.category}</p>
+                                            <p>{course.category.category_name}</p>
                                         </LinkToResources>
                                     }
                                     <Author>
@@ -321,6 +326,7 @@ const Offer = styled.section`
     & > h2 {
         width: 100%;
         white-space: pre-wrap;
+        text-wrap: nowrap;
         font-weight: 600;
         font-size: 32px;
         color: white;

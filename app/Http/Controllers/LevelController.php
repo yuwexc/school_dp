@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Level;
 use App\Http\Requests\StoreLevelRequest;
 use App\Http\Requests\UpdateLevelRequest;
@@ -14,6 +15,9 @@ class LevelController extends Controller
     public function index()
     {
         $levels = Level::all();
+        foreach ($levels as $level) {
+            $level->count = Course::where('level_id', $level->id_level)->count();
+        }
         return response($levels, 200);
     }
 

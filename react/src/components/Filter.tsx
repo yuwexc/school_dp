@@ -57,7 +57,7 @@ const Filter: FC<Props> = ({ setLevel, setCategory }) => {
                 <Select ref={levelRef} id="level" onChange={(e) => setLevel(Number(e.target.value))}>
                     <option value={''}></option>
                     {
-                        levels && levels.map((level) => <option value={level.id_level} key={level.id_level}>{level.level_code} {level.level_title} {localStorage.getItem('INTERFACE_LANGUAGE') == 'ru' ? '- ' + level.level_name.toLocaleLowerCase() : null}</option>)
+                        levels && levels.map((level) => <option value={level.id_level} key={level.id_level}>{level.level_code} {level.level_title} {localStorage.getItem('INTERFACE_LANGUAGE') == 'ru' ? '- ' + level.level_name.toLocaleLowerCase() : null} ({level.count})</option>)
                     }
                 </Select>
             }

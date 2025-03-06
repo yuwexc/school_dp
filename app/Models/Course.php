@@ -15,6 +15,8 @@ class Course extends Model
     protected $table = 'courses';
     protected $primaryKey = 'id_course';
 
+    protected $fillable = ['course_name', 'course_description', 'level_id', 'category_id'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author', 'id_user');

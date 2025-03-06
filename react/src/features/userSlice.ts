@@ -11,6 +11,7 @@ interface UserState {
 }
 
 const user: User = {
+    'id_user': null,
     'first_name': null,
     'last_name': null,
     'middle_name': null,

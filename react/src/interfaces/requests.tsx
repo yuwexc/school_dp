@@ -1,5 +1,5 @@
+import { CoursesState } from "../features/courseSlice";
 import { AchievementItemInterface } from "./achievement";
-import { CourseItemInterface } from "./course";
 import { User } from "./user";
 
 export const PROJECT_URL: string = "https://dp-chernaev.xn--80ahdri7a.site/api";
@@ -22,14 +22,8 @@ interface AchievementResponse {
     status: string | null
 }
 
-interface CourseResponse {
-    myCourses: CourseItemInterface[],
-    error: string | null,
-    status: string | null
-}
-
 export interface State {
     user: UserResponse,
     achievements: AchievementResponse,
-    courses: CourseResponse
+    courses: CoursesState,
 }

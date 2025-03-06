@@ -3,6 +3,7 @@ import { CourseItemInterface } from "../interfaces/course";
 import { PROJECT_URL } from "../interfaces/requests";
 import axios from "axios";
 import CourseAccessItemInterface from "../interfaces/course_access";
+import { FieldValues } from "../views/EditCourseProperty";
 
 export interface Request {
     pageIndex: number,
@@ -94,13 +95,30 @@ export const fetchMyCourses = createAsyncThunk<CourseItemInterface[]>(
         }
     }
 );
+export const updateCourse = createAsyncThunk<CourseItemInterface, FieldValues>(
+    'courses/updateCourse',
+    async (course, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.patch<CourseItemInterface>(PROJECT_URL + '/courses/' + course.id, course, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
+            return data;
+
+        } catch {
+            return rejectWithValue("Не удалось редактировать курс!");
+        }
+    }
+);
 
 export const requestAddMyCoursesItem = createAsyncThunk<CourseAccessItemInterface, string>(
     'courses/requestAddMyCoursesItem',
     async (id, { rejectWithValue }) => {
         try {
 
-            const { data } = await axios.post<CourseAccessItemInterface>(PROJECT_URL + '/my-courses/' + id + '/request', {
+            const { data } = await axios.post<CourseAccessItemInterface>(PROJECT_URL + '/my-courses/' + id + '/request', null, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
                 }
@@ -195,14 +213,28 @@ const coursesSlice = createSlice({
 
             //post
 
+            .addCase(updateCourse.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(updateCourse.fulfilled, (state, action: PayloadAction<CourseItemInterface>) => {
+                state.status = 'succeeded';
+                state.course = action.payload;
+            })
+            .addCase(updateCourse.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                } else {
+                    state.status = 'failed';
+                }
+            })
+
             .addCase(requestAddMyCoursesItem.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(requestAddMyCoursesItem.fulfilled, (state, action: PayloadAction<CourseAccessItemInterface>) => {
+            .addCase(requestAddMyCoursesItem.fulfilled, (state) => {
                 state.status = 'succeeded';
-                const id = state.myCourses!.findIndex(item => item.id_course === action.payload.course_id);
-                state.myCourses![id].access = action.payload;
             })
             .addCase(requestAddMyCoursesItem.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {

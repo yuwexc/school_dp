@@ -2,6 +2,7 @@ import { Level } from "./level";
 import { Role } from "./role";
 
 export interface User {
+    id_user: number | null,
     first_name: string | null,
     last_name: string | null,
     middle_name: string | null,

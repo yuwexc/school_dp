@@ -288,14 +288,14 @@ const SignUp = () => {
                                     <div>
                                         <div>
                                             <label htmlFor="level">{t('sign_up.level')}</label>
-                                            <Select {...register('level_id')} id="level">
+                                            <Select {...register('level.id_level')} id="level">
                                                 <option value={''}></option>
                                                 {
                                                     levels && levels.map((level) => <option value={level.id_level} key={level.id_level}>{level.level_code} {level.level_title} {localStorage.getItem('INTERFACE_LANGUAGE') == 'ru' ? '- ' + level.level_name.toLocaleLowerCase() : null}</option>)
                                                 }
                                             </Select>
                                             {
-                                                errors && <Message>{errors.level_id?.message}</Message>
+                                                errors && <Message>{errors.level?.id_level?.message}</Message>
                                             }
                                         </div>
                                     </div>

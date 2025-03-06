@@ -74,7 +74,7 @@ class CourseController extends Controller
         foreach ($courses as $course) {
             $course->level = $course->level()->get()->first();
             $category = $course->category()->get()->first();
-            $course->category = $category ? $category->category_name : null;
+            $course->category = $category ? $category : null;
             unset($course->level_id, $course->category_id);
         }
 
@@ -137,7 +137,7 @@ class CourseController extends Controller
                     "course_name" => $course->course_name,
                     "course_description" => $course->course_description,
                     "level" => $course->level()->select(['level_code', 'level_title', 'level_name'])->get()->first(),
-                    "category" => $category ? $category->category_name : null,
+                    "category" => $category ? $category : null,
                     "image" => $course->image,
                     "author" => $course->user()->select(['first_name', 'last_name'])->get()->first(),
                     "access" => [
@@ -226,9 +226,9 @@ class CourseController extends Controller
             "course_name" => $course->course_name,
             "course_description" => $course->course_description,
             "level" => $course->level()->select(['level_code', 'level_title', 'level_name'])->get()->first(),
-            "category" => $category ? $category->category_name : null,
+            "category" => $category ? $category : null,
             "image" => $course->image,
-            "author" => $course->user()->select(['first_name', 'last_name'])->get()->first(),
+            "author" => $course->user()->get()->first(),
             "access" => [
                 "id_course_access" => $id_course_access,
                 "access_status" => $status
@@ -242,9 +242,11 @@ class CourseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Course $course)
+    public function edit($id, Request $request)
     {
-        //
+        $course = Course::where('id_course', $id)->get()->first();
+        $course->update($request->all());
+        return $this->show($id);
     }
 
     /**

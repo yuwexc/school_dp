@@ -8,9 +8,11 @@ import FieldLoader from "./FieldLoader";
 import Modal from "./Modal";
 import { ModalInterface } from "../interfaces/modal";
 import { useTranslation } from "react-i18next";
+import { User } from "../interfaces/user";
 
 const MyCourses = () => {
 
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const modal = useSelector<RootState, ModalInterface>((state) => state.modal.modal);
     const myCourses = useSelector<RootState, CourseItemInterface[] | null>((state) => state.courses.myCourses);
     const status = useSelector((state: State) => state.courses.status);
@@ -18,8 +20,8 @@ const MyCourses = () => {
     const { t } = useTranslation();
 
     return (
-        <Section>
-            <Title>
+        <Section $role={user.role?.role_code}>
+            <Title $role={user.role?.role_code}>
                 {
                     status === 'loading' ?
                         <FieldLoader borderRadius={24} />
@@ -70,29 +72,30 @@ const Look = styled.a`
     }
 `
 
-const Title = styled.h2`
+const Title = styled.h2<{ $role: string | undefined }>`
     width: 100%;
     text-wrap: nowrap;
+    ${props => props.$role == 'teacher' ? 'margin-bottom: 12px' : null};
 
     @media (width <= 768px) {
         font-size: 16px;
     }
 `
 
-const Section = styled.section`
+const Section = styled.section<{ $role: string | undefined }>`
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: ${props => props.$role == 'teacher' ? '12px' : '24px'};
 
     @media (577px <= width <= 768px) {
-        gap: 20px;
+        gap: ${props => props.$role == 'teacher' ? '12px' : '20px'};
     }
 
     @media (425px <= width <= 576px) {
-        gap: 16px;
+        gap: ${props => props.$role == 'teacher' ? '12px' : '16px'};
     }
 
     @media (425px >= width) {
-        gap: 12px;
+        gap: ${props => props.$role == 'teacher' ? '12px' : '12px'};
     }
 `

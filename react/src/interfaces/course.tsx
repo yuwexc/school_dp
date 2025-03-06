@@ -1,3 +1,4 @@
+import { Category } from "./category";
 import CourseAccessItemInterface from "./course_access";
 import { Lesson } from "./lesson";
 import { Level } from "./level";
@@ -8,7 +9,7 @@ export interface CourseItemInterface {
     course_name: string,
     course_description: string,
     level: Level,
-    category: string | null,
+    category: Category | null,
     image: string | null,
     author: User,
     access: CourseAccessItemInterface | null,

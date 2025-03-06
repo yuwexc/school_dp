@@ -12,6 +12,8 @@ import Settings from "./views/Settings";
 import MyCourses from "./views/MyCourses";
 import CourseItem from "./views/CourseItem";
 import Lesson from "./views/Lesson";
+import CourseTeacherView from "./views/CourseTeacherView";
+import EditCourseProperty from "./views/EditCourseProperty";
 
 const router = createBrowserRouter([
     {
@@ -40,7 +42,15 @@ const router = createBrowserRouter([
             { path: '/my-courses', element: <MyCourses /> },
             { path: '/my-courses/:id', element: <CourseItem /> },
             { path: '/settings', element: <Settings /> },
-            { path: '/lessons/:id', element: <Lesson /> },
+            { path: '/lessons/:id', element: <Lesson /> }
+        ]
+    },
+    {
+        path: '/',
+        element: <StudentLayout />,
+        children: [
+            { path: '/teacher/courses/:id', element: <CourseTeacherView /> },
+            { path: '/teacher/courses/:id/edit/:property', element: <EditCourseProperty /> },
         ]
     }
 ])

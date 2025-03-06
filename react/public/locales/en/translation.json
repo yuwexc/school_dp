@@ -83,7 +83,15 @@
         "expelled": "Expelled"
     },
     "settings": {
-        "update": "Edit",
+        "update": "Save",
         "language": "Language management"
+    },
+    "update": {
+        "course": {
+            "course_name": "Course name",
+            "course_description": "Course description",
+            "level_id": "Course level",
+            "category_id": "Course category"
+        }
     }
 }

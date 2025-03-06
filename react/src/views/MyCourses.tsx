@@ -34,7 +34,7 @@ const MyCourses = () => {
                         t('dashboard.myCourses.title')
                 }
             </Title>
-            <Courses>
+            <Courses $role={user.role?.role_code}>
                 {
                     status === 'loading' ?
                         <>
@@ -64,10 +64,11 @@ const MyCourses = () => {
 
 export default MyCourses;
 
-const Courses = styled.div`
+const Courses = styled.div<{ $role: string | undefined }>`
     display: flex;
+    flex-direction: ${props => props.$role == 'student' ? 'row' : 'column'};
     flex-wrap: wrap;
-    gap: 24px;
+    gap: ${props => props.$role == 'student' ? '24px' : '12px'};
 `
 
 const Title = styled.h2`

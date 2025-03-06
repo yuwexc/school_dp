@@ -20,11 +20,11 @@ const Courses = () => {
 
     useEffect(() => {
         dispatch(fetchCourses({
-            pageIndex: pageIndex,
+            pageIndex: 1,
             level_id: '',
             category_id: ''
         }));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(fetchCourses({
@@ -81,7 +81,7 @@ const Courses = () => {
                             hasMore={pageIndex < courses.totalPages}
                         >
                             {
-                                courses.courses && courses.courses.map((course, index) =>
+                                courses.courses.map((course, index) =>
                                     <CourseCardCatalog course={course} key={index} />)
                             }
                         </InfiniteScroll>

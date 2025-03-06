@@ -4,7 +4,8 @@ export interface Level {
     level_name: string
     level_title: string
     created_at: string
-    updated_at: string | null
+    updated_at: string | null,
+    count: number
 }
 
 export const LevelColors = new Map<string, string>([

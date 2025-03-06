@@ -6,6 +6,10 @@ import Expelled from "./Expelled";
 import Enrolled from "./Enrolled";
 import CourseLevel from "./CourseLevel";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { User } from "../interfaces/user";
+import { Link } from "react-router-dom";
 
 interface Props {
     course: CourseItemInterface
@@ -15,13 +19,20 @@ const Course: FC<Props> = ({ course }) => {
 
     const { t } = useTranslation();
 
+    const user = useSelector<RootState, User>((state) => state.user.user);
+
     return (
-        <Article>
+        <Article $role={user.role?.role_code}>
             <div>
-                <IMG $src={course.image} />
+                {
+                    user.role?.role_code === 'student' && <IMG $src={course.image} />
+                }
                 <CourseLevel level={course.level} />
                 <h2>"{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}"</h2>
-                <Author>{t('dashboard.myCourses.author')} {course.author.first_name + ' ' + course.author.last_name}</Author>
+                {
+                    user.role?.role_code == 'student' &&
+                    <Author>{t('dashboard.myCourses.author')} {course.author.first_name + ' ' + course.author.last_name}</Author>
+                }
             </div>
             {
                 course.access!.access_status === 'requested' && <Requested access={course.access!.id_course_access} />
@@ -31,6 +42,12 @@ const Course: FC<Props> = ({ course }) => {
             }
             {
                 course.access!.access_status === 'expelled' && <Expelled />
+            }
+            {
+                user.role?.role_code === 'teacher' &&
+                <Link style={{ color: '#6c5ce7', fontWeight: '600', alignSelf: 'center', marginRight: '6px' }} to={'/teacher/courses/' + course.id_course}>
+                    Перейти
+                </Link>
             }
         </Article>
     )
@@ -58,7 +75,7 @@ const IMG = styled.div <{ $src: string | null }>`
     }
 `
 
-const Article = styled.article`
+const Article = styled.article<{ $role: string | undefined }>`
     flex-grow: 1;
     display: flex;
     flex-direction: row;
@@ -67,7 +84,7 @@ const Article = styled.article`
     gap: 24px;
     padding: 14px;
     background-color: whitesmoke;
-    border-radius: 24px;
+    border-radius: ${props => props.$role == 'student' ? '24px' : '12px'};
 
     & > div {
         display: flex;
