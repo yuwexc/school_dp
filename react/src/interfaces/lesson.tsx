@@ -18,3 +18,24 @@ export const MarkColors = new Map<number, string>([
     [3, '#f16b4d'],
     [2, '#eb3b5a']
 ])
+
+export interface Word {
+    id: number
+    english: string
+    transcription: string
+    russian: string
+}
+
+export interface Sentence {
+    id: number,
+    english: string,
+    russian: string,
+    score: number
+}
+
+export interface Exercise {
+    id: number,
+    name: string,
+    description: string
+    tasks: Sentence[]
+}

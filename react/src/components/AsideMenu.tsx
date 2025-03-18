@@ -139,7 +139,7 @@ const LogOutButton = styled.button`
     }
 
     &:disabled {
-            cursor: unset;
+        cursor: unset;
     }
 
     &:disabled > div {

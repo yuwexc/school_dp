@@ -15,7 +15,7 @@ class Course extends Model
     protected $table = 'courses';
     protected $primaryKey = 'id_course';
 
-    protected $fillable = ['course_name', 'course_description', 'level_id', 'category_id'];
+    protected $fillable = ['course_name', 'course_description', 'level_id', 'category_id', 'image'];
 
     public function user(): BelongsTo
     {

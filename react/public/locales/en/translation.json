@@ -91,7 +91,8 @@
             "course_name": "Course name",
             "course_description": "Course description",
             "level_id": "Course level",
-            "category_id": "Course category"
+            "category_id": "Course category",
+            "image": "Course icon"
         }
     }
 }

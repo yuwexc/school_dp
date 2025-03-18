@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { fetchMyCoursesItem, requestAddMyCoursesItem } from "../features/courseSlice";
 import { State } from "../interfaces/requests";
-import { changeLimit } from "../features/lessonsLimit";
+import { changeLimit, resetLimit } from "../features/lessonsLimit";
 import LessonCard from "../components/LessonCard";
 import { Author, Buttons, Characteristics, LinkToResources } from "../components/CourseCard";
 import { LevelColors } from "../interfaces/level";
@@ -44,6 +44,10 @@ const CourseItem = () => {
         }
 
     }, [course, id, navigate, user.id_user])
+
+    useEffect(() => {
+        dispatch(resetLimit());
+    }, [dispatch])
 
 
     const handleClick = () => {

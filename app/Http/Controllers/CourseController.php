@@ -9,7 +9,8 @@ use App\Models\Lesson;
 use App\Models\LessonStatus;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
@@ -244,8 +245,19 @@ class CourseController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $course = Course::where('id_course', $id)->get()->first();
-        $course->update($request->all());
+        $file = $request->file('image');
+
+        if ($file) {
+            $name = Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $path = $_SERVER['HTTP_HOST'] . '/images/' . $name;
+            Storage::putFileAs('images', $file, $name);
+            $course = Course::where('id_course', $id)->get()->first();
+            $course->image = $path;
+            $course->save();
+        } else {
+            $course = Course::where('id_course', $id)->get()->first();
+            $course->update($request->all());
+        }
         return $this->show($id);
     }
 

@@ -39,7 +39,7 @@ export const Dashboard = styled.div<{ $isHovered: boolean }>`
     }
 `
 
-const StyledStudentLayout = styled.div`
+export const StyledStudentLayout = styled.div`
     width: 100%;
     min-height: 100dvh;
     background-color: #ebebeb;

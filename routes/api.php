@@ -55,7 +55,7 @@ Route::controller(CourseController::class)->group(function () {
     Route::get('/courses/generate', 'generate');
 
     Route::get('/my-courses', 'my_courses')->middleware('auth:api');
-    Route::patch('/courses/{id}', 'edit')->middleware('auth:api');
+    Route::post('/courses/{id}', 'edit')->middleware('auth:api');
     Route::get('/courses', 'index');
     Route::get('/courses/{id}', 'show');
 });

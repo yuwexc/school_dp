@@ -14,8 +14,11 @@ export const lessonsLimitSlice = createSlice({
         changeLimit: (state) => {
             state.limit += 4;
         },
+        resetLimit: (state) => {
+            state.limit = 3;
+        }
     },
 });
 
-export const { getLimit, changeLimit } = lessonsLimitSlice.actions;
+export const { getLimit, changeLimit, resetLimit } = lessonsLimitSlice.actions;
 export default lessonsLimitSlice.reducer;

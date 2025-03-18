@@ -14,6 +14,7 @@ import CourseItem from "./views/CourseItem";
 import Lesson from "./views/Lesson";
 import CourseTeacherView from "./views/CourseTeacherView";
 import EditCourseProperty from "./views/EditCourseProperty";
+import CreateLessonView from "./views/CreateLessonView";
 
 const router = createBrowserRouter([
     {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
         children: [
             { path: '/teacher/courses/:id', element: <CourseTeacherView /> },
             { path: '/teacher/courses/:id/edit/:property', element: <EditCourseProperty /> },
+            { path: '/teacher/courses/:id/create-lesson', element: <CreateLessonView /> },
         ]
     }
 ])

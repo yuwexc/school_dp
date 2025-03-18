@@ -100,7 +100,7 @@ export const updateCourse = createAsyncThunk<CourseItemInterface, FieldValues>(
     async (course, { rejectWithValue }) => {
         try {
 
-            const { data } = await axios.patch<CourseItemInterface>(PROJECT_URL + '/courses/' + course.id, course, {
+            const { data } = await axios.post<CourseItemInterface>(PROJECT_URL + '/courses/' + course.id, course, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
                 }
