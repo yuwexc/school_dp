@@ -42,10 +42,3 @@ input {
 footer {
     flex: 0 0 auto;
 }
-
-/*@media (width <=376px) {
-    #root {
-        padding-top: 140px;
-        min-height: calc(100dvh - 140px);
-    }
-}*/

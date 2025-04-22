@@ -10,6 +10,7 @@ import { Characteristics, LinkToResources } from "../components/CourseCard";
 import { LevelColors } from "../interfaces/level";
 import { User } from "../interfaces/user";
 import { Button } from "../styles/forms";
+import LessonLine from "../components/LessonLine";
 
 const CourseTeacherView = () => {
 
@@ -96,7 +97,7 @@ const CourseTeacherView = () => {
                                         </LinkToResources>
                                     }
 
-                                    <LinkToResources to={'/topics'}>
+                                    <LinkToResources to={''}>
                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="16px" height="16px" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
                                             <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000" stroke="none">
                                                 <path d="M3593 4755 c-144 -40 -207 -88 -499 -379 -316 -316 -369 -392 -393 -567 -19 -138 12 -271 91 -391 55 -83 543 -571 626 -626 119 -78 247 -108 387 -91 176 22 253 75 571 393 347 348 389 416 389 636 0 230 -25 271 -395 640 -295 295 -341 332 -459 374 -74 26 -244 32 -318 11z" />
@@ -143,10 +144,16 @@ const CourseTeacherView = () => {
                     <Intro>
                         <Flex>
                             <Title>Уроки</Title>
-                            <Button onClick={() => {
+                            <AddLessonButton onClick={() => {
                                 navigate('/teacher/courses/' + course.id_course + '/create-lesson');
-                            }}>+ новый урок</Button>
+                            }}>+ новый урок</AddLessonButton>
                         </Flex>
+                        {
+                            course.lessons?.map((lesson, index) => <LessonLine lesson={lesson} index={index + 1} key={index} />)
+                        }
+                        <AddLessonButtonEnd onClick={() => {
+                            navigate('/teacher/courses/' + course.id_course + '/create-lesson');
+                        }}>+ новый урок</AddLessonButtonEnd>
                     </Intro>
                 </>
             }
@@ -155,6 +162,20 @@ const CourseTeacherView = () => {
 }
 
 export default CourseTeacherView;
+
+const AddLessonButtonEnd = styled(Button)`
+    display: none;
+
+    @media (max-width: 767px) {
+        display: block;
+    }
+`
+
+const AddLessonButton = styled(Button)`
+    @media (max-width: 767px) {
+        display: none;
+    }
+`
 
 const Block = styled.div`
     display: flex;

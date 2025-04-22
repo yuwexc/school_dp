@@ -49,6 +49,9 @@ Route::controller(UserController::class)->group(function () {
 
 Route::controller(DoneController::class)->group(function () {
     Route::get('/dashboard', 'dashboard')->middleware('auth:api');
+    Route::post('/lessons/{id}/done', 'create')->middleware('auth:api');
+    Route::get('/user/{id_user}/lessons/{id_lesson}/done', 'show')->middleware('auth:api');
+    Route::post('/user/{id_user}/lessons/{id_lesson}/done', 'update')->middleware('auth:api');
 });
 
 Route::controller(CourseController::class)->group(function () {
@@ -68,5 +71,6 @@ Route::controller(CourseAccessController::class)->group(function () {
 });
 
 Route::controller(LessonController::class)->group(function () {
-    //
+    Route::get('/lessons/{id}', 'show')->middleware('auth:api');
+    Route::post('/courses/{course}/lessons', 'create')->middleware('auth:api');
 });

@@ -13,8 +13,18 @@ class Done extends Model
     protected $table = 'dones';
     protected $primaryKey = 'id_done';
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class, 'lesson_id', 'id_lesson');
+    }
+
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'student', 'id_user');
     }
 }

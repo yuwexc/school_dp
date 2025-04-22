@@ -15,6 +15,9 @@ import Lesson from "./views/Lesson";
 import CourseTeacherView from "./views/CourseTeacherView";
 import EditCourseProperty from "./views/EditCourseProperty";
 import CreateLessonView from "./views/CreateLessonView";
+import LessonLayout from "./layouts/LessonLayout";
+import CheckLessonView from "./views/CheckLessonView";
+import CheckLessonStudentAnswer from "./views/CheckLessonStudentAnswer";
 
 const router = createBrowserRouter([
     {
@@ -42,8 +45,7 @@ const router = createBrowserRouter([
             { path: '/dashboard', element: <Dashboard /> },
             { path: '/my-courses', element: <MyCourses /> },
             { path: '/my-courses/:id', element: <CourseItem /> },
-            { path: '/settings', element: <Settings /> },
-            { path: '/lessons/:id', element: <Lesson /> }
+            { path: '/settings', element: <Settings /> }
         ]
     },
     {
@@ -53,6 +55,15 @@ const router = createBrowserRouter([
             { path: '/teacher/courses/:id', element: <CourseTeacherView /> },
             { path: '/teacher/courses/:id/edit/:property', element: <EditCourseProperty /> },
             { path: '/teacher/courses/:id/create-lesson', element: <CreateLessonView /> },
+            { path: '/lessons/:id/unmarked', element: <CheckLessonView /> },
+            { path: '/user/:user/completed-lessons/:id/check', element: <CheckLessonStudentAnswer /> },
+        ]
+    },
+    {
+        path: '/',
+        element: <LessonLayout />,
+        children: [
+            { path: '/lessons/:id', element: <Lesson /> }
         ]
     }
 ])

@@ -1,9 +1,17 @@
 import styled from "styled-components";
-import { Button, Input, Title } from "../styles/forms";
+import { Button, Error, Input, Title } from "../styles/forms";
 import { ReactElement, useState } from "react";
 import LessonWordsSection from "../components/LessonWordsSection";
-import { Exercise, Word } from "../interfaces/lesson";
+import { Exercise, Theory, Word } from "../interfaces/lesson";
 import LessonTranslationExercise from "../components/LessonTranslationExercise";
+import LessonTheory from "../components/LessonTheory";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../store";
+import { State } from "../interfaces/requests";
+import { postLesson } from "../features/lessonSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../components/Loader";
+import { t } from "i18next";
 
 export interface ElementProps {
     id: number,
@@ -13,15 +21,15 @@ export interface ElementProps {
 const CreateLessonView = () => {
 
     const current_date: Date = new Date();
-    const date: string = current_date.getDate().toString() + '.' + (current_date.getMonth() + 1).toString().padStart(2, '0') + '.' + current_date.getFullYear().toString();
+    const date: string = current_date.getDate().toString().padStart(2, '0') + '.' + (current_date.getMonth() + 1).toString().padStart(2, '0') + '.' + current_date.getFullYear().toString();
 
-    const [lessonName, setLessonName] = useState<string>('Урок от ' + date);
+    const [lessonName, setLessonName] = useState<string>('От ' + date);
     const [lessonDescription, setLessonDescription] = useState<string>('');
     const [lessonWords, setLessonWords] = useState<Word[]>([]);
-    const [lessonExercises, setLessonExercises] = useState<Exercise[]>([]);
+    const [lessonBody, setLessonBody] = useState<(Exercise | Theory)[]>([]);
 
     const [displayedElements, setDisplayedElements] = useState<ReactElement<ElementProps>[]>([]);
-    const [newElementId, setNewElementId] = useState(0);
+    const [newElementId, setNewElementId] = useState<number>(0);
 
     const deleteElement = (id: number) => {
         setDisplayedElements((prevElements) =>
@@ -36,15 +44,21 @@ const CreateLessonView = () => {
     }
 
     const addExercise = (newExercise: Exercise) => {
-        setLessonExercises(prevState => [...prevState, newExercise]);
+        setLessonBody(prevState => prevState.filter(item => item.id != newExercise.id));
+        setLessonBody(prevState => [...prevState, newExercise]);
+    }
+
+    const addTheory = (newTheory: Theory) => {
+        setLessonBody(prevState => prevState.filter(item => item.id != newTheory.id));
+        setLessonBody(prevState => [...prevState, newTheory]);
     }
 
     const resetLessonWords = () => {
         setLessonWords([]);
     }
 
-    const deleteLessonExercise = (id: number) => {
-        setLessonExercises(prevState => prevState.filter(item => item.id != id));
+    const deleteLessonSection = (id: number) => {
+        setLessonBody(prevState => prevState.filter(item => item.id != id));
     }
 
     const elements = new Map<string, ReactElement<ElementProps>>([
@@ -56,13 +70,20 @@ const CreateLessonView = () => {
             resetLessonWords={resetLessonWords}
             deleteElement={() => deleteElement(newElementId)}
         />],
-        ['THEORY', ],
+        ['THEORY', <LessonTheory
+            id={newElementId}
+            key={newElementId}
+            type='THEORY'
+            addTheory={addTheory}
+            deleteLessonTheory={deleteLessonSection}
+            deleteElement={() => deleteElement(newElementId)}
+        />],
         ['TRANSLATION_EXERCISE', <LessonTranslationExercise
             id={newElementId}
             key={newElementId}
             type='TRANSLATION_EXERCISE'
             addExercise={addExercise}
-            deleteLessonExercise={deleteLessonExercise}
+            deleteLessonExercise={deleteLessonSection}
             deleteElement={() => deleteElement(newElementId)}
             displayedElements={displayedElements}
         />]
@@ -83,17 +104,21 @@ const CreateLessonView = () => {
         }), 100);
     };
 
+    const dispatch = useDispatch<AppDispatch>();
+    const { status } = useSelector((state: State) => state.lesson);
+    const parameters = useParams();
+    const navigate = useNavigate();
+
     const saveLesson = () => {
         const lesson = {
-            lesson_name: lessonName || 'Урок от ' + date,
-            lesson_description: lessonDescription || '',
-            lesson_body: {
-                "lesson_words": lessonWords,
-                "lesson_exercises": lessonExercises
-            }
+            lesson_name: lessonName || 'От ' + date,
+            lesson_description: lessonDescription || 'Этот урок обеспечит ощутимые результаты. Улучшите свою грамматику, словарный запас и навыки общения – всё за одно занятие!',
+            lesson_words: JSON.parse(JSON.stringify(lessonWords)),
+            lesson_body: JSON.parse(JSON.stringify(lessonBody))
         }
 
-        console.log(lesson);
+        dispatch(postLesson({ course: parameters.id!, lesson: lesson }))
+            .then(() => navigate('/teacher/courses/' + parameters.id));
     }
 
     return (
@@ -118,25 +143,30 @@ const CreateLessonView = () => {
                 displayedElements.length > 0 && displayedElements.map(element => element)
             }
             <Intro>
-                <Flex>
-                    <p>Добавить:</p>
+                <Title>Добавить в урок</Title>
+                <Buttons>
                     <ActonButton onClick={() => addLessonSection('LESSON_WORDS')}
                         disabled={displayedElements.includes(displayedElements.find(item => item.props.type === 'LESSON_WORDS')!)}>
                         Слова к уроку
                     </ActonButton>
-                    <ActonButton onClick={() => addLessonSection('')}
-                        disabled={displayedElements.includes(displayedElements.find(item => item.props.type === '')!)}>
+                    <ActonButton onClick={() => addLessonSection('THEORY')}>
                         Теорию
                     </ActonButton>
                     <ActonButton onClick={() => addLessonSection('TRANSLATION_EXERCISE')}>
                         Упражнение на перевод
                     </ActonButton>
-                </Flex>
+                </Buttons>
             </Intro>
             <Intro>
                 <Flex style={{ justifyContent: 'space-between' }}>
                     <Title>Готово?</Title>
-                    <Button onClick={saveLesson}>Сохранить урок*</Button>
+                    {
+                        status == 'loading' ? <Button disabled><Loader /></Button> :
+                            <Button onClick={saveLesson}>Сохранить урок*</Button>
+                    }
+                    {
+                        status === 'failed' && <Error>{t('error')}</Error>
+                    }
                 </Flex>
             </Intro>
             <p>*перед публикацией урок проверяется модераторами, он будет доступен в ближайшее время</p>
@@ -160,6 +190,16 @@ const Flex = styled.div`
         flex-direction: column;
         justify-content: unset;
         align-items: flex-start;
+    }
+`
+
+const Buttons = styled(Flex)`
+    flex-wrap: wrap;
+
+    @media (max-width: 767px) {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
     }
 `
 

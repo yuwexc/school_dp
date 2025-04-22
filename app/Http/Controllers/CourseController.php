@@ -16,16 +16,7 @@ class CourseController extends Controller
 {
     public function generate()
     {
-        $courses = Course::factory()->has(
-            Lesson::factory()->count(7)->state(
-                function (array $attributes, Course $course) {
-                    return [
-                        'course_id' => $course->id_course
-                    ];
-                }
-            ),
-            'lessons'
-        )->count(10)->create();
+        $courses = Course::factory()->count(10)->create();
         return $courses;
     }
 
@@ -198,12 +189,32 @@ class CourseController extends Controller
             $status = $access->status()->get()->first()->status_code;
         }
 
-        $lessons = $course->lessons()
-            ->where(
-                'lesson_status',
-                LessonStatus::where('status_code', 'published')->get()->first()->id_status
-            )->orderBy('lesson_number')
-            ->get();
+        $progress = null;
+
+        if ($status == 'enrolled' || $status == 'expelled') {
+            $id_lessons = collect(Lesson::where('course_id', $course->id_course)->get('id_lesson'))
+                ->map(function ($item) {
+                    return $item['id_lesson'];
+                });
+            $dones = $user->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
+
+            if ($id_lessons && $dones) {
+                $progress = $dones / $id_lessons->count() * 100;
+            }
+        }
+
+        if ($user != null && $course->user()->get()->first()->id_user == $user->id_user) {
+            $lessons = $course->lessons()
+                ->orderBy('lesson_number')
+                ->get();
+        } else {
+            $lessons = $course->lessons()
+                ->where(
+                    'lesson_status',
+                    LessonStatus::where('status_code', 'published')->get()->first()->id_status
+                )->orderBy('lesson_number')
+                ->get();
+        }
 
         foreach ($lessons as $lesson) {
             $done = null;
@@ -234,6 +245,7 @@ class CourseController extends Controller
                 "id_course_access" => $id_course_access,
                 "access_status" => $status
             ],
+            "progress" => $progress,
             "lessons" => $lessons,
             "created_at" => $course->created_at,
             "updated_at" => $course->updated_at

@@ -7,6 +7,7 @@ import SentenceLine from "./SentenceLine";
 import SavingBlock from "./SavingBlock";
 import { Exercise, Sentence } from "../interfaces/lesson";
 import { ElementProps } from "../views/CreateLessonView";
+import LessonSectionHeader from "./LessonSectionHeader";
 
 interface Props {
     id: number,
@@ -25,7 +26,7 @@ const LessonTranslationExercise: FC<Props> = ({ id, addExercise, deleteElement, 
 
     const { register, handleSubmit, formState: { errors }, unregister } = useForm<FormData>();
 
-    const [name, setName] = useState<string>('Упражнение №' + (displayedElements.filter(item => item.props.type == 'TRANSLATION_EXERCISE').length + 1));
+    const [name, setName] = useState<string>('Упражнение #' + (displayedElements.filter(item => item.props.type == 'TRANSLATION_EXERCISE').length + 1));
     const [description, setDescription] = useState<string>('');
     const [isSaved, setIsSaved] = useState<boolean>(false);
 
@@ -69,6 +70,7 @@ const LessonTranslationExercise: FC<Props> = ({ id, addExercise, deleteElement, 
 
         addExercise({
             id: id,
+            type: 'TRANSLATION_EXERCISE',
             name: name || 'Упражнение №' + (displayedElements.filter(item => item.props.type == 'TRANSLATION_EXERCISE').length + 1),
             description: description || '',
             tasks: sentences
@@ -85,13 +87,7 @@ const LessonTranslationExercise: FC<Props> = ({ id, addExercise, deleteElement, 
 
     return (
         <Intro>
-            <FlexRow style={{ gap: '24px' }}>
-                <Title>Упражнение на перевод</Title>
-                <StyledButton data-swapy-no-drag onClick={() => {
-                    deleteLessonExercise(id);
-                    deleteElement(id);
-                }}>удалить</StyledButton>
-            </FlexRow>
+            <LessonSectionHeader id={id} title={'Упражнение на перевод'} deleteElement={deleteElement} reset={deleteLessonExercise} />
             <Title style={{ fontSize: '20px' }}>Название упражнения</Title>
             <Input value={name} onChange={(e) => setName(e.target.value)} id={"exercise-name-" + id}></Input>
             <Title style={{ fontSize: '20px' }}>Описание упражнения</Title>
@@ -128,31 +124,10 @@ const LessonTranslationExercise: FC<Props> = ({ id, addExercise, deleteElement, 
 
 export default LessonTranslationExercise;
 
-const StyledButton = styled.button`
-    color: #6c5ce7;
-    font-weight: 600;
-    align-self: center;
-    border: 0;
-    background-color: transparent;
-    font-size: 20px;
-    cursor: pointer;
-
-    @media (max-width: 767px) {
-        align-self: unset;
-        margin-right: unset;
-    }
-`
-
 const Flex = styled.div`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-`
-
-const FlexRow = styled.div`
-    display: flex;
-    align-items: center;
     gap: 12px;
 `
 

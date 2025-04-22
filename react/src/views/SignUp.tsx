@@ -156,7 +156,7 @@ const SignUp = () => {
                                 <h2>{t('sign_up.title')}</h2>
                                 <p>{t('sign_up.text')}</p>
                                 <SwiperButtonNext>{t('sign_up.next')}</SwiperButtonNext>
-                                <p>{t('sign_up.acc_exist')} <Link style={{ color: '#2d55ff' }} to={'/login'}>{t('sign_up.log_in')}</Link></p>
+                                <p>{t('sign_up.acc_exist')} <Link style={{ color: '#6c5ce7' }} to={'/login'}>{t('sign_up.log_in')}</Link></p>
                             </SignUpForm>
                         </SignUpFormBlock>
                         <Image style={{ backgroundImage: 'url(/images/man.jpeg)' }} translate="no" />
@@ -229,7 +229,7 @@ const SignUp = () => {
                                         <Input {...register('phone', {
                                             required: { value: true, message: t('sign_up.empty') },
                                             pattern: {
-                                                value: /((8|\+7)[- ]?)?(\(?\d{3}\)?[- ]?)?[\d\- ]{11}$/,
+                                                value: /((8|\+7)[- ]?)?(\(?\d{3}\)?[- ]?)?[\d\- ]{11,11}$/,
                                                 message: t('sign_up.incorrect')
                                             }
                                         })} type="tel" placeholder={t('sign_up.phone_placeholder')} autoComplete="tel-national" id="phone"

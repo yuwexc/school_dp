@@ -23,9 +23,17 @@ const DashboardHeader = () => {
     return (
         <StyledDashboardHeader>
             {
-                status === 'loading' ? <FieldLoader /> : <p style={{ fontSize: '18px' }}>
-                    {t('dashboard_header.welcome')}, {user.last_name + ' ' + user.first_name}!
-                </p>
+                status === 'loading' ?
+                    <FieldLoader />
+                    :
+                    <>
+                        <p style={{ fontSize: '18px' }}>
+                            {t('dashboard_header.welcome')}, {user.last_name + ' ' + user.first_name}!
+                        </p>
+                        {
+                            user.score != null && <p>&#11088;{user.score}</p>
+                        }
+                    </>
             }
         </StyledDashboardHeader>
     )

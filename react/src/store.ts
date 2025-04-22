@@ -4,6 +4,7 @@ import achievementsSlice from './features/achievementsSlice';
 import coursesSlice from './features/courseSlice';
 import modalSlice from './features/modalSlice';
 import lessonsLimitSlice from "./features/lessonsLimit";
+import lessonSlice from "./features/lessonSlice";
 
 const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
         achievements: achievementsSlice,
         courses: coursesSlice,
         modal: modalSlice,
-        lessonsLimit: lessonsLimitSlice
+        lessonsLimit: lessonsLimitSlice,
+        lesson: lessonSlice
     },
 });
 

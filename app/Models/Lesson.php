@@ -30,4 +30,10 @@ class Lesson extends Model
     {
         return $this->hasMany(Done::class, 'lesson_id', 'id_lesson');
     }
+
+    public function done($id): HasOne
+    {
+        return $this->hasOne(Done::class, 'lesson_id', 'id_lesson')
+        ->where('student', $id);
+    }
 }

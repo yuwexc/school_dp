@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Lesson;
 use App\Http\Requests\StoreLessonRequest;
 use App\Http\Requests\UpdateLessonRequest;
+use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
@@ -25,9 +27,31 @@ class LessonController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id_course, Request $request)
     {
-        //
+        $course = Course::where('id_course', $id_course)->get()->first();
+
+        if (!$course) {
+            return response(["message" => "Course not found"], 404);
+        }
+
+        if (auth()->user()->id_user != $course->user()->get()->first()->id_user) {
+            return response(["message" => "Forbidden for you"], 403);
+        }
+
+        $new_lesson = new Lesson();
+        $new_lesson->lesson_number = $course->lessons()->count() + 1;
+        $new_lesson->lesson_name = $request->lesson_name;
+        $new_lesson->lesson_description = $request->lesson_description;
+        $new_lesson->lesson_body = json_encode([
+            "lesson_words" => $request->lesson_words,
+            $request->lesson_body
+        ]);
+        $new_lesson->word_amount = count($request->lesson_words);
+        $new_lesson->course_id = $id_course;
+        $new_lesson->save();
+
+        return response($new_lesson, 200);
     }
 
     /**
@@ -41,9 +65,31 @@ class LessonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Lesson $lesson)
+    public function show($id)
     {
-        //
+        $lesson = Lesson::where('id_lesson', $id)->get()->first();
+
+        if (!$lesson) {
+            return response(["message" => "Lesson not found"], 404);
+        }
+
+        if (auth()->user()->role()->get()->first()->role_code != 'student') {
+            $lesson->done = $lesson->done(auth()->user()->id_user)->get()->first();
+            $lesson->unchecked_list = $lesson->dones()->where('mark', null)->get()->all();
+            foreach ($lesson->unchecked_list as $done) {
+                $done->student = $done->student()->get()->first();
+            }
+            return $lesson;
+        } else {
+            $course = $lesson->course()->get()->first();
+            $enrolled = auth()->user()->enrolled()->where('id_course', $course->id_course)->get()->first();
+            if (!$enrolled) {
+                return response(["message" => "Forbidden for you"], 403);
+            }
+
+            $lesson->done = $lesson->done(auth()->user()->id_user)->get()->first();
+            return $lesson;
+        }
     }
 
     /**

@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Title } from "../styles/forms";
 import LineWord, { ActionButton } from "./LineWord";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Word } from "../interfaces/lesson";
 import SavingBlock from "./SavingBlock";
+import LessonSectionHeader from "./LessonSectionHeader";
 
 interface Props {
     id: number,
@@ -77,13 +77,7 @@ const LessonWordsSection: FC<Props> = ({ id, addWord, resetLessonWords, deleteEl
 
     return (
         <Intro>
-            <FlexRow style={{ gap: '24px' }}>
-                <Title>Слова к уроку</Title>
-                <StyledButton data-swapy-no-drag onClick={() => {
-                    resetLessonWords();
-                    deleteElement(id);
-                }}>удалить</StyledButton>
-            </FlexRow>
+            <LessonSectionHeader id={id} title={'Слова к уроку'} deleteElement={deleteElement} reset={resetLessonWords} />
             <p>В этом разделе укажите английские слова, используемые на уроке, их транскрипцию и перевод на русский язык. Включите все ключевые слова и фразы, которые будут изучаться или использоваться на занятии. Для большей ясности, можете также указать часть речи (существительное, глагол, прилагательное и т.д.) для каждого слова.</p>
             <Flex as="form" onSubmit={handleSubmit(onSubmit)}>
                 {
@@ -123,31 +117,10 @@ export const AddButton = styled(ActionButton)`
     }
 `
 
-const StyledButton = styled.button`
-    color: #6c5ce7;
-    font-weight: 600;
-    align-self: center;
-    border: 0;
-    background-color: transparent;
-    font-size: 20px;
-    cursor: pointer;
-
-    @media (max-width: 767px) {
-        align-self: unset;
-        margin-right: unset;
-    }
-`
-
 const Flex = styled.div`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-`
-
-const FlexRow = styled.div`
-    display: flex;
-    align-items: center;
     gap: 12px;
 `
 

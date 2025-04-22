@@ -6,8 +6,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDoneRequest;
 use App\Http\Requests\UpdateDoneRequest;
 use App\Models\Done;
+use App\Models\Lesson;
 use App\Models\User;
 use DivisionByZeroError;
+use Illuminate\Http\Request;
 
 class DoneController extends Controller
 {
@@ -69,9 +71,28 @@ class DoneController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id, Request $request)
     {
-        //
+        if ($lesson = Lesson::where('id_lesson', $id)->get()->first()) {
+            if (
+                !Done::where([
+                    ['student', auth()->user()->id_user],
+                    ['lesson_id', $id]
+                ])->exists()
+            ) {
+                $done = new Done();
+                $done->lesson_id = $lesson->id_lesson;
+                $done->student = auth()->user()->id_user;
+                $done->st_answer = json_encode($request->st_answer);
+                $done->time_start = $request->time_start;
+                $done->time_end = $request->time_end;
+                $done->save();
+            } else {
+                return response(["message" => "Forbidden for you"], 403);
+            }
+        } else {
+            return response(["message" => "Lesson not found"], 404);
+        }
     }
 
     /**
@@ -85,9 +106,23 @@ class DoneController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Done $done)
+    public function show($id_user, $id_lesson)
     {
-        //
+        if (auth()->user()->role()->get()->first()->role_code != 'teacher') {
+            return response(["message" => "Forbidden for you"], 403);
+        }
+
+        if (User::where('id_user', $id_user)->get()->first()) {
+            if ($lesson = Lesson::where('id_lesson', $id_lesson)->get()->first()) {
+                $lesson->done = $lesson->done($id_user)->get()->first();
+                $lesson->done->student = $lesson->done->student()->get()->first();
+                return response($lesson, 200);
+            } else {
+                return response(["message" => "Lesson not found"], 404);
+            }
+        } else {
+            return response(["message" => "User not found"], 404);
+        }
     }
 
     /**
@@ -101,9 +136,30 @@ class DoneController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDoneRequest $request, Done $done)
+    public function update($id_user, $id_lesson, Request $request)
     {
-        //
+        if (auth()->user()->role()->get()->first()->role_code != 'teacher') {
+            return response(["message" => "Forbidden for you"], 403);
+        }
+
+        if ($user = User::where('id_user', $id_user)->get()->first()) {
+            if ($done = Done::where('lesson_id', $id_lesson)->get()->first()) {
+                if ($done->mark == null) {
+                    $user->score = $user->score + $request->score;
+                    $user->save();
+                    $done->feedback = $request->feedback;
+                    $done->mark = $request->mark;
+                    $done->save();
+                } else {
+                    return response(["message" => "Forbidden for you"], 403);
+                }
+                return response($done, 200);
+            } else {
+                return response(["message" => "Student answer not found"], 404);
+            }
+        } else {
+            return response(["message" => "User not found"], 404);
+        }
     }
 
     /**

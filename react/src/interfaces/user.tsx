@@ -11,6 +11,7 @@ export interface User {
     photo: string | null,
     level: Level | null,
     role: Role | null,
+    score: number | null,
     password?: string | null,
     api_token?: string | null,
     created_at: Date | null

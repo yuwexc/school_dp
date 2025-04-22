@@ -1,0 +1,136 @@
+import styled from "styled-components";
+import { Button, Input, Title } from "../styles/forms";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Exercise } from "../interfaces/lesson";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FormData } from "./LessonWordsSection";
+import { Done, Feedback } from "../interfaces/done";
+
+interface Props {
+    exercise: Exercise
+    setDone?: Dispatch<SetStateAction<Exercise[]>>,
+    done?: Done
+}
+
+const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, done }) => {
+
+    const { register, handleSubmit } = useForm();
+
+    const onSubmit: SubmitHandler<FormData> = (data) => {
+        if (done) return;
+        Object.values(data).forEach((answer, index) => {
+            const current_task = exercise.tasks[index];
+            if (current_task) {
+                current_task.answer = answer;
+                if (current_task.answer.length == 0) {
+                    current_task.student_score = 0;
+                }
+                if (current_task.english && current_task.answer === current_task.english) {
+                    current_task.student_score = current_task.score;
+                }
+            }
+        });
+
+        setDone!(prevState => [...prevState.filter(item => item.id != exercise.id), exercise]);
+    }
+
+    const [doneBody, setDoneBody] = useState<Exercise[]>([]);
+    const [feedback, setFeedback] = useState<Feedback[][]>([]);
+
+    useEffect(() => {
+        if (done) {
+            setDoneBody(JSON.parse(done.st_answer));
+            setFeedback(JSON.parse(done.feedback!));
+        }
+    }, [done]);
+
+    return (
+        <Section>
+            <Title style={{ fontSize: '103px', color: '#fa8231' }}>PRACTICE</Title>
+            <Name>{exercise.name}. {exercise.description}</Name>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+                {
+                    exercise.tasks.map(task =>
+                        <div key={task.id}>
+                            <Task $student_score={doneBody.find(item => item.id == exercise.id)?.tasks[task.id].student_score}>
+                                <Number>{(task.id + 1).toString().padStart(2, '0')}</Number>
+                                <p style={{ fontSize: '24px' }}>{task.russian}</p>
+                            </Task>
+                            {
+                                doneBody.length == 0 && !doneBody.find(item => item.id == exercise.id) ?
+                                    <Input {...register(`english-${task.id}`)} type="text" placeholder="Ваш ответ" id={'english-' + task.id} />
+                                    :
+                                    <>
+                                        <Input disabled value={doneBody.find(item => item.id == exercise.id)?.tasks[task.id].answer || 'Ответ отсутствует'} type="text" id={'english-' + task.id} />
+                                        {
+                                            feedback && feedback.find(item => item[0].id == exercise.id)?.find(item => item.id == task.id)?.english &&
+                                            <>
+                                                <p>Комментарий преподавателя:</p>
+                                                <Input disabled value={feedback.find(item => item[0].id == exercise.id)?.find(item => item.id == task.id)?.english || ''} type="text" id={'feedback-' + task.id} />
+                                            </>
+                                        }
+                                        {
+                                            feedback && <p style={{ color: '#6c5ce7' }}>Балл: {feedback.find(item => item[0].id == exercise.id)?.find(element => feedback.find(item => item[0].id == exercise.id)?.indexOf(element) == task.id)?.student_score}</p>
+                                        }
+                                    </>
+                            }
+                        </div>
+                    )
+                }
+                {
+                    feedback && feedback.length == 0 && <Button style={{ backgroundColor: '#fa8231' }} type="submit">Сохранить</Button>
+                }
+            </Form>
+        </Section>
+    )
+}
+
+export default LessonTranslationExerciseStudentView;
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+`
+
+const Task = styled.div<{ $student_score: number | undefined }>`
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    & > p:first-child {
+        background-color: ${props => typeof props.$student_score == 'undefined' ? '#fa8231' : (props.$student_score == 0 ? '#d91e18' : '#20bf6b')};
+    }
+
+    & + input {
+        color: ${props => typeof props.$student_score == 'undefined' ? '#2d2d2d' : (props.$student_score == 0 ? '#d91e18' : '#20bf6b')};
+    }
+`
+
+const Number = styled.p`
+    border-radius: 6px;
+    padding: 8px;
+    color: white;
+    font-size: 20px;
+    font-variant-numeric: tabular-nums;
+`
+
+const Name = styled.h3`
+    font-size: 30px;
+`
+
+const Section = styled.section`
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+`

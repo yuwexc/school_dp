@@ -93,7 +93,7 @@ const Login = () => {
                                 :
                                 <Button type="submit">{t('login.log_in')}</Button>
                         }
-                        <p>{t('login.not_account')} <Link style={{ color: '#2d55ff' }} to={'/sign-up'}>{t('login.sign_up')}</Link></p>
+                        <p>{t('login.not_account')} <Link style={{ color: '#6c5ce7' }} to={'/sign-up'}>{t('login.sign_up')}</Link></p>
                     </Form>
                 </FormBlock>
                 <Image translate="no" />

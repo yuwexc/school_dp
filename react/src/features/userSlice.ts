@@ -19,6 +19,7 @@ const user: User = {
     'email': null,
     'photo': null,
     'level': null,
+    "score": null,
     'role': null,
     'password': null,
     'api_token': null,
