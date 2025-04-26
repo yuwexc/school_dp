@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { Input, Message } from "../styles/forms";
 import { Dispatch, FC, SetStateAction } from "react";
-import { t } from "i18next";
 import { FormData, WordLine } from "./LessonWordsSection";
 import { FieldErrors, UseFormRegister, UseFormUnregister } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     id: number,
@@ -15,6 +15,8 @@ interface Props {
 }
 
 const LineWord: FC<Props> = ({ id, wordLines, setWordLines, register, errors, unregister }) => {
+
+    const { t } = useTranslation();
 
     const handleDelete = (id: number) => {
         if (wordLines.length === 1) return;

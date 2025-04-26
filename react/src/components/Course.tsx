@@ -83,8 +83,9 @@ const Article = styled.article<{ $role: string | undefined }>`
     align-items: stretch;
     gap: 24px;
     padding: 14px;
-    background-color: whitesmoke;
+    background-color: ${props => props.$role == 'teacher' ? 'white' : 'whitesmoke'};
     border-radius: ${props => props.$role == 'student' ? '24px' : '12px'};
+    ${props => props.$role == 'teacher' ? 'box-shadow: #d3d3d321 0px 10px 10px 0px;' : null}
 
     & > div {
         display: flex;

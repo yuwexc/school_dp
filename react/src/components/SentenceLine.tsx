@@ -4,8 +4,8 @@ import { SentenceLineInterface } from "./LessonTranslationExercise";
 import { Dispatch, FC, SetStateAction } from "react";
 import { FieldErrors, UseFormRegister, UseFormUnregister } from "react-hook-form";
 import { FormData } from "./LessonWordsSection";
-import { t } from "i18next";
 import { ActionButton } from "./LineWord";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     id: number,
@@ -29,6 +29,8 @@ const SentenceLine: FC<Props> = ({ id, sentenceLines, setSentenceLines, register
         unregister(`english-sentence-${id}`);
         unregister(`score--${id}`);
     }
+
+    const { t } = useTranslation();
 
     return (
         <Line>

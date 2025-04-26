@@ -13,6 +13,11 @@ class Category extends Model
     protected $table = 'categories';
     protected $primaryKey = 'id_category';
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     public function category(): HasMany
     {
         return $this->hasMany(Course::class, 'category_id', 'id_category');

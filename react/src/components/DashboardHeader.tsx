@@ -42,7 +42,7 @@ const DashboardHeader = () => {
 export default DashboardHeader;
 
 const StyledDashboardHeader = styled.header`
-    background-color: white;
+    background-color: #f5f5f5;
     height: 20px;
     padding: 28px;
     display: flex;

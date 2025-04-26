@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
@@ -15,7 +16,16 @@ class Course extends Model
     protected $table = 'courses';
     protected $primaryKey = 'id_course';
 
-    protected $fillable = ['course_name', 'course_description', 'level_id', 'category_id', 'image'];
+    protected $fillable = [
+        'course_name',
+        'course_description',
+        'level_id',
+        'category_id',
+        'image'
+    ];
+    protected $hidden = [
+        'pivot'
+    ];
 
     public function user(): BelongsTo
     {
@@ -40,6 +50,19 @@ class Course extends Model
     public function accesses(): HasMany
     {
         return $this->hasMany(CourseAccess::class, 'course_id', 'id_course');
+    }
+
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'course_accesses',
+            'course_id',
+            'student'
+        )->wherePivot(
+                'status_id',
+                AccessStatus::where('status_code', 'enrolled')->get()->first()->id_access_status
+            );
     }
 
 }

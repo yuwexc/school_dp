@@ -10,6 +10,8 @@ import CourseCard from "../components/CourseCard";
 import { useTranslation } from "react-i18next";
 import { User } from "../interfaces/user";
 import Course from "../components/Course";
+import { Link } from "react-router-dom";
+import { Button } from "../styles/forms";
 
 const MyCourses = () => {
 
@@ -26,14 +28,19 @@ const MyCourses = () => {
 
     return (
         <StyledMyCourses>
-            <Title>
+            <Flex>
+                <Title>
+                    {
+                        status === 'loading' ?
+                            <FieldLoader borderRadius={24} />
+                            :
+                            t('dashboard.myCourses.title')
+                    }
+                </Title>
                 {
-                    status === 'loading' ?
-                        <FieldLoader borderRadius={24} />
-                        :
-                        t('dashboard.myCourses.title')
+                    user.role?.role_code === 'teacher' && <Button as={Link} to={'/teacher/courses/create'} style={{ padding: 0 }}>Создать курс</Button>
                 }
-            </Title>
+            </Flex>
             <Courses $role={user.role?.role_code}>
                 {
                     status === 'loading' ?
@@ -53,7 +60,10 @@ const MyCourses = () => {
                                         }
                                     })
                                     :
-                                    <p>{t('dashboard.myCourses.not')}</p>
+                                    <>
+                                        <p style={{ alignSelf: 'center' }}>{t('dashboard.myCourses.not')}</p>
+                                        <Link to={'/courses'} style={{ padding: 'unset', fontWeight: 500 }}><span style={{ textDecoration: 'underline' }}>{t('dashboard.myCourses.go')}</span> &#8594;</Link>
+                                    </>
                             }
                         </>
                 }
@@ -63,6 +73,12 @@ const MyCourses = () => {
 }
 
 export default MyCourses;
+
+const Flex = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`
 
 const Courses = styled.div<{ $role: string | undefined }>`
     display: flex;
@@ -83,7 +99,7 @@ const Title = styled.h2`
 const StyledMyCourses = styled.main`
     height: 100%;
     padding: 28px;
-    background-color: white;
+    background-color: rgb(245, 245, 245);
     display: flex;
     flex-direction: column;
     gap: 24px;

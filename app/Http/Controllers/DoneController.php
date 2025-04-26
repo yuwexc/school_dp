@@ -33,17 +33,9 @@ class DoneController extends Controller
         }
 
         $words = 0;
-        $marks = 0;
 
         foreach ($dones as $done) {
             $words += $done->lesson()->get()->first()->word_amount;
-            $marks += $done->mark;
-        }
-
-        try {
-            $average_score = $marks / $dones->count();
-        } catch (DivisionByZeroError $e) {
-            $average_score = 0;
         }
 
         try {
@@ -58,7 +50,7 @@ class DoneController extends Controller
                 'subtitle' => $words . ' ',
             ],
             [
-                'title' => $average_score . '/5.0',
+                'title' => $user->average_score() . '/5.0',
                 'subtitle' => null,
             ],
             [
@@ -143,7 +135,7 @@ class DoneController extends Controller
         }
 
         if ($user = User::where('id_user', $id_user)->get()->first()) {
-            if ($done = Done::where('lesson_id', $id_lesson)->get()->first()) {
+            if ($done = Done::where('lesson_id', $id_lesson)->where('student', $id_user)->get()->first()) {
                 if ($done->mark == null) {
                     $user->score = $user->score + $request->score;
                     $user->save();

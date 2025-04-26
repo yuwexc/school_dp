@@ -126,7 +126,7 @@ const Settings = () => {
                         <Input defaultValue={user.first_name!} {...register('first_name', {
                             required: { value: true, message: t('sign_up.empty') },
                             pattern: {
-                                value: /[a-zA-zа-яА-ЯёЁ]$/,
+                                value: /^[a-zA-Zа-яА-ЯёЁ]$/,
                                 message: t('sign_up.incorrect')
                             }
                         })} type="text" placeholder={t('sign_up.first_name_placeholder')} autoComplete="name" id="first_name" />
@@ -139,7 +139,7 @@ const Settings = () => {
                         <Input defaultValue={user.last_name! || ''} {...register('last_name', {
                             required: { value: true, message: t('sign_up.empty') },
                             pattern: {
-                                value: /[a-zA-zа-яА-ЯёЁ]$/,
+                                value: /^[a-zA-Zа-яА-ЯёЁ]$/,
                                 message: t('sign_up.incorrect')
                             }
                         })} type="text" placeholder={t('sign_up.last_name_placeholder')} autoComplete="family-name"
@@ -152,7 +152,7 @@ const Settings = () => {
                         <label htmlFor="middle_name">{t('sign_up.middle_name')}</label>
                         <Input defaultValue={user.middle_name! || ''} {...register('middle_name', {
                             pattern: {
-                                value: /[a-zA-zа-яА-ЯёЁ]$/,
+                                value: /^[a-zA-Zа-яА-ЯёЁ]$/,
                                 message: t('sign_up.incorrect')
                             }
                         })}

@@ -9,6 +9,7 @@ import Modal from "./Modal";
 import { ModalInterface } from "../interfaces/modal";
 import { useTranslation } from "react-i18next";
 import { User } from "../interfaces/user";
+import { Link } from "react-router-dom";
 
 const MyCourses = () => {
 
@@ -49,7 +50,10 @@ const MyCourses = () => {
                                     />
                                 )
                                 :
-                                <p>{t('dashboard.myCourses.not')}</p>
+                                <>
+                                    <p>{t('dashboard.myCourses.not')}</p>
+                                    <Link to={'/courses'} style={{ padding: 'unset', fontWeight: 500 }}><span style={{ textDecoration: 'underline' }}>{t('dashboard.myCourses.go')}</span> &#8594;</Link>
+                                </>
                         }
                     </>
             }

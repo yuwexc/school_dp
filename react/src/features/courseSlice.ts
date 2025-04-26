@@ -59,6 +59,24 @@ export const fetchMyCoursesItem = createAsyncThunk<CourseItemInterface, string>(
     }
 );
 
+export const postCourse = createAsyncThunk<CourseItemInterface, { course_name: string, course_description: string, level_id: number, category_id: number }>(
+    'courses/postCourse',
+    async (course, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.post<CourseItemInterface>(PROJECT_URL + '/courses/create', course, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
+            return data;
+
+        } catch {
+            return rejectWithValue("Не удалось создать курс!");
+        }
+    }
+);
+
 export const fetchCourses = createAsyncThunk<Courses, Request>(
     'courses/fetchCourses',
     async ({ pageIndex, level_id, category_id }, { rejectWithValue }) => {
@@ -237,6 +255,22 @@ const coursesSlice = createSlice({
                 state.status = 'succeeded';
             })
             .addCase(requestAddMyCoursesItem.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                } else {
+                    state.status = 'failed';
+                }
+            })
+
+            .addCase(postCourse.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(postCourse.fulfilled, (state, action: PayloadAction<CourseItemInterface>) => {
+                state.status = 'succeeded';
+                state.course = action.payload;
+            })
+            .addCase(postCourse.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
                 } else {

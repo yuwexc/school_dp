@@ -7,12 +7,12 @@ import { State } from "../interfaces/requests";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Error, Input, Message, Select } from "../styles/forms";
-import { t } from "i18next";
 import Loader from "../components/Loader";
 import { fetchMyCoursesItem, updateCourse } from "../features/courseSlice";
 import { User } from "../interfaces/user";
 import { Level } from "../interfaces/level";
 import { Category } from "../interfaces/category";
+import { useTranslation } from "react-i18next";
 
 export interface FieldValues {
     id?: string,
@@ -25,6 +25,7 @@ export interface FieldValues {
 
 const EditCourseProperty = () => {
 
+    const { t } = useTranslation();
     const { id, property } = useParams<{ id: string, property: "course_name" | "course_description" | "level_id" | "category_id" | "image" }>();
 
     const user = useSelector<RootState, User>((state) => state.user.user);

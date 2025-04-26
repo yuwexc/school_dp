@@ -149,9 +149,24 @@ class CourseController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        if (auth()->user()->role()->get()->first()->role_code != 'teacher') {
+            return response(["message" => "Forbidden for you"], 403);
+        }
+
+        if ($user = auth()->user()) {
+            $course = new Course();
+            $course->course_name = $request->course_name;
+            $course->course_description = $request->course_description;
+            $course->level_id = $request->level_id;
+            $course->category_id = $request->category_id;
+            $course->author = $user->id_user;
+            $course->save();
+            $this->show($course->id_course);
+        } else {
+            return response(["message" => "User not found"], 404);
+        }
     }
 
     /**
@@ -180,7 +195,7 @@ class CourseController extends Controller
             $access = $course->accesses()->where('student', $user->id_user)->get()->first();
         }
 
-        $category = $course->category()->get()->first();
+        $category = $course->category()->select('category_name')->get()->first();
         $id_course_access = null;
         $status = '';
 
@@ -204,16 +219,29 @@ class CourseController extends Controller
         }
 
         if ($user != null && $course->user()->get()->first()->id_user == $user->id_user) {
-            $lessons = $course->lessons()
-                ->orderBy('lesson_number')
-                ->get();
+            $lessons = $course->lessons()->select([
+                'id_lesson',
+                'lesson_description',
+                'lesson_name',
+                'lesson_number',
+                'lesson_status',
+                'created_at',
+                'updated_at'
+            ])->orderBy('lesson_number')->get();
         } else {
             $lessons = $course->lessons()
                 ->where(
                     'lesson_status',
                     LessonStatus::where('status_code', 'published')->get()->first()->id_status
-                )->orderBy('lesson_number')
-                ->get();
+                )->select([
+                        'id_lesson',
+                        'lesson_description',
+                        'lesson_name',
+                        'lesson_number',
+                        'lesson_status',
+                        'created_at',
+                        'updated_at'
+                    ])->orderBy('lesson_number')->get();
         }
 
         foreach ($lessons as $lesson) {
@@ -226,12 +254,27 @@ class CourseController extends Controller
                     ->get()->first();
             }
 
-            if ($done != null) {
-                $lesson->mark = $done->mark;
-            } else {
-                $lesson->mark = null;
-            }
+            $lesson->done = $done;
         }
+
+        $top_students = collect($course->students()->get()->filter(function (User $student) {
+            return $student->dones()->whereNot('mark')->count() > 0;
+        }))->sort(
+                function (User $a, User $b) {
+                    $scoreComparison = $b->average_score() <=> $a->average_score();
+                    if ($scoreComparison === 0) {
+                        return $b->created_at <=> $a->created_at;
+                    }
+                    return $scoreComparison;
+                }
+            )->values()->map(function (User $user) {
+                return [
+                    "first_name" => $user->first_name,
+                    "last_name" => $user->last_name,
+                    "middle_name" => $user->middle_name,
+                    'score' => $user->average_score()
+                ];
+            })->all();
 
         return response([
             "id_course" => $course->id_course,
@@ -240,13 +283,14 @@ class CourseController extends Controller
             "level" => $course->level()->select(['level_code', 'level_title', 'level_name'])->get()->first(),
             "category" => $category ? $category : null,
             "image" => $course->image,
-            "author" => $course->user()->get()->first(),
+            "author" => $course->user()->select(['first_name', 'last_name'])->get()->first(),
             "access" => [
                 "id_course_access" => $id_course_access,
                 "access_status" => $status
             ],
             "progress" => $progress,
             "lessons" => $lessons,
+            "top_students" => $top_students,
             "created_at" => $course->created_at,
             "updated_at" => $course->updated_at
         ], 200);

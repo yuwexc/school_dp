@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import { CoursesState, fetchCourses } from "../features/courseSlice";
 import CourseCardCatalog from "../components/CourseCardCatalog";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { t } from "i18next";
 import { Error } from "../styles/forms";
+import { useTranslation } from "react-i18next";
 
 const Courses = () => {
 
     const dispatch = useDispatch<AppDispatch>();
+    const { t } = useTranslation();
 
     const { courses, status, error } = useSelector<RootState, CoursesState>((state) => state.courses);
     const [pageIndex, setPageIndex] = useState<number>(1);
@@ -41,8 +42,8 @@ const Courses = () => {
     return (
         <StyledMain>
             <Intro>
-                <h1>Курсы английского языка<br />онлайн под ваши цели</h1>
-                <p>Комплексные программы под рабочие и жизненные цели: для IT, маркетологов, финансов, жизни за границей и путешествий</p>
+                <h1>{t('courses.title1')}<br />{t('courses.title2')}</h1>
+                <p>{t('courses.description')}</p>
             </Intro>
             <CoursesSection>
                 <Filter setLevel={setLevel} setCategory={setCategory} />

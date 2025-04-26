@@ -3,9 +3,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Exercise } from "../interfaces/lesson";
 import styled from "styled-components";
 import { Input, Message, Select } from "../styles/forms";
-import { t } from "i18next";
 import { Feedback } from "../interfaces/done";
 import SavingBlock from "./SavingBlock";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     item: Exercise,
@@ -17,6 +17,8 @@ const LessonTranslationExerciseCheckView: FC<Props> = ({ item, addFeedback }) =>
     const { register, handleSubmit, formState: { errors } } = useForm<{ [key: string]: string }>();
 
     const [isSaved, setIsSaved] = useState<boolean>(false);
+
+    const { t } = useTranslation();
 
     const onSubmit: SubmitHandler<{ [key: string]: string }> = (data) => {
         function transformData(input: { [key: string]: string }): Feedback[] {

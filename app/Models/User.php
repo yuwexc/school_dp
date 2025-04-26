@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\UserFactory;
+use DivisionByZeroError;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -45,7 +46,9 @@ class User extends Authenticatable
         'password',
         'api_token',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'pivot',
+        'email_verified_at'
     ];
 
     /**
@@ -99,5 +102,23 @@ class User extends Authenticatable
     public function dones(): HasMany
     {
         return $this->hasMany(Done::class, 'student', 'id_user');
+    }
+
+    public function average_score()
+    {
+        $dones = $this->dones()->whereNot('mark')->get();
+        $marks = 0;
+
+        foreach ($dones as $done) {
+            $marks += $done->mark;
+        }
+
+        try {
+            $average_score = $marks / $dones->count();
+        } catch (DivisionByZeroError $e) {
+            $average_score = 0;
+        }
+
+        return $average_score;
     }
 }

@@ -3,14 +3,6 @@ import { CourseItemInterface } from "../interfaces/course";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import { LevelColors } from "../interfaces/level";
-import Enrolled from "./Enrolled";
-import Expelled from "./Expelled";
-import Requested from "./Requested";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import { ModalInterface } from "../interfaces/modal";
-import Modal from "./Modal";
-import { t } from "i18next";
 
 interface Props {
     course: CourseItemInterface
@@ -18,13 +10,12 @@ interface Props {
 
 const CourseCard: FC<Props> = ({ course }) => {
 
-    const modal = useSelector<RootState, ModalInterface>((state) => state.modal.modal);
-
     return (
         <Article>
             <IMG $src={course.image} />
             <Info>
-                <h2>{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}</h2>
+                <p style={{ color: "#9e9e9e" }}>{course.level.level_title.toUpperCase()}</p>
+                <Link to={'/my-courses/' + course.id_course} style={{ textTransform: 'capitalize', fontWeight: 'bold', fontSize: '24px' }}>{course.course_name.toString()}</Link>
                 <Description>{course.course_description}</Description>
                 <Characteristics>
                     <LinkToResources
@@ -67,31 +58,21 @@ const CourseCard: FC<Props> = ({ course }) => {
                         <Progress $progress={course.progress} />
                         <p style={{ alignSelf: 'center', textWrap: 'nowrap' }}>{course.progress}%</p>
                     </div>
-                    <Buttons>
-                        {
-                            course.access!.access_status === 'requested' && <Requested access={course.access!.id_course_access} />
-                        }
-                        {
-                            course.access!.access_status === 'expelled' && <Expelled />
-                        }
-                        {
-                            course.access!.access_status === 'enrolled' && <Enrolled url={'/my-courses/' + course.id_course} />
-                        }
-                    </Buttons>
                 </Actions>
             </Info>
-            {
-                modal.state && <Modal
-                    header={t('modal.header')}
-                    main={t('modal.main')}
-                    access={modal.access}
-                />
-            }
         </Article>
     )
 }
 
 export default CourseCard;
+
+const Description = styled.p`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+`
 
 export const Buttons = styled.div`
     min-height: 35px;
@@ -138,7 +119,6 @@ const Progress = styled.div<{ $progress: number }>`
 
 const Actions = styled.div`
     padding-top: 12px;
-    margin-top: auto;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -170,6 +150,7 @@ export const LinkToResources = styled(Link) <{ $backgroundColor?: string }>`
 `
 
 export const Characteristics = styled.div`
+    margin-top: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -177,29 +158,12 @@ export const Characteristics = styled.div`
     gap: 4px;
 `
 
-const Description = styled.p`
-    min-height: 48px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    @media (width <= 768px) {
-        min-height: unset;
-        display: block;
-        -webkit-line-clamp: unset;
-        -webkit-box-orient: unset;
-    }
-`
-
 const Info = styled.div`
-    width: 100%;
-    min-width: 192px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 24px;
+    padding: 20px;
 
     @media (width <= 768px) {
         width: unset;
@@ -208,49 +172,28 @@ const Info = styled.div`
             font-size: 20px;
         }
     }
-
-    @media (425px <= width <= 576px) {
-        padding: 24px 20px 20px 20px;
-    }
-
-    @media (425px >= width) {
-        padding: 18px 12px 12px 12px;
-    }
 `
 
 const IMG = styled.div <{ $src: string | null }>`
-    min-width: 240px;
+    min-height: 240px;
     background-image: url(${props => props.$src == null ? '/images/4.jpeg' : props.$src});
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-
-    @media (377px <= width <= 768px) {
-        height: 300px;
-    }
-
-    @media (376px >= width) {
-        height: 200px;
-    }
+    border-radius: 25px;
 `
 
 const Article = styled.article`
-    width: calc(50% - 14px);
+    width: calc(20% - 24px);
     overflow: hidden;
-    min-width: 480px;
+    min-width: 400px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    border: 1px solid lightgray;
-    border-radius: 24px;
-
-    @media (width <= 1350px) {
-        width: 100%;
-    }
-
-    @media (width <= 768px) {
-        flex-direction: column;
-        min-width: unset;
-    }
+    gap: 6px;
+    border-radius: 30px;
+    padding: 5px;
+    box-shadow: rgb(211, 211, 211) 0px 0px 10px 0px;
+    background-color: white;
 `

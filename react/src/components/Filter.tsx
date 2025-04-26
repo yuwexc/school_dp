@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { Level } from "../interfaces/level";
 import { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from "react";
 import { Message, Select } from "../styles/forms";
-import { t } from "i18next";
 import { Category } from "../interfaces/category";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     setLevel: Dispatch<SetStateAction<number | "">>
@@ -19,6 +19,8 @@ const Filter: FC<Props> = ({ setLevel, setCategory }) => {
 
     const levelRef = useRef<HTMLSelectElement>(null);
     const categoryRef = useRef<HTMLSelectElement>(null);
+
+    const { t } = useTranslation();
 
     const onLoad = () => {
         const requestOptions: RequestInit = {
@@ -51,7 +53,7 @@ const Filter: FC<Props> = ({ setLevel, setCategory }) => {
 
     return (
         <StyledFilter>
-            <h3>Уровни</h3>
+            <h3>{t('filter.levels')}</h3>
             {
                 errorLevel &&
                 <Select ref={levelRef} id="level" onChange={(e) => setLevel(Number(e.target.value))}>
@@ -64,7 +66,7 @@ const Filter: FC<Props> = ({ setLevel, setCategory }) => {
             {
                 !errorLevel && <Message>{t('error')}</Message>
             }
-            <h3 style={{ marginTop: '12px' }}>Категории</h3>
+            <h3 style={{ marginTop: '12px' }}>{t('filter.categories')}</h3>
             {
                 errorCategory &&
                 <Select ref={categoryRef} id="category" onChange={(e) => setCategory(Number(e.target.value))}>
@@ -82,7 +84,7 @@ const Filter: FC<Props> = ({ setLevel, setCategory }) => {
                 setLevel('')
                 levelRef.current!.value = '';
                 categoryRef.current!.value = '';
-            }}>Сбросить</Button>
+            }}>{t('filter.reset')}</Button>
         </StyledFilter>
     )
 }

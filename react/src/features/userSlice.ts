@@ -134,7 +134,12 @@ export const logoutUser = createAsyncThunk<null>(
 const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers: {
+        resetErrorAndStatus: (state) => {
+            state.error = null;
+            state.status = null;
+        },
+    },
     extraReducers: (builder) => {
         builder
 
@@ -151,7 +156,6 @@ const userSlice = createSlice({
             .addCase(fetchUser.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
-                } else {
                     state.status = 'failed';
                 }
             })
@@ -230,5 +234,6 @@ export const selectUser = (state: { user: UserState }) => state.user.user;
 export const selectToken = (state: { user: UserState }) => state.user.token;
 export const selectUserStatus = (state: { user: UserState }) => state.user.status;
 export const selectUserError = (state: { user: UserState }) => state.user.error;
+export const { resetErrorAndStatus } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,6 +1,6 @@
 {
     "error": "Sorry, our server is sad today :(",
-    "modal" : {
+    "modal": {
         "header": "Confirmation of the deletion of the application",
         "main": "Do you really want to withdraw the application?",
         "confirm": "Confirm",
@@ -44,7 +44,7 @@
         "middle_name": "Middle name (if you have)",
         "middle_name_placeholder": "",
         "phone": "Phone",
-        "phone_placeholder": "+7 (999) 999 99-99",
+        "phone_placeholder": "+79991112233",
         "phone_existence": "The phone has already been taken",
         "level": "Your language proficiency"
     },
@@ -74,7 +74,8 @@
             "title": "My courses",
             "view": "view all my courses",
             "author": "by",
-            "not": "You don't have any courses"
+            "not": "You don't have any courses",
+            "go": "Enroll in courses"
         }
     },
     "access": {
@@ -94,5 +95,27 @@
             "category_id": "Course category",
             "image": "Course icon"
         }
+    },
+    "filter": {
+        "levels": "Levels",
+        "categories": "Categories",
+        "reset": "Reset"
+    },
+    "courses": {
+        "title1": "Custom Online English Courses",
+        "title2": "for Your Needs",
+        "description": "Comprehensive Programs for Career & Life Goals: IT, Marketing, Finance, Living Abroad, and Travel",
+        "learn": "Learn more"
+    },
+    "course": {
+        "progress": "studied",
+        "start": "GETTING STARTED WITH THE SCHOOL \"LIMN\"",
+        "expelled": "You have been dismissed",
+        "lesson": "LESSON",
+        "go": "View",
+        "check": "We're checking your work!",
+        "top": "TOP STUDENTS",
+        "more": "Show more",
+        "score": "average grade"
     }
 }

@@ -4,12 +4,15 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Characteristics, LinkToResources } from "./CourseCard";
 import { LevelColors } from "../interfaces/level";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     course: CourseItemInterface
 }
 
 const CourseCardCatalog: FC<Props> = ({ course }) => {
+
+    const { t } = useTranslation();
 
     return (
         <Card>
@@ -48,7 +51,7 @@ const CourseCardCatalog: FC<Props> = ({ course }) => {
                     }
                 </Characteristics>
                 <Link style={{ color: '#6c5ce7', fontWeight: '600', marginTop: '6px' }} to={'/courses/' + course.id_course}>
-                    Подробнее
+                    {t('courses.learn')}
                 </Link>
             </Info>
         </Card>

@@ -9,11 +9,12 @@ import LessonTranslationExerciseCheckView from "../components/LessonTranslationE
 import { Feedback } from "../interfaces/done";
 import { Button, Error } from "../styles/forms";
 import Loader from "../components/Loader";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const CheckLessonStudentAnswer = () => {
 
     const { user, id } = useParams();
+    const { t } = useTranslation();
 
     const dispatch = useDispatch<AppDispatch>();
     const lesson = useSelector<RootState, LessonInterface | null>((state) => state.lesson.lesson);

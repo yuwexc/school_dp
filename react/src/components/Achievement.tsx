@@ -1,9 +1,12 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { t } from "i18next";
 import { AchievementItemInterface } from "../interfaces/achievement";
+import { useTranslation } from "react-i18next";
 
 const Achievement: FC<AchievementItemInterface> = ({ background, image, title, additional, subtitle }) => {
+
+    const { t } = useTranslation();
+
     return (
         <Article $background={background!}>
             <Info>

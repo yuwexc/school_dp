@@ -72,7 +72,7 @@ const CourseTeacherView = () => {
                                         </StyledLink>
                                     }
                                 </Flex>
-                                <Characteristics>
+                                <Characteristics style={{ marginTop: 'unset' }}>
                                     <LinkToResources
                                         to={'/courses'}
                                         $backgroundColor={LevelColors.get(course.level.level_code)!}>

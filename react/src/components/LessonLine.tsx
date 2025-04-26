@@ -25,10 +25,13 @@ const LessonLine: FC<Props> = ({ index, lesson }) => {
             </Flex>
             <p><span style={{ fontWeight: 'bold' }}>Описание:</span> {lesson.lesson_description}</p>
             <Flex style={{ flexWrap: 'wrap' }}>
-                <p style={{ color: 'gray', fontSize: '12px' }}>Создан: {lesson.created_at!.toString().slice(8, 10) + '.' + lesson.created_at!.toString().slice(5, 7) + '.' + lesson.created_at!.toString().slice(0, 4)}</p>
                 {
-                    lesson.lesson_status == 2 &&
-                    <p style={{ color: 'gray', fontSize: '12px' }}>Опубликован: {lesson.updated_at!.toString().slice(8, 10) + '.' + lesson.updated_at!.toString().slice(5, 7) + '.' + lesson.updated_at!.toString().slice(0, 4)}</p>
+                    lesson.created_at &&
+                    <p style={{ color: 'gray', fontSize: '12px' }}>Создан: {lesson.created_at.toString().slice(8, 10) + '.' + lesson.created_at.toString().slice(5, 7) + '.' + lesson.created_at.toString().slice(0, 4)}</p>
+                }
+                {
+                    lesson.lesson_status == 2 && lesson.updated_at &&
+                    <p style={{ color: 'gray', fontSize: '12px' }}>Опубликован: {lesson.updated_at.toString().slice(8, 10) + '.' + lesson.updated_at.toString().slice(5, 7) + '.' + lesson.updated_at.toString().slice(0, 4)}</p>
                 }
             </Flex>
         </Article>

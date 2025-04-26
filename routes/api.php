@@ -28,14 +28,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/levels', [LevelController::class, 'index']);
 Route::get('/categories', [CategoryController::class, 'index']);
 
-//Route::get('/email/verify/{id}/{hash}', fn() => 'verify')->middleware(['auth:api', 'signed'])->name('verification.verify');
-
-
 Route::controller(UserController::class)->group(function () {
-    Route::get('/user/generate', 'generate');
-
+    //Route::get('/user/generate', 'generate');
     Route::get('/user', 'index')->middleware('auth:api');
-
     Route::post('/users', 'create');
     Route::post('/user/update', 'update')->middleware('auth:api');
     Route::post('/login', 'login');
@@ -55,17 +50,16 @@ Route::controller(DoneController::class)->group(function () {
 });
 
 Route::controller(CourseController::class)->group(function () {
-    Route::get('/courses/generate', 'generate');
-
+    //Route::get('/courses/generate', 'generate');
     Route::get('/my-courses', 'my_courses')->middleware('auth:api');
+    Route::post('/courses/create', 'create')->middleware('auth:api');
     Route::post('/courses/{id}', 'edit')->middleware('auth:api');
     Route::get('/courses', 'index');
     Route::get('/courses/{id}', 'show');
 });
 
 Route::controller(CourseAccessController::class)->group(function () {
-    Route::get('/access-course/generate', 'generate');
-
+    //Route::get('/access-course/generate', 'generate');
     Route::post('/my-courses/{id}/request', 'create')->middleware('auth:api');
     Route::delete('/my-courses/delete/{id}', 'delete')->middleware('auth:api');
 });

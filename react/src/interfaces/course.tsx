@@ -14,6 +14,7 @@ export interface CourseItemInterface {
     author: User,
     access: CourseAccessItemInterface | null,
     lessons: LessonInterface[] | null,
+    top_students?: User[],
     progress: number,
     created_at: Date,
     updated_at: Date | null

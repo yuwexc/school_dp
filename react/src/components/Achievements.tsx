@@ -4,13 +4,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { State } from "../interfaces/requests";
 import FieldLoader from "./FieldLoader";
-import { t } from "i18next";
 import { AchievementItemInterface } from "../interfaces/achievement";
+import { useTranslation } from "react-i18next";
 
 const Achievements = () => {
 
     const achievements = useSelector<RootState, AchievementItemInterface[] | null>((state) => state.achievements.achievements);
     const status = useSelector((state: State) => state.achievements.status);
+    const { t } = useTranslation();
 
     const items: AchievementItemInterface[] = [
         {

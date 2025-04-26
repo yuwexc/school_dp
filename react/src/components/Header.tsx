@@ -54,6 +54,7 @@ const StyledHeader = styled.header`
     height: 8dvh;
     background: #e4e6ee;
     padding: 10px 10%;
+    z-index: 999;
 
     @media (width <=1024px) {
         & {

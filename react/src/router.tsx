@@ -18,6 +18,7 @@ import CreateLessonView from "./views/CreateLessonView";
 import LessonLayout from "./layouts/LessonLayout";
 import CheckLessonView from "./views/CheckLessonView";
 import CheckLessonStudentAnswer from "./views/CheckLessonStudentAnswer";
+import CreateCourseView from "./views/CreateCourseView";
 
 const router = createBrowserRouter([
     {
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
         children: [
             { path: '/teacher/courses/:id', element: <CourseTeacherView /> },
             { path: '/teacher/courses/:id/edit/:property', element: <EditCourseProperty /> },
+            { path: '/teacher/courses/create', element: <CreateCourseView /> },
             { path: '/teacher/courses/:id/create-lesson', element: <CreateLessonView /> },
             { path: '/lessons/:id/unmarked', element: <CheckLessonView /> },
             { path: '/user/:user/completed-lessons/:id/check', element: <CheckLessonStudentAnswer /> },

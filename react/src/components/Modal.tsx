@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AppDispatch } from "../store";
 import { deleteMyCoursesItem } from "../features/courseSlice";
 import { handleModalState } from "../features/modalSlice";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     header: string
@@ -15,6 +15,7 @@ interface Props {
 const Modal: FC<Props> = ({ header, main, access }) => {
 
     const dispatch = useDispatch<AppDispatch>();
+    const { t } = useTranslation();
 
     const deleteCourseAccess = () => {
         dispatch(deleteMyCoursesItem(access!));

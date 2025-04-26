@@ -11,16 +11,16 @@ import LessonCard from "../components/LessonCard";
 import { Author, Buttons, Characteristics, LinkToResources } from "../components/CourseCard";
 import { LevelColors } from "../interfaces/level";
 import Requested from "../components/Requested";
-
 import Modal from "../components/Modal";
 import { ModalInterface } from "../interfaces/modal";
-import { t } from "i18next";
 import { User } from "../interfaces/user";
+import { useTranslation } from "react-i18next";
 
 const CourseItem = () => {
 
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const user = useSelector<RootState, User>((state) => state.user.user);
     const course = useSelector<RootState, CourseItemInterface | null>((state) => state.courses.course);
@@ -78,12 +78,12 @@ const CourseItem = () => {
                         <CourseInfo>
                             <div style={{ width: '100%', display: 'flex', gap: '8px', marginBottom: '24px' }}>
                                 <Progress $progress={course.progress || 0} $access={course.access?.access_status} />
-                                <p style={{ alignSelf: 'center', textWrap: 'nowrap' }}>{course.progress || '0'}% STUDIED</p>
+                                <p style={{ alignSelf: 'center', textWrap: 'nowrap', textTransform: 'uppercase' }}>{course.progress || '0'}% {t('course.progress')}</p>
                             </div>
-                            <p>GETTING STARTED WITH THE SCHOOL "LIMN"</p>
+                            <p>{t('course.start')}</p>
                             <h1>{course.course_name.toUpperCase()}</h1>
                             <p>{course.course_description}</p>
-                            <Characteristics>
+                            <Characteristics style={{ marginTop: 'unset' }}>
                                 <LinkToResources
                                     to={'/courses'}
                                     style={{ border: '2px solid white' }}
@@ -137,39 +137,55 @@ const CourseItem = () => {
                             }
                         </CourseInfo>
                     </HeaderSection>
-                    <Program>
-                        {course.lessons &&
-                            <Lessons>
-                                {
-                                    course.lessons
-                                        .filter(item => item.lesson_status === 2)
-                                        .filter((_, index) => index < limit)
-                                        .map((lesson, index, array) => <LessonCard
-                                            lesson={lesson}
-                                            access={course.access}
-                                            index={index}
-                                            isOpened={() => {
-                                                if (index < 1) {
-                                                    return true;
-                                                } else {
-                                                    if (array[index - 1].mark != null) {
+                    <Flex>
+                        <Program>
+                            {course.lessons &&
+                                <Lessons>
+                                    {
+                                        course.lessons
+                                            .filter(item => item.lesson_status === 2)
+                                            .filter((_, index) => index < limit)
+                                            .map((lesson, index, array) => <LessonCard
+                                                lesson={lesson}
+                                                access={course.access}
+                                                index={index}
+                                                isOpened={() => {
+                                                    if (index < 1) {
                                                         return true;
                                                     } else {
-                                                        return false;
+                                                        if (array[index - 1].mark != null) {
+                                                            return true;
+                                                        } else {
+                                                            return false;
+                                                        }
                                                     }
-                                                }
-                                            }}
-                                            key={index} />)
-                                }
-                            </Lessons>
-                        }
-                        <ShowMore
-                            style={{ display: (limit >= course.lessons!.filter(item => item.lesson_status === 2).length) ? 'none' : 'block' }}
-                            onClick={() => dispatch(changeLimit())}
-                        >
-                            Показать ещё
-                        </ShowMore>
-                    </Program>
+                                                }}
+                                                key={index} />)
+                                    }
+                                </Lessons>
+                            }
+                            <ShowMore
+                                style={{ display: (limit >= course.lessons!.filter(item => item.lesson_status === 2).length) ? 'none' : 'block' }}
+                                onClick={() => dispatch(changeLimit())}
+                            >
+                                {t('course.more')}
+                            </ShowMore>
+                        </Program>
+                        <TopStudents>
+                            <h2>{t('course.top')}</h2>
+                            {
+                                course.top_students && course.top_students.slice(-course.lessons!.length || 0).map((student, i) =>
+                                    <div key={i} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '12px' }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="36" height="36" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000" stroke="none"><path d="M2340 4984 c-19 -2 -82 -11 -140 -20 -973 -145 -1771 -876 -2003 -1835 -52 -211 -62 -307 -62 -569 0 -312 24 -473 111 -742 241 -747 825 -1330 1572 -1572 273 -88 430 -111 752 -110 229 1 270 3 400 27 516 93 975 335 1330 703 362 374 579 811 667 1339 25 156 25 554 0 710 -93 559 -336 1025 -733 1404 -294 280 -642 478 -1029 585 -218 60 -350 78 -605 81 -124 2 -241 1 -260 -1z m431 -355 c710 -72 1340 -512 1655 -1154 379 -775 247 -1684 -338 -2324 -27 -29 -50 -52 -52 -50 -1 2 -20 33 -41 69 -175 295 -464 497 -792 555 -125 21 -1157 22 -1280 1 -334 -59 -623 -261 -798 -556 -21 -36 -40 -67 -41 -69 -2 -2 -25 21 -52 50 -453 496 -641 1161 -511 1816 207 1046 1188 1771 2250 1662z"></path><path d="M2380 3946 c-178 -38 -333 -121 -468 -250 -187 -180 -282 -401 -283 -658 0 -133 11 -204 46 -308 102 -301 344 -525 652 -607 141 -37 326 -37 467 0 318 85 555 312 662 637 26 80 28 96 29 260 0 153 -3 185 -23 253 -94 327 -345 574 -672 662 -87 23 -321 29 -410 11z"></path></g></svg>
+                                        <h3 style={{ fontWeight: '500', textWrap: 'nowrap' }}>{student.first_name} {student.last_name}</h3>
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <p style={{ fontSize: '14px', color: 'gray' }}>{t('course.score')}: {student.score}</p>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        </TopStudents>
+                    </Flex>
                     {
                         modal.state && <Modal
                             header={t('modal.header')}
@@ -184,6 +200,41 @@ const CourseItem = () => {
 }
 
 export default CourseItem;
+
+const TopStudents = styled.div`
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    gap: 14px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 10px 0 #d3d3d35c;
+
+    @media (max-width: 768px) {
+        width: calc(100% - 48px);
+        padding: 24px;
+        gap: 12px;
+    }
+`
+
+const Flex = styled.div`
+    width: 100%;
+    max-width: 1348px;
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    @media (max-width: 425px) {
+        gap: 12px;
+    }
+`
 
 const ProgressAnimation = keyframes<{ $progress: number }>`
     0% {
@@ -282,8 +333,7 @@ const Lessons = styled.div`
 `
 
 const Program = styled.section`
-    width: 100%;
-    max-width: 1288px;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

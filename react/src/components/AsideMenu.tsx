@@ -27,6 +27,7 @@ const AsideMenu: FC<Props> = ({ setIsHovered }) => {
         {
             to: '/dashboard',
             teacher: null,
+            lesson: null,
             icon:
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20 17.0002V11.4522C20 10.9179 19.9995 10.6506 19.9346 10.4019C19.877 10.1816 19.7825 9.97307 19.6546 9.78464C19.5102 9.57201 19.3096 9.39569 18.9074 9.04383L14.1074 4.84383C13.3608 4.19054 12.9875 3.86406 12.5674 3.73982C12.1972 3.63035 11.8026 3.63035 11.4324 3.73982C11.0126 3.86397 10.6398 4.19014 9.89436 4.84244L5.09277 9.04383C4.69064 9.39569 4.49004 9.57201 4.3457 9.78464C4.21779 9.97307 4.12255 10.1816 4.06497 10.4019C4 10.6506 4 10.9179 4 11.4522V17.0002C4 17.932 4 18.3978 4.15224 18.7654C4.35523 19.2554 4.74432 19.6452 5.23438 19.8482C5.60192 20.0005 6.06786 20.0005 6.99974 20.0005C7.93163 20.0005 8.39808 20.0005 8.76562 19.8482C9.25568 19.6452 9.64467 19.2555 9.84766 18.7654C9.9999 18.3979 10 17.932 10 17.0001V16.0001C10 14.8955 10.8954 14.0001 12 14.0001C13.1046 14.0001 14 14.8955 14 16.0001V17.0001C14 17.932 14 18.3979 14.1522 18.7654C14.3552 19.2555 14.7443 19.6452 15.2344 19.8482C15.6019 20.0005 16.0679 20.0005 16.9997 20.0005C17.9316 20.0005 18.3981 20.0005 18.7656 19.8482C19.2557 19.6452 19.6447 19.2554 19.8477 18.7654C19.9999 18.3978 20 17.932 20 17.0002Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -36,6 +37,7 @@ const AsideMenu: FC<Props> = ({ setIsHovered }) => {
         {
             to: '/my-courses',
             teacher: '/teacher/courses',
+            lesson: '/lessons',
             icon:
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                     width="22" height="22" viewBox="0 0 24 24"
@@ -49,6 +51,7 @@ const AsideMenu: FC<Props> = ({ setIsHovered }) => {
         {
             to: '/settings',
             teacher: null,
+            lesson: null,
             icon:
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" clipRule="evenodd" d="M11.1987 2.58728C11.6971 2.31042 12.303 2.31043 12.8013 2.58728L20.0013 6.58728C20.5252 6.87829 20.85 7.43041 20.85 8.02964V15.9705C20.85 16.5697 20.5252 17.1219 20.0013 17.4129L12.8013 21.4129C12.303 21.6897 11.6971 21.6897 11.1987 21.4129L3.99871 17.4129C3.47489 17.1219 3.15002 16.5697 3.15002 15.9705V8.02964C3.15002 7.43041 3.4749 6.87829 3.99871 6.58728L11.1987 2.58728ZM12.0729 3.89852C12.0276 3.87335 11.9725 3.87335 11.9272 3.89851L4.72718 7.89852C4.67956 7.92497 4.65002 7.97516 4.65002 8.02964V15.9705C4.65002 16.025 4.67956 16.0752 4.72718 16.1016L11.9272 20.1016C11.9725 20.1268 12.0276 20.1268 12.0729 20.1016L19.2729 16.1016C19.3205 16.0752 19.35 16.025 19.35 15.9705V8.02964C19.35 7.97516 19.3205 7.92497 19.2729 7.89852L12.0729 3.89852Z" fill="black" />
@@ -66,7 +69,6 @@ const AsideMenu: FC<Props> = ({ setIsHovered }) => {
         await dispatch(logoutUser());
         localStorage.removeItem('ACCESS_TOKEN');
         navigate('/');
-
     }
 
     return (
@@ -86,7 +88,7 @@ const AsideMenu: FC<Props> = ({ setIsHovered }) => {
                         return (
                             <div key={index}>
                                 <StyledLink to={link.to} $isCurrent={window.location.pathname.toString().slice(0, 11) === link.to
-                                    || window.location.pathname.toString().slice(0, 16) === link.teacher ? true : false}>
+                                    || window.location.pathname.toString().slice(0, 16) === link.teacher || window.location.pathname.toString().slice(0, 8) === link.lesson ? true : false}>
                                     {link.icon}
                                     <p style={{ textWrap: 'nowrap' }}>{link.name}</p>
                                 </StyledLink>
@@ -97,6 +99,19 @@ const AsideMenu: FC<Props> = ({ setIsHovered }) => {
             </GroupLinks>
             <GroupLinks>
                 <div>
+                    <Link style={{
+                        width: '38px',
+                        height: '38px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: '50%',
+                        marginBottom: '10px'
+                    }} to={'/'}>&#8592;</Link>
                     {
                         status === 'loading' ?
                             <LogOutButton disabled>

@@ -11,7 +11,7 @@ import { State } from "../interfaces/requests";
 import { postLesson } from "../features/lessonSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export interface ElementProps {
     id: number,
@@ -20,6 +20,7 @@ export interface ElementProps {
 
 const CreateLessonView = () => {
 
+    const { t } = useTranslation();
     const current_date: Date = new Date();
     const date: string = current_date.getDate().toString().padStart(2, '0') + '.' + (current_date.getMonth() + 1).toString().padStart(2, '0') + '.' + current_date.getFullYear().toString();
 
