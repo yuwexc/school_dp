@@ -21,7 +21,6 @@ const LessonCard: FC<Props> = ({ lesson, index, access, isOpened }) => {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '14px' }}>
                 <h2>{t('course.lesson')} #{index + 1} "{lesson.lesson_name!.toUpperCase()}"</h2>
                 <p>{lesson.lesson_description}</p>
-
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 {

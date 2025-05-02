@@ -7,9 +7,10 @@ import Loader from "../components/Loader";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "../interfaces/requests";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 import { postCourse } from "../features/courseSlice";
 import { useNavigate } from "react-router-dom";
+import { User } from "../interfaces/user";
 
 const CreateCourseView = () => {
 
@@ -17,11 +18,14 @@ const CreateCourseView = () => {
     const [levels, setLevels] = useState<Level[] | null>(null);
     const [categories, setCategories] = useState<Category[] | null>(null);
 
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const status = useSelector((state: State) => state.courses.status);
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
     const onLoad = () => {
+        if (user.role?.role_code != 'teacher') navigate('/my-courses');
+
         const requestOptions: RequestInit = {
             method: "GET",
             redirect: "follow"

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { setLanguage } from "../../public/locales/Language";
 import LangugageButton from "./LanguageButton";
 
@@ -26,9 +26,9 @@ const Header = () => {
                 {
                     links.map((link) => <HeaderLink to={link.link} key={link.id}>{link.text}</HeaderLink>)
                 }
-                <Language>
-                    <LangugageButton lang="en" onClick={() => changeLanguage("en")}>EN</LangugageButton>
-                    <LangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</LangugageButton>
+                <Language style={{ backgroundColor: 'white', borderRadius: '25px', padding: '5px' }}>
+                    <StyledLangugageButton lang="en" onClick={() => changeLanguage("en")}>EN</StyledLangugageButton>
+                    <StyledLangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</StyledLangugageButton>
                 </Language>
             </Nav>
         </StyledHeader>
@@ -36,6 +36,10 @@ const Header = () => {
 }
 
 export default Header;
+
+const StyledLangugageButton = styled(LangugageButton)`
+    border: 1px solid #2d2d2d !important;
+`
 
 export const Language = styled.div`
     display: flex;
@@ -46,14 +50,30 @@ export const Language = styled.div`
     }
 `
 
+const Animation = keyframes`
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}`
+
 const StyledHeader = styled.header`
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: calc(100% - 40px);
     height: 8dvh;
-    background: #e4e6ee;
-    padding: 10px 10%;
+    background: linear-gradient(-90deg, #f7b731, #9c9be3);
+	background-size: 400% 400%;
+	animation: ${Animation} 60s ease infinite;
+    border-radius: 0 0 40px 40px;
+    padding: 10px;
+    margin-inline: 10px;
     z-index: 999;
 
     @media (width <=1024px) {
@@ -70,17 +90,23 @@ const StyledHeader = styled.header`
 `;
 
 const HeaderLink = styled(Link)`
-    width: calc(25% - 5px);
+    flex-grow: 1;
     height: 100%;
     border-radius: 5px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    transition: background .4s;
+    transition: background .4s, color .4s;
+    color: #f9f9f9;
+
+    &:first-child {
+        border-radius: 5px 5px 5px 20px;
+    }
 
     &:hover {
-        background-color: #e4e6ee;
+        background-color: #f9f9f957;
+        color: #2d2d2d;
     }
 
     @media (width <=1024px) {
@@ -91,10 +117,10 @@ const HeaderLink = styled(Link)`
 `
 
 const Nav = styled.nav`
-    background-color: #f9f9f9;
+    // background-color: #f9f9f9;
     height: calc(100% - 20px);
-    width: 80%;
-    border-radius: 10px;
+    width: calc(100% - 20px);
+    border-radius: 10px 10px 30px 30px;
     padding: 10px;
     display: flex;
     flex-direction: row;

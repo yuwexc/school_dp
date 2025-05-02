@@ -1,17 +1,18 @@
 import styled from "styled-components";
 import { Button, Error, Input, Title } from "../styles/forms";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import LessonWordsSection from "../components/LessonWordsSection";
 import { Exercise, Theory, Word } from "../interfaces/lesson";
 import LessonTranslationExercise from "../components/LessonTranslationExercise";
 import LessonTheory from "../components/LessonTheory";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 import { State } from "../interfaces/requests";
 import { postLesson } from "../features/lessonSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import { useTranslation } from "react-i18next";
+import { User } from "../interfaces/user";
 
 export interface ElementProps {
     id: number,
@@ -106,9 +107,14 @@ const CreateLessonView = () => {
     };
 
     const dispatch = useDispatch<AppDispatch>();
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const { status } = useSelector((state: State) => state.lesson);
     const parameters = useParams();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user.role?.role_code != 'teacher') navigate('/my-courses');
+    }, []);
 
     const saveLesson = () => {
         const lesson = {

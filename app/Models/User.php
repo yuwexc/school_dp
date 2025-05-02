@@ -121,4 +121,20 @@ class User extends Authenticatable
 
         return $average_score;
     }
+
+    public function progress(Course $course)
+    {
+        $id_lessons = $course->lessons()->select('id_lesson')->get()
+            ->map(function (Lesson $item) {
+                return $item['id_lesson'];
+            })->all();
+
+        $dones = $this->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
+
+        if ($id_lessons && $dones) {
+            return $dones / count($id_lessons) * 100;
+        } else {
+            return 0;
+        }
+    }
 }

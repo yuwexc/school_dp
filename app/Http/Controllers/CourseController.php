@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccessStatus;
 use App\Models\Course;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
+use App\Models\CourseAccess;
 use App\Models\Lesson;
 use App\Models\LessonStatus;
 use App\Models\User;
@@ -207,16 +209,11 @@ class CourseController extends Controller
         $progress = null;
 
         if ($status == 'enrolled' || $status == 'expelled') {
-            $id_lessons = collect(Lesson::where('course_id', $course->id_course)->get('id_lesson'))
-                ->map(function ($item) {
-                    return $item['id_lesson'];
-                });
-            $dones = $user->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
-
-            if ($id_lessons && $dones) {
-                $progress = $dones / $id_lessons->count() * 100;
-            }
+            $progress = $user->progress($course);
         }
+
+        $students = null;
+        $requests = null;
 
         if ($user != null && $course->user()->get()->first()->id_user == $user->id_user) {
             $lessons = $course->lessons()->select([
@@ -228,6 +225,26 @@ class CourseController extends Controller
                 'created_at',
                 'updated_at'
             ])->orderBy('lesson_number')->get();
+            $students = $course->students()->get()->map(
+                function (User $user) use ($course) {
+                    return [
+                        "first_name" => $user->first_name,
+                        "last_name" => $user->last_name,
+                        "progress" => $user->progress($course)
+                    ];
+                }
+            )->all();
+            $requests = $course->accesses()->where(
+                'status_id',
+                AccessStatus::where('status_code', 'requested')->get()->first()->id_access_status
+            )->get()->map(
+                    function (CourseAccess $access) {
+                        return [
+                            "id_course_access" => $access->id_course_access,
+                            "student" => $access->user()->select(['first_name', 'last_name'])->get()->first()
+                        ];
+                    }
+                )->all();
         } else {
             $lessons = $course->lessons()
                 ->where(
@@ -283,7 +300,7 @@ class CourseController extends Controller
             "level" => $course->level()->select(['level_code', 'level_title', 'level_name'])->get()->first(),
             "category" => $category ? $category : null,
             "image" => $course->image,
-            "author" => $course->user()->select(['first_name', 'last_name'])->get()->first(),
+            "author" => $course->user()->select(['id_user', 'first_name', 'last_name'])->get()->first(),
             "access" => [
                 "id_course_access" => $id_course_access,
                 "access_status" => $status
@@ -291,6 +308,8 @@ class CourseController extends Controller
             "progress" => $progress,
             "lessons" => $lessons,
             "top_students" => $top_students,
+            "students" => $students,
+            "requests" => $requests,
             "created_at" => $course->created_at,
             "updated_at" => $course->updated_at
         ], 200);

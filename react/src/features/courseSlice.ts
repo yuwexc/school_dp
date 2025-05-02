@@ -149,6 +149,24 @@ export const requestAddMyCoursesItem = createAsyncThunk<CourseAccessItemInterfac
     }
 );
 
+export const enrollStudent = createAsyncThunk<CourseAccessItemInterface, string>(
+    'courses/enrollStudent',
+    async (id, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.post<CourseAccessItemInterface>(PROJECT_URL + '/requests/' + id + '/enroll', null, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
+            return data;
+
+        } catch {
+            return rejectWithValue("Не удалось добавить ученика на курс!");
+        }
+    }
+);
+
 export const deleteMyCoursesItem = createAsyncThunk<string, string>(
     'courses/deleteMyCoursesItem',
     async (id, { rejectWithValue }) => {
@@ -255,6 +273,21 @@ const coursesSlice = createSlice({
                 state.status = 'succeeded';
             })
             .addCase(requestAddMyCoursesItem.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                } else {
+                    state.status = 'failed';
+                }
+            })
+
+            .addCase(enrollStudent.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(enrollStudent.fulfilled, (state) => {
+                state.status = 'succeeded';
+            })
+            .addCase(enrollStudent.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
                 } else {

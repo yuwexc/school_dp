@@ -35,6 +35,8 @@ const EditCourseProperty = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (user.role?.role_code != 'teacher') navigate('/courses' + id);
+        
         window.scrollTo(0, 0);
 
         dispatch(fetchMyCoursesItem(id!));

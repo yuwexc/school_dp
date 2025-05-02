@@ -36,6 +36,10 @@ const LineWord: FC<Props> = ({ id, wordLines, setWordLines, register, errors, un
                 <Input {...register(`english-${id}`, {
                     required: {
                         value: true, message: t('sign_up.empty')
+                    },
+                    pattern: {
+                        value: /^[a-zA-Z\s-]+$/i,
+                        message: t('sign_up.incorrect')
                     }
                 })} type="text" placeholder="Слово на английском языке (часть речи - необязательно)" id={'english' + id}></Input>
                 {
@@ -55,13 +59,12 @@ const LineWord: FC<Props> = ({ id, wordLines, setWordLines, register, errors, un
             <div>
                 <Input {...register(`russian-${id}`, {
                     required: {
-                        value: true, message: t('sign_up.empty', {
-                            pattern: {
-                                value: /[а-яА-ЯёЁ]$/,
-                                message: t('sign_up.incorrect')
-                            }
-                        })
+                        value: true, message: t('sign_up.empty')
                     },
+                    pattern: {
+                        value: /^[а-яА-ЯёЁ\s-]+$/i,
+                        message: t('sign_up.incorrect')
+                    }
                 })}
                     type="text" placeholder="Перевод" id={'russian' + id}></Input>
                 {

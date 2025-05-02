@@ -3,8 +3,8 @@ import styled, { keyframes } from "styled-components";
 import { AppDispatch, RootState } from "../store";
 import { CourseItemInterface } from "../interfaces/course";
 import { State } from "../interfaces/requests";
-import { useEffect } from "react";
-import { fetchMyCoursesItem } from "../features/courseSlice";
+import { useEffect, useState } from "react";
+import { enrollStudent, fetchMyCoursesItem } from "../features/courseSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Characteristics, LinkToResources } from "../components/CourseCard";
 import { LevelColors } from "../interfaces/level";
@@ -23,6 +23,8 @@ const CourseTeacherView = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
+        if (user.role?.role_code != 'teacher') navigate('/courses' + id);
+        
         window.scrollTo({
             top: 0,
             left: 0,
@@ -32,6 +34,9 @@ const CourseTeacherView = () => {
         dispatch(fetchMyCoursesItem(id!));
 
     }, [dispatch, id]);
+
+    const [studentLimit, setStudentLimit] = useState<number>(3);
+    const [requestLimit, setRequestLimit] = useState<number>(3);
 
     return (
         <StyledMain>
@@ -141,9 +146,61 @@ const CourseTeacherView = () => {
                             </div>
                         </Block>
                     </Intro>
+                    <FlexGroup>
+                        <Students>
+                            <h2>Студенты</h2>
+                            {
+                                course.students && course.students.length != 0 ?
+                                    <>
+                                        {
+                                            course.students.filter((_, index) => index < studentLimit).map((student, index) =>
+                                                <Line key={index}>
+                                                    <div>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="36" height="36" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000" stroke="none"><path d="M2340 4984 c-19 -2 -82 -11 -140 -20 -973 -145 -1771 -876 -2003 -1835 -52 -211 -62 -307 -62 -569 0 -312 24 -473 111 -742 241 -747 825 -1330 1572 -1572 273 -88 430 -111 752 -110 229 1 270 3 400 27 516 93 975 335 1330 703 362 374 579 811 667 1339 25 156 25 554 0 710 -93 559 -336 1025 -733 1404 -294 280 -642 478 -1029 585 -218 60 -350 78 -605 81 -124 2 -241 1 -260 -1z m431 -355 c710 -72 1340 -512 1655 -1154 379 -775 247 -1684 -338 -2324 -27 -29 -50 -52 -52 -50 -1 2 -20 33 -41 69 -175 295 -464 497 -792 555 -125 21 -1157 22 -1280 1 -334 -59 -623 -261 -798 -556 -21 -36 -40 -67 -41 -69 -2 -2 -25 21 -52 50 -453 496 -641 1161 -511 1816 207 1046 1188 1771 2250 1662z"></path><path d="M2380 3946 c-178 -38 -333 -121 -468 -250 -187 -180 -282 -401 -283 -658 0 -133 11 -204 46 -308 102 -301 344 -525 652 -607 141 -37 326 -37 467 0 318 85 555 312 662 637 26 80 28 96 29 260 0 153 -3 185 -23 253 -94 327 -345 574 -672 662 -87 23 -321 29 -410 11z"></path></g></svg>
+                                                        <p>{student.first_name} {student.last_name}</p>
+                                                    </div>
+                                                    <p style={{ color: 'gray' }}>пройдено: {student.progress}%</p>
+                                                </Line>
+                                            )
+                                        }
+                                        {
+                                            course.students.length > studentLimit &&
+                                            <ShowMore onClick={() => setStudentLimit(course.students!.length)}>Показать все</ShowMore>
+                                        }
+                                    </>
+                                    :
+                                    <p>Студентов нет</p>
+                            }
+                        </Students>
+                        <Requests>
+                            <h2 style={{ textWrap: 'nowrap' }}>Завки на поступление</h2>
+                            {
+                                course.requests && course.requests.length != 0 ?
+                                    <>
+                                        {
+                                            course.requests.filter((_, index) => index < requestLimit).map((request, index) =>
+                                                <Line key={index}>
+                                                    <div>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="36" height="36" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000" stroke="none"><path d="M2340 4984 c-19 -2 -82 -11 -140 -20 -973 -145 -1771 -876 -2003 -1835 -52 -211 -62 -307 -62 -569 0 -312 24 -473 111 -742 241 -747 825 -1330 1572 -1572 273 -88 430 -111 752 -110 229 1 270 3 400 27 516 93 975 335 1330 703 362 374 579 811 667 1339 25 156 25 554 0 710 -93 559 -336 1025 -733 1404 -294 280 -642 478 -1029 585 -218 60 -350 78 -605 81 -124 2 -241 1 -260 -1z m431 -355 c710 -72 1340 -512 1655 -1154 379 -775 247 -1684 -338 -2324 -27 -29 -50 -52 -52 -50 -1 2 -20 33 -41 69 -175 295 -464 497 -792 555 -125 21 -1157 22 -1280 1 -334 -59 -623 -261 -798 -556 -21 -36 -40 -67 -41 -69 -2 -2 -25 21 -52 50 -453 496 -641 1161 -511 1816 207 1046 1188 1771 2250 1662z"></path><path d="M2380 3946 c-178 -38 -333 -121 -468 -250 -187 -180 -282 -401 -283 -658 0 -133 11 -204 46 -308 102 -301 344 -525 652 -607 141 -37 326 -37 467 0 318 85 555 312 662 637 26 80 28 96 29 260 0 153 -3 185 -23 253 -94 327 -345 574 -672 662 -87 23 -321 29 -410 11z"></path></g></svg>
+                                                        <p>{request.student.first_name} {request.student.last_name}</p>
+                                                    </div>
+                                                    <Enroll onClick={() => dispatch(enrollStudent(request.id_course_access)).then(() => dispatch(fetchMyCoursesItem(id!)))}>Принять</Enroll>
+                                                </Line>
+                                            )
+                                        }
+                                        {
+                                            course.requests.length > requestLimit &&
+                                            <ShowMore onClick={() => setRequestLimit(course.requests!.length)}>Показать все</ShowMore>
+                                        }
+                                    </>
+                                    :
+                                    <p>Заявок нет</p>
+                            }
+                        </Requests>
+                    </FlexGroup>
                     <Intro>
                         <Flex>
-                            <Title>Уроки</Title>
+                            <h2>Уроки</h2>
                             <AddLessonButton onClick={() => {
                                 navigate('/teacher/courses/' + course.id_course + '/create-lesson');
                             }}>+ новый урок</AddLessonButton>
@@ -162,6 +219,98 @@ const CourseTeacherView = () => {
 }
 
 export default CourseTeacherView;
+
+const ShowMore = styled.button`
+    align-self: center;
+    width: fit-content;
+    border: 1px solid #2d2d2d;
+    border-radius: 6px;
+    padding: 4px 6px;
+    background-color: unset;
+    font-weight: 500;
+    cursor: pointer;
+`
+
+const Enroll = styled.button`
+    color: #6c5ce7;
+    font-size: 16px;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+    background-color: transparent;
+`
+
+const Line = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #d3d3d3;
+
+    & > div {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+`
+
+const FlexGroup = styled.div`
+    width: 100%;
+    max-width: 1368px;
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    @media (max-width: 425px) {
+        gap: 12px;
+    }
+`
+
+const Requests = styled.div`
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    gap: 20px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 10px 0 #d3d3d35c;
+
+    @media (max-width: 768px) {
+        width: calc(100% - 48px);
+        padding: 24px;
+        gap: 12px;
+    }
+`
+
+const Students = styled.section`
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    gap: 20px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 10px 0 #d3d3d35c;
+
+    @media (max-width: 1279px) {
+        width: calc(100% - 60px);
+    }
+
+    @media (max-width: 767px) {
+        width: calc(100% - 48px);
+        gap: 12px;
+        padding: 24px;
+    }
+`
 
 const AddLessonButtonEnd = styled(Button)`
     display: none;
@@ -250,7 +399,8 @@ const Intro = styled.section`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: rgb(245, 245, 245);
+    background-color: white;
+    box-shadow: 0px 10px 10px 0 #d3d3d35c;
     padding: 32px;
     gap: 20px;
     border-radius: 24px;
@@ -274,7 +424,7 @@ const StyledMain = styled.main`
     flex-direction: column;
     align-items: center;
     gap: 24px;
-    background-color: white;
+    background-color: rgb(245, 245, 245);
 
     @media (577px <= width <= 768px) {
         padding: 24px;

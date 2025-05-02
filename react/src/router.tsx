@@ -1,8 +1,8 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import GuestLayout from "./layouts/GuestLayout";
 import StudentLayout from "./layouts/StudentLayout";
 import Courses from "./views/Courses";
-import Topics from "./views/Topics";
+// import Topics from "./views/Topics";
 import Home from "./views/Home";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./views/Login";
@@ -28,7 +28,8 @@ const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: '/courses', element: <Courses /> },
             { path: '/courses/:id', element: <CourseItem /> },
-            { path: '/topics', element: <Topics /> },
+            { path: '/*', element: <Navigate to={'/'} /> },
+            // { path: '/topics', element: <Topics /> },
         ]
     },
     {

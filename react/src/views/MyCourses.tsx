@@ -85,6 +85,10 @@ const Courses = styled.div<{ $role: string | undefined }>`
     flex-direction: ${props => props.$role == 'student' ? 'row' : 'column'};
     flex-wrap: wrap;
     gap: ${props => props.$role == 'student' ? '24px' : '12px'};
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `
 
 const Title = styled.h2`

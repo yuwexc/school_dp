@@ -96,6 +96,22 @@ const Section = styled.section`
     gap: 24px;
     background-color: rgb(245, 245, 245);
     border-radius: 32px;
+
+    @media (max-width: 1024px) {
+        margin: -40px 60px 40px 60px;
+    }
+
+    @media (max-width: 768px) {
+        margin: -30px 40px 40px 40px;
+    }
+
+    @media (max-width: 426px) {
+        & > div {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        margin: -10px 24px 30px 24px;
+    }
 `
 
 const Main = styled.main`

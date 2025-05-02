@@ -9,9 +9,7 @@ const LessonIntro: FC<{ lesson: LessonInterface }> = ({ lesson }) => {
                 <Greeting style={{ gridColumn: '1 / 3' }}>Welcome to the Lesson,</Greeting>
                 <Flex>
                     <Greeting>"{lesson.lesson_name}"!</Greeting>
-                    <Greeting style={{ fontSize: '280px', lineHeight: '0.81', color: '#f7b731' }}>
-                        #{lesson.lesson_number}
-                    </Greeting>
+                    <Number>#{lesson.lesson_number}</Number>
                 </Flex>
             </Grid>
             <SvgTopRight xmlns="http://www.w3.org/2000/svg" width="864" height="907" viewBox="0 0 864 907" fill="none">
@@ -77,6 +75,32 @@ const Greeting = styled.h1`
     text-transform: uppercase;
     font-size: 103px;
     color: white;
+
+    @media (max-width: 1024px) {
+        font-size: 84px;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 72px;
+    }
+
+    @media (max-width: 576px) {
+        font-size: 60px;
+    }
+        
+    @media (max-width: 426px) {
+        font-size: 40px;
+    }
+`
+
+const Number = styled(Greeting)`
+    font-size: 280px;
+    line-height: 0.81;
+    color: #f7b731;
+
+    @media (max-width: 768px) {
+        font-size: 180px;
+    }
 `
 
 const Section = styled.section`

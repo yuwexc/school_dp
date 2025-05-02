@@ -1,21 +1,25 @@
 import styled, { keyframes } from "styled-components";
 import { fetchLesson } from "../features/lessonSlice";
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { LessonInterface } from "../interfaces/lesson";
 import { State } from "../interfaces/requests";
+import { User } from "../interfaces/user";
 
 const CheckLessonView = () => {
 
     const { id } = useParams<{ id: string }>();
 
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const lesson = useSelector<RootState, LessonInterface | null>((state) => state.lesson.lesson);
     const status = useSelector((state: State) => state.lesson.status);
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if (user.role?.role_code != 'teacher') navigate('/my-courses');
         window.scrollTo({
             top: 0,
             left: 0,

@@ -184,12 +184,11 @@ const SignUp = () => {
                                         <label htmlFor="first_name">{t('sign_up.first_name')}</label>
                                         <Input {...register('first_name', {
                                             required: {
-                                                value: true, message: t('sign_up.empty', {
-                                                    pattern: {
-                                                        value: /[a-zA-zа-яА-ЯёЁ]$/,
-                                                        message: t('sign_up.incorrect')
-                                                    }
-                                                })
+                                                value: true, message: t('sign_up.empty')
+                                            },
+                                            pattern: {
+                                                value: /^[a-zA-Zа-яА-ЯёЁ-]+$/i,
+                                                message: t('sign_up.incorrect')
                                             }
                                         })} type="text" placeholder={t('sign_up.first_name_placeholder')} autoComplete="name" id="first_name" />
                                         {
@@ -200,12 +199,11 @@ const SignUp = () => {
                                         <label htmlFor="last_name">{t('sign_up.last_name')}</label>
                                         <Input {...register('last_name', {
                                             required: {
-                                                value: true, message: t('sign_up.empty', {
-                                                    pattern: {
-                                                        value: /[a-zA-zа-яА-ЯёЁ]$/,
-                                                        message: t('sign_up.incorrect')
-                                                    }
-                                                })
+                                                value: true, message: t('sign_up.empty')
+                                            },
+                                            pattern: {
+                                                value: /^[a-zA-Zа-яА-ЯёЁ-]+$/i,
+                                                message: t('sign_up.incorrect')
                                             }
                                         })} type="text" placeholder={t('sign_up.last_name_placeholder')} autoComplete="family-name" id="last_name" />
                                         {
@@ -216,7 +214,7 @@ const SignUp = () => {
                                         <label htmlFor="middle_name">{t('sign_up.middle_name')}</label>
                                         <Input {...register('middle_name', {
                                             pattern: {
-                                                value: /[a-zA-zа-яА-ЯёЁ]$/,
+                                                value: /^[a-zA-Zа-яА-ЯёЁ-]+$/i,
                                                 message: t('sign_up.incorrect')
                                             }
                                         })} type="text" placeholder={t('sign_up.middle_name_placeholder')} autoComplete="additional-name" id="middle_name" />
@@ -229,7 +227,7 @@ const SignUp = () => {
                                         <Input {...register('phone', {
                                             required: { value: true, message: t('sign_up.empty') },
                                             pattern: {
-                                                value: /((8|\+7)[- ]?)?(\(?\d{3}\)?[- ]?)?[\d\- ]{11,11}$/,
+                                                value: /^(?:\+7|8)\d{10}$/,
                                                 message: t('sign_up.incorrect')
                                             }
                                         })} type="tel" placeholder={t('sign_up.phone_placeholder')} autoComplete="tel-national" id="phone"
@@ -247,7 +245,7 @@ const SignUp = () => {
                                         <Input {...register('email', {
                                             required: { value: true, message: t('sign_up.empty') },
                                             pattern: {
-                                                value: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                                value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
                                                 message: t('login.incorrect')
                                             }
                                         })} placeholder="example@gmail.com" autoComplete="email" id="email"

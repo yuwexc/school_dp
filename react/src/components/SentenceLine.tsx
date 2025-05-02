@@ -37,13 +37,12 @@ const SentenceLine: FC<Props> = ({ id, sentenceLines, setSentenceLines, register
             <div>
                 <Input {...register(`russian-sentence-${id}`, {
                     required: {
-                        value: true, message: t('sign_up.empty', {
-                            pattern: {
-                                value: /[а-яА-ЯёЁ]$/,
-                                message: t('sign_up.incorrect')
-                            }
-                        })
+                        value: true, message: t('sign_up.empty')
                     },
+                    pattern: {
+                        value: /^[а-яА-ЯёЁ\s-\d]+$/i,
+                        message: t('sign_up.incorrect')
+                    }
                 })}
                     type="text" placeholder="Предложение на русском" id={'russian-sentence' + id}></Input>
                 {
@@ -52,6 +51,10 @@ const SentenceLine: FC<Props> = ({ id, sentenceLines, setSentenceLines, register
             </div>
             <div>
                 <Input {...register(`english-sentence-${id}`, {
+                    pattern: {
+                        value: /^[a-zA-Z\s-\d]+$/i,
+                        message: t('sign_up.incorrect')
+                    }
                 })} type="text" placeholder="Ответ" id={'english-sentence' + id}></Input>
                 {
                     errors[`english-sentence-${id}`] && <Message>{errors[`english-sentence-${id}`]?.message}</Message>
@@ -61,6 +64,10 @@ const SentenceLine: FC<Props> = ({ id, sentenceLines, setSentenceLines, register
                 <Input {...register(`score--${id}`, {
                     required: {
                         value: true, message: t('sign_up.empty')
+                    },
+                    pattern: {
+                        value: /^[\d]+$/,
+                        message: t('sign_up.incorrect')
                     }
                 })} type="number" min={1} placeholder="Балл за правильный ответ" id={'score' + id}></Input>
                 {

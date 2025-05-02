@@ -10,6 +10,7 @@ import { Feedback } from "../interfaces/done";
 import { Button, Error } from "../styles/forms";
 import Loader from "../components/Loader";
 import { useTranslation } from "react-i18next";
+import { User } from "../interfaces/user";
 
 const CheckLessonStudentAnswer = () => {
 
@@ -17,6 +18,7 @@ const CheckLessonStudentAnswer = () => {
     const { t } = useTranslation();
 
     const dispatch = useDispatch<AppDispatch>();
+    const current_user = useSelector<RootState, User>((state) => state.user.user);
     const lesson = useSelector<RootState, LessonInterface | null>((state) => state.lesson.lesson);
     const status = useSelector<RootState, string | null>((state) => state.lesson.status);
 
@@ -106,6 +108,10 @@ const CheckLessonStudentAnswer = () => {
             })).then(() => navigate(-1))
         }
     }, [check, summaryFeedback]);
+
+    useEffect(() => {
+        if (current_user.role?.role_code != 'teacher') navigate('/courses' + id);
+    }, [])
 
     return (
         <StyledMain>

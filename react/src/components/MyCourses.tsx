@@ -27,10 +27,7 @@ const MyCourses = () => {
                     status === 'loading' ?
                         <FieldLoader borderRadius={24} />
                         :
-                        <>
-                            {t('dashboard.myCourses.title') + ' | '}
-                            <Look href={'/my-courses'}><span>{t('dashboard.myCourses.view')}</span> &#8594;</Look>
-                        </>
+                        t('dashboard.myCourses.title')
                 }
             </Title>
             {
@@ -55,6 +52,7 @@ const MyCourses = () => {
                                     <Link to={'/courses'} style={{ padding: 'unset', fontWeight: 500 }}><span style={{ textDecoration: 'underline' }}>{t('dashboard.myCourses.go')}</span> &#8594;</Link>
                                 </>
                         }
+                        <Look href={'/my-courses'}><span>{t('dashboard.myCourses.view')}</span> &#8594;</Look>
                     </>
             }
             {

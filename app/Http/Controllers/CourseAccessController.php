@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\AccessStatus;
 use App\Models\CourseAccess;
 use App\Http\Requests\StoreCourseAccessRequest;
-use App\Http\Requests\UpdateCourseAccessRequest;
 use Request;
 
 class CourseAccessController extends Controller
@@ -87,9 +86,15 @@ class CourseAccessController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCourseAccessRequest $request, CourseAccess $courseAccess)
+    public function update($id)
     {
-        //
+        if ($access = CourseAccess::find($id)) {
+            $access->status_id = AccessStatus::where('status_code', 'enrolled')->get()->first()->id_access_status;
+            $access->save();
+            return response($access, 200);
+        } else {
+            return response(["message" => "Course access not found"], 404);
+        }
     }
 
     /**

@@ -107,7 +107,7 @@ const Settings = () => {
         if (data.phone![0] === '8') {
             data.phone = '+7' + data.phone!.split('').splice(1).join('');
         }
-        
+
         dispatch(updateUser(data));
     }
 
@@ -126,7 +126,7 @@ const Settings = () => {
                         <Input defaultValue={user.first_name!} {...register('first_name', {
                             required: { value: true, message: t('sign_up.empty') },
                             pattern: {
-                                value: /^[a-zA-Zа-яА-ЯёЁ]$/,
+                                value: /^[a-zA-Zа-яА-ЯёЁ-]+$/i,
                                 message: t('sign_up.incorrect')
                             }
                         })} type="text" placeholder={t('sign_up.first_name_placeholder')} autoComplete="name" id="first_name" />
@@ -139,7 +139,7 @@ const Settings = () => {
                         <Input defaultValue={user.last_name! || ''} {...register('last_name', {
                             required: { value: true, message: t('sign_up.empty') },
                             pattern: {
-                                value: /^[a-zA-Zа-яА-ЯёЁ]$/,
+                                value: /^[a-zA-Zа-яА-ЯёЁ-]+$/i,
                                 message: t('sign_up.incorrect')
                             }
                         })} type="text" placeholder={t('sign_up.last_name_placeholder')} autoComplete="family-name"
@@ -152,7 +152,7 @@ const Settings = () => {
                         <label htmlFor="middle_name">{t('sign_up.middle_name')}</label>
                         <Input defaultValue={user.middle_name! || ''} {...register('middle_name', {
                             pattern: {
-                                value: /^[a-zA-Zа-яА-ЯёЁ]$/,
+                                value: /^[a-zA-Zа-яА-ЯёЁ-]+$/i,
                                 message: t('sign_up.incorrect')
                             }
                         })}
@@ -167,7 +167,7 @@ const Settings = () => {
                         <Input defaultValue={user.phone! || ''} {...register('phone', {
                             required: { value: true, message: t('sign_up.empty') },
                             pattern: {
-                                value: /((8|\+7)[- ]?)?(\(?\d{3}\)?[- ]?)?[\d\- ]{11}$/,
+                                value: /^(?:\+7|8)\d{10}$/,
                                 message: t('sign_up.incorrect')
                             }
                         })} type="tel" placeholder={t('sign_up.phone_placeholder')} autoComplete="tel-national" id="phone"
@@ -185,7 +185,7 @@ const Settings = () => {
                         <Input defaultValue={user.email! || ''} contentEditable={true}  {...register('email', {
                             required: { value: true, message: t('sign_up.empty') },
                             pattern: {
-                                value: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
                                 message: t('login.incorrect')
                             }
                         })} placeholder="example@gmail.com" autoComplete="email" id="email"
@@ -231,7 +231,7 @@ const Settings = () => {
                     }
                 </div>
                 <h3>{t('settings.language')}</h3>
-                <Language>
+                <Language style={{ display: 'flex' }}>
                     <LangugageButton lang="en" onClick={() => changeLanguage("en")}>EN</LangugageButton>
                     <LangugageButton lang="ru" onClick={() => changeLanguage("ru")}>RU</LangugageButton>
                 </Language>

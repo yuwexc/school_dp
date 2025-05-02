@@ -28,7 +28,7 @@ const Course: FC<Props> = ({ course }) => {
                     user.role?.role_code === 'student' && <IMG $src={course.image} />
                 }
                 <CourseLevel level={course.level} />
-                <h2>"{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}"</h2>
+                <h2 style={{ textWrap: 'wrap' }}>"{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}"</h2>
                 {
                     user.role?.role_code == 'student' &&
                     <Author>{t('dashboard.myCourses.author')} {course.author.first_name + ' ' + course.author.last_name}</Author>

@@ -30,4 +30,8 @@ const LevelBlock = styled.div`
     @media (576px >= width) {
         margin-right: unset;
     }
+
+    @media (425px >= width) {
+        display: none;
+    }
 `

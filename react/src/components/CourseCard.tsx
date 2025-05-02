@@ -181,6 +181,19 @@ const IMG = styled.div <{ $src: string | null }>`
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 25px;
+
+    @media (width <= 986px) {
+        min-width: 240px;
+    }
+
+    @media (width <= 768px) {
+        min-width: unset;
+        min-height: 320px;
+    }
+
+    @media (width <= 426px) {
+        display: none;
+    }
 `
 
 const Article = styled.article`
@@ -196,4 +209,14 @@ const Article = styled.article`
     padding: 5px;
     box-shadow: rgb(211, 211, 211) 0px 0px 10px 0px;
     background-color: white;
+
+    @media (width <= 986px) {
+        width: 100%;
+        min-width: unset;
+        flex-direction: row;
+    }
+
+    @media (width <= 768px) {
+        flex-direction: column;
+    }
 `

@@ -60,6 +60,7 @@ Route::controller(CourseController::class)->group(function () {
 
 Route::controller(CourseAccessController::class)->group(function () {
     //Route::get('/access-course/generate', 'generate');
+    Route::post('/requests/{id}/enroll', 'update')->middleware('auth:api');
     Route::post('/my-courses/{id}/request', 'create')->middleware('auth:api');
     Route::delete('/my-courses/delete/{id}', 'delete')->middleware('auth:api');
 });

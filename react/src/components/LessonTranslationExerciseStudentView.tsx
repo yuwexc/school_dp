@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { Button, Input, Title } from "../styles/forms";
+import { Button, Input } from "../styles/forms";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Exercise } from "../interfaces/lesson";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormData } from "./LessonWordsSection";
 import { Done, Feedback } from "../interfaces/done";
+import { LessonSectionTitle } from "../styles/lesson";
 
 interface Props {
     exercise: Exercise
@@ -46,7 +47,7 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
 
     return (
         <Section>
-            <Title style={{ fontSize: '103px', color: '#fa8231' }}>PRACTICE</Title>
+            <LessonSectionTitle style={{ color: '#fa8231' }}>PRACTICE</LessonSectionTitle>
             <Name>{exercise.name}. {exercise.description}</Name>
             <Form onSubmit={handleSubmit(onSubmit)}>
                 {
@@ -113,6 +114,12 @@ const Task = styled.div<{ $student_score: number | undefined }>`
     & + input {
         color: ${props => typeof props.$student_score == 'undefined' ? '#2d2d2d' : (props.$student_score == 0 ? '#d91e18' : '#20bf6b')};
     }
+
+    @media (max-width: 426px) {
+        & > p {
+            font-size: 20px !important;
+        }
+    }
 `
 
 const Number = styled.p`
@@ -121,10 +128,18 @@ const Number = styled.p`
     color: white;
     font-size: 20px;
     font-variant-numeric: tabular-nums;
+
+    @media (max-width: 426px) {
+        display: none;
+    }
 `
 
 const Name = styled.h3`
     font-size: 30px;
+
+    @media (max-width: 426px) {
+        font-size: 24px;
+    }
 `
 
 const Section = styled.section`
@@ -133,4 +148,16 @@ const Section = styled.section`
     flex-direction: column;
     align-items: stretch;
     gap: 24px;
+
+    @media (max-width: 1024px) {
+        padding: 60px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 50px 40px;
+    }
+
+    @media (max-width: 426px) {
+        padding: 30px 24px;
+    }
 `

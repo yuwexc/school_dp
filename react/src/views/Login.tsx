@@ -67,7 +67,7 @@ const Login = () => {
                             <Input {...register('email', {
                                 required: { value: true, message: t('login.empty') },
                                 pattern: {
-                                    value: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
                                     message: t('login.incorrect')
                                 }
                             })} placeholder="example@gmail.com" autoComplete="email" id="email" />
