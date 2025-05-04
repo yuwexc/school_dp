@@ -117,5 +117,89 @@
         "top": "TOP STUDENTS",
         "more": "Show more",
         "score": "average grade"
+    },
+    "home": {
+        "title": "The best platform enroll in your special course",
+        "view": "Explore Courses",
+        "description1": "Limn English Online School — ",
+        "description2": "Effective lessons, flexible scheduling, and a personalized approach. Learn with ease and achieve your goals with us!",
+        "action1": "Dreaming of fluent English?",
+        "action2": "Your journey starts here!",
+        "facts": {
+            "1": "of our students achieve conversational English in just 3 months",
+            "2": "successful graduates and counting",
+            "3": "of our students pass international English exams successfully",
+            "4": "interactive lessons designed for maximum learning impact"
+        },
+        "target": {
+            "title": "Set your target and we’ll make sure you hit it",
+            "men1": "For beginners",
+            "description1": "If you're just starting to learn English, our courses will help you master the basics from scratch",
+            "men2": "For IT professionals",
+            "description2": "English for Developers: master tech vocabulary and boost your skills for international projects",
+            "men3": "For advanced learners",
+            "description3": "Enhance your English proficiency and refine skills for fluent communication in professional settings",
+            "men4": "For medical professionals",
+            "description4": "Medical English Proficiency: develop specialized vocabulary for foreign Healthcare settings",
+            "men5": "For travelers",
+            "description5": "Learn English to communicate freely while traveling and feel confident abroad",
+            "men6": "For Children & Teens",
+            "description6": "Fun English lessons for kids - learning through games and creativity, no memorization needed",
+            "men7": "For Career & Business",
+            "description7": "Master Business English and take your career to the next level with practical skills",
+            "men8": "Exam Preparation Courses",
+            "description8": "Get your required IELTS/TOEFL score - our guaranteed preparation program"
+        },
+        "feedback": {
+            "title": "Success stories from our students",
+            "items": {
+                "0": {
+                    "title": "LIMN helped me prepare for my exam",
+                    "text": "The classes at LIMN gave me everything I needed to get ready for my IELTS exam, and I achieved my target score! I highly recommend this school to anyone serious about success.",
+                    "letter": "T",
+                    "author": "Tatyana A.",
+                    "date": "27 November 2023"
+                },
+                "1": {
+                    "title": "I loved the flexible schedule",
+                    "text": "The adaptable class timetable was perfect for my full-time job. The courses are excellently tailored to my current level.",
+                    "letter": "E",
+                    "author": "Elena S.",
+                    "date": "15 July 2023"
+                },
+                "2": {
+                    "title": "From beginner to understanding movies & speaking confidently",
+                    "text": "When I first joined LIMN, my English level was very basic. I was afraid to speak, mixed up tenses constantly, and couldn’t catch most phrases in movies. But thanks to my teacher’s attentive approach and LIMN’s brilliant learning system, I progressed faster than I ever imagined. A huge thank you to the LIMN team for their professionalism and personalized attention!",
+                    "letter": "A",
+                    "author": "Alexandra M.",
+                    "date": "4 August 2023"
+                },
+                "3": {
+                    "title": "Felt supported every step of the way",
+                    "text": "The course was perfectly structured, and I truly felt supported at every stage. I especially loved the interactive exercises that helped reinforce the material – they made learning engaging and effective.",
+                    "letter": "L",
+                    "author": "Liza K.",
+                    "date": "14 November 2023"
+                },
+                "4": {
+                    "title": "My pronunciation improved dramatically",
+                    "text": "In just a short time, I saw significant progress. The lessons with native speakers were especially valuable - they helped me improve both my pronunciation and conversational confidence.",
+                    "letter": "O",
+                    "author": "Olesya F.",
+                    "date": "23 April 2024"
+                },
+                "5": {
+                    "title": "Now I communicate confidently with colleagues",
+                    "text": "Studying at LIMN completely transformed my relationship with English! I used to be afraid to speak, but now I confidently communicate with colleagues in international meetings.",
+                    "letter": "D",
+                    "author": "Dmitry K.",
+                    "date": "6 November 2023"
+                }
+            },
+            "action": {
+                "text": "Our students achieve conversational English in just 3 months",
+                "question": "Why not you?"
+            }
+        }
     }
 }
