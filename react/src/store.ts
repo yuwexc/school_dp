@@ -5,6 +5,8 @@ import coursesSlice from './features/courseSlice';
 import modalSlice from './features/modalSlice';
 import lessonsLimitSlice from "./features/lessonsLimit";
 import lessonSlice from "./features/lessonSlice";
+import categoriesSlice from "./features/categorySlice";
+import adminSlice from "./features/adminSlice";
 
 const store = configureStore({
     reducer: {
@@ -13,7 +15,9 @@ const store = configureStore({
         courses: coursesSlice,
         modal: modalSlice,
         lessonsLimit: lessonsLimitSlice,
-        lesson: lessonSlice
+        lesson: lessonSlice,
+        categories: categoriesSlice,
+        admin: adminSlice
     },
 });
 

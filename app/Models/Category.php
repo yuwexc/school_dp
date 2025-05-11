@@ -13,6 +13,10 @@ class Category extends Model
     protected $table = 'categories';
     protected $primaryKey = 'id_category';
 
+    protected $fillable = [
+        'category_name'
+    ];
+
     protected $hidden = [
         'created_at',
         'updated_at'

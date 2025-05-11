@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseAccessController;
 use App\Http\Controllers\CourseController;
@@ -27,10 +28,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/levels', [LevelController::class, 'index']);
 Route::get('/categories', [CategoryController::class, 'index']);
+Route::post('/categories', [CategoryController::class, 'store']);
 
 Route::controller(UserController::class)->group(function () {
     //Route::get('/user/generate', 'generate');
-    Route::get('/user', 'index')->middleware('auth:api');
+    Route::get('/user', 'show')->middleware('auth:api');
+    Route::get('/users', 'index');
     Route::post('/users', 'create');
     Route::post('/user/update', 'update')->middleware('auth:api');
     Route::post('/login', 'login');
@@ -68,4 +71,8 @@ Route::controller(CourseAccessController::class)->group(function () {
 Route::controller(LessonController::class)->group(function () {
     Route::get('/lessons/{id}', 'show')->middleware('auth:api');
     Route::post('/courses/{course}/lessons', 'create')->middleware('auth:api');
+});
+
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/stats', 'stats')->middleware('auth:api');
 });

@@ -19,6 +19,10 @@ import LessonLayout from "./layouts/LessonLayout";
 import CheckLessonView from "./views/CheckLessonView";
 import CheckLessonStudentAnswer from "./views/CheckLessonStudentAnswer";
 import CreateCourseView from "./views/CreateCourseView";
+import UsersManagement from "./views/UsersManagement";
+import AdminLayout from "./layouts/AdminLayout";
+import CategoriesManagement from "./views/CategoriesManagement";
+import AdminDashboard from "./views/Admin";
 
 const router = createBrowserRouter([
     {
@@ -68,6 +72,14 @@ const router = createBrowserRouter([
         children: [
             { path: '/lessons/:id', element: <Lesson /> }
         ]
+    },
+    {
+        path: '/admin',
+        element: <AdminDashboard />,
+        // children: [
+        //     { path: 'users', element: <UsersManagement /> },
+        //     { path: 'categories', element: <CategoriesManagement /> }
+        // ]
     }
 ])
 

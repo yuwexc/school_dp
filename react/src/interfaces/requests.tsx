@@ -1,5 +1,6 @@
 import { CoursesState } from "../features/courseSlice";
 import { AchievementItemInterface } from "./achievement";
+import { Category } from "./category";
 import { LessonInterface } from "./lesson";
 import { User } from "./user";
 
@@ -29,9 +30,16 @@ interface LessonResponse {
     status: string | null
 }
 
+interface CategoriesResponse {
+    categories: Category[],
+    error: string | null,
+    status: string | null
+}
+
 export interface State {
     user: UserResponse,
     achievements: AchievementResponse,
     courses: CoursesState,
-    lesson: LessonResponse
+    lesson: LessonResponse,
+    categories: CategoriesResponse
 }

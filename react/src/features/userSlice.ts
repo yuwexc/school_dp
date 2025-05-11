@@ -4,6 +4,7 @@ import { LoginInterface, PROJECT_URL } from "../interfaces/requests";
 import { User } from "../interfaces/user";
 
 interface UserState {
+    users: User[] | null,
     user: User,
     token: string | null,
     status: 'loading' | 'succeeded' | 'failed' | null;
@@ -27,6 +28,7 @@ const user: User = {
 }
 
 const initialState: UserState = {
+    users: null,
     user,
     token: null,
     status: null,
@@ -47,6 +49,24 @@ export const fetchUser = createAsyncThunk<User>(
 
         } catch {
             return rejectWithValue("Не удалось загрузить пользователя!");
+        }
+    }
+);
+
+export const fetchUsers = createAsyncThunk<User[]>(
+    'user/fetchUsers',
+    async (_, { rejectWithValue }) => {
+        try {
+
+            const { data } = await axios.get<User[]>(PROJECT_URL + '/users', {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                }
+            });
+            return data;
+
+        } catch {
+            return rejectWithValue("Не удалось загрузить пользователей!");
         }
     }
 );
@@ -154,6 +174,21 @@ const userSlice = createSlice({
                 state.user = action.payload;
             })
             .addCase(fetchUser.rejected, (state, action: PayloadAction<unknown>) => {
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                    state.status = 'failed';
+                }
+            })
+
+            .addCase(fetchUsers.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+                state.status = 'succeeded';
+                state.users = action.payload;
+            })
+            .addCase(fetchUsers.rejected, (state, action: PayloadAction<unknown>) => {
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
                     state.status = 'failed';

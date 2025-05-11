@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "../store";
 import { LoginInterface, State } from "../interfaces/requests";
 import { loginUser } from "../features/userSlice";
 import Loader from "../components/Loader";
+import { User } from "../interfaces/user";
 
 const Login = () => {
 
@@ -32,6 +33,7 @@ const Login = () => {
 
     const dispatch = useDispatch<AppDispatch>();
     const token = useSelector<RootState, string | null>((state) => state.user.token);
+    const user = useSelector<RootState, User | null>((state) => state.user.user);
     const { status, error } = useSelector((state: State) => state.user);
 
     const onSubmit: SubmitHandler<LoginInterface> = async (data) => {
@@ -41,9 +43,13 @@ const Login = () => {
     useEffect(() => {
         if (token != undefined && token != null && token != '') {
             localStorage.setItem('ACCESS_TOKEN', token!);
-            navigate('/dashboard');
+            if (user && user.role?.role_code === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/dashboard');
+            }
         }
-    }, [navigate, token]);
+    }, [navigate, token, user]);
 
     return (
         <StyledSection>

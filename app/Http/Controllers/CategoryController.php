@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Course;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -32,9 +33,19 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(Request $request)
     {
-        //
+        Category::updateOrCreate(
+            [
+                'id_category' => $request->id_category
+            ],
+            [
+                'category_name' => $request->category_name,
+                'updated_at' => now()
+            ]
+        );
+
+        return response(Category::all(), 200);
     }
 
     /**

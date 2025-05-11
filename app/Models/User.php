@@ -45,7 +45,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'api_token',
-        'created_at',
         'updated_at',
         'pivot',
         'email_verified_at'

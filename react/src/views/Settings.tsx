@@ -119,6 +119,7 @@ const Settings = () => {
     return (
         <StyledMain>
             <StyledForm onSubmit={handleSubmit(onSubmit)}>
+                <input type="hidden" {...register('id_user')} value={user.id_user!} />
                 <h3>{t('sign_up.personal')}</h3>
                 <InfoBlock>
                     <div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -22,11 +23,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        $user->level = $user->level()->get()->first();
-        $user->role = $user->role()->get()->first();
-        unset($user->email_verified_at, $user->level_id, $user->role_id, $user->updated_at, $user->api_token);
-        return response($user, 200);
+        $users = User::all()->map(function (User $user): User {
+            $user->role = $user->role()->get()->first();
+            unset($user->role_id);
+            return $user;
+        });
+        return response($users, 200);
     }
 
     /**
@@ -102,9 +104,13 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show()
     {
-        //
+        $user = auth()->user();
+        $user->level = $user->level()->get()->first();
+        $user->role = $user->role()->get()->first();
+        unset($user->email_verified_at, $user->level_id, $user->role_id, $user->updated_at, $user->api_token);
+        return response($user, 200);
     }
 
     /**
@@ -120,7 +126,7 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::where('id_user', auth()->user()->id_user)->get()->first();
+        $user = User::where('id_user', $request->id_user)->get()->first();
         $user->update($request->all());
         $user->level = $user->level()->get()->first();
         $user->role = $user->role()->get()->first();

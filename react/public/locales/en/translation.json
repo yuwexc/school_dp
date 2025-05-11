@@ -52,7 +52,8 @@
         "main": "Home",
         "courses": "Courses",
         "topics": "Topics",
-        "profile": "Profile"
+        "profile": "Profile",
+        "admin": "Admin"
     },
     "aside": {
         "dashboard": "Dashboard",
