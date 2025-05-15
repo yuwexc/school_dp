@@ -79,7 +79,7 @@ const Number = styled.p`
 const Grid = styled.div`
     margin-top: 12px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
 
     & > div {
@@ -89,12 +89,10 @@ const Grid = styled.div`
     }
 
     @media (max-width: 1286px) {
-        grid-template-columns: 1fr 1fr;
         gap: 16px;
     }
 
     @media (max-width: 1024px) {
-        grid-template-columns: 1fr;
         gap: 20px;
     }
 `

@@ -78,9 +78,6 @@ const LessonTheoryTable: FC<Props> = ({ id, color, deleteHeaderElement, setTheor
 
         const outputArray = transformData(data);
 
-        console.log(outputArray);
-
-
         setTheory(prevState => prevState.filter(item => item.id != id));
 
         setTheory(prevState => [...prevState, {

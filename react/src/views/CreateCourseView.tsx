@@ -97,7 +97,7 @@ const CreateCourseView = () => {
                 <Title>Категория курса</Title>
                 <Select value={courseCategory} onChange={(e) => setCourseCategory(Number(e.target.value))} id="category">
                     {
-                        categories && categories.map((category) => <option value={category.id_category} key={category.id_category}>{category.category_name}</option>)
+                        categories && categories.map((category) => <option value={category.id_category!} key={category.id_category}>{category.category_name}</option>)
                     }
                 </Select>
             </Intro>

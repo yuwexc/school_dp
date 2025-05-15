@@ -103,9 +103,15 @@ class User extends Authenticatable
         return $this->hasMany(Done::class, 'student', 'id_user');
     }
 
-    public function average_score()
+    public function average_score($id = null)
     {
-        $dones = $this->dones()->whereNot('mark')->get();
+        if ($id != null) {
+            $id_lessons = Course::find($id)->lessons()->get(['id_lesson']);
+            $dones = $this->dones()->whereIn('lesson_id', $id_lessons)->whereNot('mark')->get();
+        } else {
+            $dones = $this->dones()->whereNot('mark')->get();
+        }
+
         $marks = 0;
 
         foreach ($dones as $done) {
@@ -131,7 +137,7 @@ class User extends Authenticatable
         $dones = $this->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
 
         if ($id_lessons && $dones) {
-            return $dones / count($id_lessons) * 100;
+            return round($dones / count($id_lessons) * 100, 0);
         } else {
             return 0;
         }

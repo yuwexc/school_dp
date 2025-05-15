@@ -252,6 +252,19 @@ const userSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state, action: PayloadAction<null>) => {
                 state.status = 'succeeded';
+                state.user.id_user = null;
+                state.user.first_name = null;
+                state.user.last_name = null;
+                state.user.middle_name = null;
+                state.user.phone = null;
+                state.user.email = null;
+                state.user.photo = null;
+                state.user.level = null;
+                state.user.role = null;
+                state.user.score = null;
+                state.user.password = null;
+                state.user.api_token = null;
+                state.user.created_at = null;
                 state.token = action.payload;
             })
             .addCase(logoutUser.rejected, (state, action: PayloadAction<unknown>) => {

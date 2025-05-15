@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import UsersManagement from './UsersManagement';
 import CategoriesManagement from './CategoriesManagement';
 import { fetchAdminStats } from '../features/adminSlice';
-import { logoutUser } from '../features/userSlice';
+import { fetchUser, logoutUser } from '../features/userSlice';
 import { StatCard } from '../components/StatCard';
 import { Card } from '../components/Card';
 import { User } from '../interfaces/user';
@@ -15,6 +15,7 @@ import { ActivityFeed } from '../components/ActivityFeed';
 import { Stats } from '../interfaces/stats';
 
 const AdminDashboard = () => {
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const user = useSelector<RootState, User>((state) => state.user.user);
@@ -23,15 +24,21 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   useEffect(() => {
+    dispatch(fetchUser());
     dispatch(fetchAdminStats());
   }, [dispatch, navigate]);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    await localStorage.removeItem('ACCESS_TOKEN');
     navigate('/login');
   };
 
   if (!user) return null;
+
+  if (!localStorage.getItem('ACCESS_TOKEN')) {
+    return <Navigate to="/login" />
+  }
 
   return (
     <DashboardContainer>
@@ -49,24 +56,24 @@ const AdminDashboard = () => {
             $active={activeTab === 'dashboard'}
             onClick={() => setActiveTab('dashboard')}
           >
-            <i className="icon-dashboard" /> Дашборд
+            Дашборд
           </NavItem>
           <NavItem
             $active={activeTab === 'users'}
             onClick={() => setActiveTab('users')}
           >
-            <i className="icon-users" /> Пользователи
+            Пользователи
           </NavItem>
           <NavItem
             $active={activeTab === 'categories'}
             onClick={() => setActiveTab('categories')}
           >
-            <i className="icon-categories" /> Категории
+            Категории
           </NavItem>
         </Nav>
 
         <LogoutButton onClick={handleLogout}>
-          <i className="icon-logout" /> Выйти
+          Выйти
         </LogoutButton>
       </Sidebar>
 
@@ -160,6 +167,7 @@ const ProfileInfo = styled.div`
 
 const Name = styled.span`
   font-weight: 600;
+  color: white;
   margin-bottom: 0.25rem;
 `;
 
@@ -190,10 +198,6 @@ const NavItem = styled.div<{ $active: boolean }>`
     background-color: #334155;
     color: white;
   }
-
-  i {
-    font-size: 1.25rem;
-  }
 `;
 
 const LogoutButton = styled.button`
@@ -202,20 +206,15 @@ const LogoutButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   background-color: transparent;
   color: #cbd5e1;
   border: none;
   margin-top: auto;
   transition: all 0.2s;
+  width: fit-content;
 
   &:hover {
-    background-color: #334155;
-    color: white;
-  }
-
-  i {
-    font-size: 1.25rem;
+    background-color: #d91e18;
   }
 `;
 

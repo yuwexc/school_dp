@@ -3,7 +3,6 @@ import { CourseItemInterface } from "../interfaces/course";
 import { PROJECT_URL } from "../interfaces/requests";
 import axios from "axios";
 import CourseAccessItemInterface from "../interfaces/course_access";
-import { FieldValues } from "../views/EditCourseProperty";
 
 export interface Request {
     pageIndex: number,
@@ -113,14 +112,16 @@ export const fetchMyCourses = createAsyncThunk<CourseItemInterface[]>(
         }
     }
 );
-export const updateCourse = createAsyncThunk<CourseItemInterface, FieldValues>(
+
+export const updateCourse = createAsyncThunk<CourseItemInterface, { id: string, formData: FormData }>(
     'courses/updateCourse',
     async (course, { rejectWithValue }) => {
         try {
 
-            const { data } = await axios.post<CourseItemInterface>(PROJECT_URL + '/courses/' + course.id, course, {
+            const { data } = await axios.post<CourseItemInterface>(PROJECT_URL + '/courses/' + course.id, course.formData, {
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+                    Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN'),
+                    "Content-Type": 'multipart/form-data'
                 }
             });
             return data;

@@ -49,7 +49,9 @@ const MyCourses = () => {
                                 :
                                 <>
                                     <p>{t('dashboard.myCourses.not')}</p>
-                                    <Link to={'/courses'} style={{ padding: 'unset', fontWeight: 500 }}><span style={{ textDecoration: 'underline' }}>{t('dashboard.myCourses.go')}</span> &#8594;</Link>
+                                    {
+                                        user.role?.role_code === 'user' && <Link to={'/courses'} style={{ padding: 'unset', fontWeight: 500 }}><span style={{ textDecoration: 'underline' }}>{t('dashboard.myCourses.go')}</span> &#8594;</Link>
+                                    }
                                 </>
                         }
                         <Look href={'/my-courses'}><span>{t('dashboard.myCourses.view')}</span> &#8594;</Look>

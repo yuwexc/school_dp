@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { LoginInterface, State } from "../interfaces/requests";
-import { loginUser } from "../features/userSlice";
+import { fetchUser, loginUser } from "../features/userSlice";
 import Loader from "../components/Loader";
 import { User } from "../interfaces/user";
 
@@ -37,19 +37,21 @@ const Login = () => {
     const { status, error } = useSelector((state: State) => state.user);
 
     const onSubmit: SubmitHandler<LoginInterface> = async (data) => {
-        await dispatch(loginUser(data));
+        await dispatch(loginUser(data)).then(async () => await dispatch(fetchUser()));
     }
 
     useEffect(() => {
         if (token != undefined && token != null && token != '') {
             localStorage.setItem('ACCESS_TOKEN', token!);
-            if (user && user.role?.role_code === 'admin') {
+        }
+        if (user && user.role) {
+            if (user.role.role_code === 'admin') {
                 navigate('/admin');
             } else {
                 navigate('/dashboard');
             }
         }
-    }, [navigate, token, user]);
+    }, [navigate, token, user])
 
     return (
         <StyledSection>

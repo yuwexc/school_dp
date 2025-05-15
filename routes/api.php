@@ -31,7 +31,7 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/categories', [CategoryController::class, 'store']);
 
 Route::controller(UserController::class)->group(function () {
-    //Route::get('/user/generate', 'generate');
+    // Route::get('/user/generate', 'generate');
     Route::get('/user', 'show')->middleware('auth:api');
     Route::get('/users', 'index');
     Route::post('/users', 'create');
@@ -53,7 +53,7 @@ Route::controller(DoneController::class)->group(function () {
 });
 
 Route::controller(CourseController::class)->group(function () {
-    //Route::get('/courses/generate', 'generate');
+    // Route::get('/courses/generate', 'generate');
     Route::get('/my-courses', 'my_courses')->middleware('auth:api');
     Route::post('/courses/create', 'create')->middleware('auth:api');
     Route::post('/courses/{id}', 'edit')->middleware('auth:api');

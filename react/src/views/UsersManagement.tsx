@@ -15,6 +15,7 @@ const UsersManagement = () => {
 
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     useEffect(() => {
         dispatch(fetchUsers());
@@ -29,12 +30,32 @@ const UsersManagement = () => {
         dispatch(updateUser(userData)).then(() => dispatch(fetchUsers()));
     };
 
+    const filteredUsers = users?.filter(user => {
+        const searchLower = searchQuery.toLowerCase();
+        return (
+            user.last_name?.toLowerCase().includes(searchLower) ||
+            user.first_name?.toLowerCase().includes(searchLower) ||
+            (user.middle_name && user.middle_name.toLowerCase().includes(searchLower)) ||
+            user.email?.toLowerCase().includes(searchLower) ||
+            user.phone?.includes(searchQuery)
+        );
+    }) || [];
+
     const skeletonRows = 5;
 
     return (
         <Container>
             <Header>
                 <Title>Управление пользователями</Title>
+                <SearchContainer>
+                    <SearchInput
+                        type="text"
+                        placeholder="Поиск по ФИО, email или телефону"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <SearchIcon>🔍</SearchIcon>
+                </SearchContainer>
             </Header>
 
             <TableContainer>
@@ -66,8 +87,8 @@ const UsersManagement = () => {
                                     </TableCell>
                                 </TableRow>
                             ))
-                        ) : users && users.length > 0 ? (
-                            users.map(user => (
+                        ) : filteredUsers.length > 0 ? (
+                            filteredUsers.map(user => (
                                 <TableRow key={user.id_user}>
                                     <TableCell>{user.id_user}</TableCell>
                                     <TableCell>{`${user.last_name} ${user.first_name} ${user.middle_name || ''}`}</TableCell>
@@ -84,10 +105,10 @@ const UsersManagement = () => {
                                 </TableRow>
                             ))
                         ) : (
-                            // Нет данных
                             <TableRow>
                                 <TableCell colSpan={6} style={{ textAlign: 'center' }}>
-                                    {status === 'failed' ? `Ошибка: ${error}` : 'Нет данных'}
+                                    {status === 'failed' ? `Ошибка: ${error}` :
+                                        searchQuery ? 'Ничего не найдено' : 'Нет данных'}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -106,6 +127,40 @@ const UsersManagement = () => {
 };
 
 export default UsersManagement;
+
+const SearchContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+`;
+
+const SearchInput = styled.input`
+  width: calc(100% - 3.5rem);
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  background-color: #f8fafc;
+  
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+  
+  &::placeholder {
+    color: #94a3b8;
+  }
+`;
+
+const SearchIcon = styled.span`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+`;
 
 const shimmer = keyframes`
   0% {
@@ -144,6 +199,8 @@ const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 `;
 
 const TableContainer = styled.div`

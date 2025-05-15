@@ -15,6 +15,7 @@ const CategoriesManagement = () => {
 
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [viewMode, setViewMode] = useState<'standard' | 'compact'>('standard');
 
     useEffect(() => {
         dispatch(fetchCategories());
@@ -35,66 +36,47 @@ const CategoriesManagement = () => {
         <Container>
             <Header>
                 <Title>Управление категориями</Title>
-                <AddButton onClick={() => { setEditingCategory(null); setIsModalOpen(true); }}>
-                    + Добавить категорию
-                </AddButton>
+                <Controls>
+                    <ViewToggle>
+                        <ToggleButton
+                            active={viewMode === 'standard'}
+                            onClick={() => setViewMode('standard')}
+                        >
+                            Стандартный
+                        </ToggleButton>
+                        <ToggleButton
+                            active={viewMode === 'compact'}
+                            onClick={() => setViewMode('compact')}
+                        >
+                            Компактный
+                        </ToggleButton>
+                    </ViewToggle>
+                    <AddButton onClick={() => { setEditingCategory(null); setIsModalOpen(true); }}>
+                        + Добавить категорию
+                    </AddButton>
+                </Controls>
             </Header>
 
             <TableContainer>
-                <Table>
-                    <TableHeader>
-                        <tr>
-                            <TableHeaderCell>ID</TableHeaderCell>
-                            <TableHeaderCell>Название</TableHeaderCell>
-                            <TableHeaderCell>Иконка</TableHeaderCell>
-                            <TableHeaderCell>Действия</TableHeaderCell>
-                        </tr>
-                    </TableHeader>
-                    <tbody>
-                        {status === 'loading' ? (
-                            Array(skeletonRows).fill(0).map((_, index) => (
-                                <TableRow key={`skeleton-${index}`}>
-                                    <TableCell><SkeletonBox width="50px" /></TableCell>
-                                    <TableCell><SkeletonBox /></TableCell>
-                                    <TableCell><SkeletonBox /></TableCell>
-                                    <TableCell><SkeletonBox width="30px" /></TableCell>
-                                    <TableCell><SkeletonBox width="80px" /></TableCell>
-                                    <TableCell>
-                                        <Actions>
-                                            <SkeletonIconButton />
-                                            <SkeletonIconButton />
-                                        </Actions>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : categories && categories.length > 0 ? (
-                            categories.map(category => (
-                                <TableRow key={category.id_category}>
-                                    <TableCell>{category.id_category?.toString().padStart(3, '0')}</TableCell>
-                                    <TableCell>{category.category_name}</TableCell>
-                                    <TableCell>
-                                        {category.image && (
-                                            <IconPreview src={category.image} alt={`Иконка ${category.image}`} />
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Actions>
-                                            <IconButton onClick={() => handleEdit(category)}>
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Actions>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={6} style={{ textAlign: 'center' }}>
-                                    {status === 'failed' ? `Ошибка: ${error}` : 'Нет данных'}
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </tbody>
-                </Table>
+                {viewMode === 'standard' ? (
+                    <StandardTable>
+                        <TableHeader>
+                            <tr>
+                                <TableHeaderCell>ID</TableHeaderCell>
+                                <TableHeaderCell>Название</TableHeaderCell>
+                                <TableHeaderCell>Иконка</TableHeaderCell>
+                                <TableHeaderCell>Действия</TableHeaderCell>
+                            </tr>
+                        </TableHeader>
+                        <tbody>
+                            {renderTableBody()}
+                        </tbody>
+                    </StandardTable>
+                ) : (
+                    <CompactGrid>
+                        {renderCompactGrid()}
+                    </CompactGrid>
+                )}
             </TableContainer>
 
             <CategoryEditModal
@@ -105,9 +87,140 @@ const CategoriesManagement = () => {
             />
         </Container>
     );
+
+    function renderTableBody() {
+        if (status === 'loading') {
+            return Array(skeletonRows).fill(0).map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                    <TableCell><SkeletonBox width="50px" /></TableCell>
+                    <TableCell><SkeletonBox /></TableCell>
+                    <TableCell><SkeletonBox /></TableCell>
+                    <TableCell>
+                        <Actions>
+                            <SkeletonIconButton />
+                            <SkeletonIconButton />
+                        </Actions>
+                    </TableCell>
+                </TableRow>
+            ));
+        } else if (categories && categories.length > 0) {
+            return categories.map(category => (
+                <TableRow key={category.id_category}>
+                    <TableCell>{category.id_category?.toString().padStart(3, '0')}</TableCell>
+                    <TableCell>{category.category_name}</TableCell>
+                    <TableCell>
+                        {category.image && (
+                            <IconPreview src={category.image} alt={`Иконка ${category.image}`} />
+                        )}
+                    </TableCell>
+                    <TableCell>
+                        <Actions>
+                            <IconButton onClick={() => handleEdit(category)}>
+                                <EditIcon />
+                            </IconButton>
+                        </Actions>
+                    </TableCell>
+                </TableRow>
+            ));
+        } else {
+            return (
+                <TableRow>
+                    <TableCell colSpan={4} style={{ textAlign: 'center' }}>
+                        {status === 'failed' ? `Ошибка: ${error}` : 'Нет данных'}
+                    </TableCell>
+                </TableRow>
+            );
+        }
+    }
+
+    function renderCompactGrid() {
+        if (status === 'loading') {
+            return Array(Math.ceil(skeletonRows / 2)).fill(0).map((_, rowIndex) => (
+                <CompactGridRow key={`skeleton-row-${rowIndex}`}>
+                    {Array(2).fill(0).map((_, colIndex) => (
+                        <CompactGridCell key={`skeleton-cell-${rowIndex}-${colIndex}`}>
+                            <SkeletonBox width="30px" />
+                            <CompactCellContent>
+                                <SkeletonBox width="120px" />
+                                <SkeletonBox width="80px" />
+                            </CompactCellContent>
+                            <SkeletonIconButton />
+                        </CompactGridCell>
+                    ))}
+                </CompactGridRow>
+            ));
+        } else if (categories && categories.length > 0) {
+            const rows = [];
+            for (let i = 0; i < categories.length; i += 2) {
+                const pair = categories.slice(i, i + 2);
+                rows.push(
+                    <CompactGridRow key={`row-${i}`}>
+                        {pair.map(category => (
+                            <CompactGridCell key={category.id_category}>
+                                <span>#{category.id_category?.toString().padStart(3, '0')}</span>
+                                <CompactCellContent>
+                                    <strong>{category.category_name}</strong>
+                                    {category.image && (
+                                        <IconPreview src={category.image} alt={`Иконка ${category.image}`} />
+                                    )}
+                                </CompactCellContent>
+                                <IconButton onClick={() => handleEdit(category)}>
+                                    <EditIcon />
+                                </IconButton>
+                            </CompactGridCell>
+                        ))}
+                        {pair.length < 2 && <CompactGridCell style={{ visibility: 'hidden' }} />}
+                    </CompactGridRow>
+                );
+            }
+            return rows;
+        } else {
+            return (
+                <EmptyMessage>
+                    {status === 'failed' ? `Ошибка: ${error}` : 'Нет данных'}
+                </EmptyMessage>
+            );
+        }
+    }
 };
 
 export default CategoriesManagement;
+
+const CompactGrid = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+`;
+
+const CompactGridRow = styled.div`
+    display: flex;
+    gap: 0.75rem;
+`;
+
+const CompactGridCell = styled.div`
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    
+    &:hover {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        background-color: #f8fafc;
+    }
+`;
+
+const EmptyMessage = styled.div`
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+`;
+
 
 const IconPreview = styled.img`
     width: 24px;
@@ -142,7 +255,6 @@ const SkeletonIconButton = styled.div`
   border-radius: 6px;
 `;
 
-// Общие стили (аналогичны предыдущим компонентам)
 const Container = styled.div`
     padding: 2rem;
     background-color: #f8fafc;
@@ -153,6 +265,36 @@ const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+`;
+
+const Controls = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+`;
+
+const ViewToggle = styled.div`
+    display: flex;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    background-color: #e2e8f0;
+`;
+
+const ToggleButton = styled.button<{ active?: boolean }>`
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: ${props => props.active ? '#4f46e5' : 'transparent'};
+    color: ${props => props.active ? 'white' : '#334155'};
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    
+    &:hover {
+        background-color: ${props => props.active ? '#4338ca' : '#cbd5e1'};
+    }
 `;
 
 const AddButton = styled.button`
@@ -181,7 +323,7 @@ const TableContainer = styled.div`
     overflow: hidden;
 `;
 
-const Table = styled.table`
+const StandardTable = styled.table`
     width: 100%;
     border-collapse: collapse;
 `;
@@ -217,6 +359,13 @@ const TableCell = styled.td`
     padding: 1rem 1.5rem;
     color: #334155;
     font-size: 0.875rem;
+`;
+
+const CompactCellContent = styled.div`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 `;
 
 const Actions = styled.div`

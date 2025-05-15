@@ -14,7 +14,7 @@ import { Level } from "../interfaces/level";
 import { Category } from "../interfaces/category";
 import { useTranslation } from "react-i18next";
 
-export interface FieldValues {
+interface FieldValues {
     id?: string,
     course_name?: string,
     course_description?: string,
@@ -35,13 +35,13 @@ const EditCourseProperty = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user.role?.role_code != 'teacher') navigate('/courses' + id);
-        
+        if (user && user.role && user.role.role_code != 'teacher') navigate('/courses' + id);
+
         window.scrollTo(0, 0);
 
         dispatch(fetchMyCoursesItem(id!));
 
-    }, [dispatch, id]);
+    }, [dispatch, id, navigate, user]);
 
     useEffect(() => {
 
@@ -54,15 +54,22 @@ const EditCourseProperty = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>();
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+        const formData = new FormData();
+
+        if (data.course_name) formData.append('course_name', data.course_name || '');
+        if (data.course_description) formData.append('course_description', data.course_description || '');
+        if (data.level_id) formData.append('level_id', String(data.level_id) || String(course?.level.id_level));
+        if (data.category_id) formData.append('category_id', String(data.category_id) || String(course?.category?.id_category));
+
+        if (data.image instanceof FileList && data.image.length > 0) {
+            formData.append('image', data.image[0]);
+        }
+
         dispatch(updateCourse({
             id: id!,
-            course_name: data.course_name,
-            course_description: data.course_description,
-            level_id: Number(data.level_id) || course!.level.id_level,
-            category_id: Number(data.category_id) || course!.category?.id_category,
-            image: data.image || course!.image
+            formData: formData
         })).then(() => navigate('/teacher/courses/' + course?.id_course));
-    }
+    };
 
     const [levels, setLevels] = useState<Level[] | null>(null);
     const [categories, setCategories] = useState<Category[] | null>(null);
@@ -135,7 +142,7 @@ const EditCourseProperty = () => {
                                     })} id={property}>
                                         <option value={''}></option>
                                         {
-                                            categories && categories.map((category) => <option value={category.id_category} key={category.id_category}>{category.category_name}</option>)
+                                            categories && categories.map((category) => <option value={category.id_category!} key={category.id_category}>{category.category_name}</option>)
                                         }
                                     </Select>
                                 }

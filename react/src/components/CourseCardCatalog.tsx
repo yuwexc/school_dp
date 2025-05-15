@@ -18,11 +18,11 @@ const CourseCardCatalog: FC<Props> = ({ course }) => {
         <Card>
             <IMG $src={course.image} />
             <Info>
-                <h2 style={{
+                <h3 style={{
                     overflow: 'hidden',
                     textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 1,
                     WebkitBoxOrient: 'vertical'
-                }}>{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}</h2>
+                }}>{course.course_name.charAt(0).toUpperCase() + course.course_name.slice(1)}</h3>
                 <Characteristics>
                     <LinkToResources
                         to={'/courses'}
@@ -61,11 +61,13 @@ const CourseCardCatalog: FC<Props> = ({ course }) => {
 export default CourseCardCatalog;
 
 const Info = styled.div`
-    width: calc(100% - 48px);
+    width: calc(100% - 50px);
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    border-radius: 0 0 12px 12px;
+    border: 1px solid lightgray;
 `
 
 const IMG = styled.div <{ $src: string | null }>`
@@ -75,6 +77,7 @@ const IMG = styled.div <{ $src: string | null }>`
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: lightgray;
 
     @media (377px <= width <= 768px) {
         height: 300px;
@@ -92,16 +95,4 @@ const Card = styled.div`
     flex-direction: column;
     background-color: #f3f3f3;
     border-radius: 12px;
-
-    &:nth-child(3n + 2) {
-        flex-direction: column-reverse;
-        justify-content: space-between;
-    }
-
-    @media (max-width: 1296px) {
-        &:nth-child(3n + 2) {
-            flex-direction: column;
-            justify-content: unset;
-        }
-    }
 `

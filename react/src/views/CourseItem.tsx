@@ -145,22 +145,22 @@ const CourseItem = () => {
                                         course.lessons
                                             .filter(item => item.lesson_status === 2)
                                             .filter((_, index) => index < limit)
-                                            .map((lesson, index, array) => <LessonCard
+                                            .map((lesson, i, array) => <LessonCard
                                                 lesson={lesson}
                                                 access={course.access}
-                                                index={index}
+                                                index={i}
                                                 isOpened={() => {
-                                                    if (index < 1) {
+                                                    if (i < 1) {
                                                         return true;
                                                     } else {
-                                                        if (array[index - 1].mark != null) {
-                                                            return true;
+                                                        if (array[i - 1].done?.mark) {
+                                                            return true
                                                         } else {
-                                                            return false;
+                                                            return false
                                                         }
                                                     }
                                                 }}
-                                                key={index} />)
+                                                key={i} />)
                                     }
                                 </Lessons>
                             }
@@ -333,6 +333,7 @@ const Lessons = styled.div`
 `
 
 const Program = styled.section`
+    max-width: 856.3px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -401,7 +402,7 @@ const CourseInfo = styled.div`
         margin: 0px 0px 24px;
         white-space: pre-wrap;
         font-weight: 600;
-        line-height: 68px;
+        line-height: 1.3;
         font-size: 40px;
 
         @media (max-width: 1279px) {

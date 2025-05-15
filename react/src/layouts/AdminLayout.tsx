@@ -1,11 +1,9 @@
 import styled from 'styled-components';
-import AdminNavbar from '../components/AdminNavBar';
 import { Outlet } from 'react-router-dom';
 
 const AdminLayout = () => {
   return (
     <AdminContainer>
-      <AdminNavbar />
       <MainContent>
         <Outlet />
       </MainContent>

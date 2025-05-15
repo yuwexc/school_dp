@@ -202,5 +202,8 @@
                 "question": "Why not you?"
             }
         }
+    },
+    "footer": {
+        "rights": "LIMN. All rights reserved."
     }
 }

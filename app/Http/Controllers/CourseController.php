@@ -118,7 +118,7 @@ class CourseController extends Controller
                 $dones = $user->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
 
                 if ($id_lessons && $dones) {
-                    $progress = $dones / $id_lessons->count() * 100;
+                    $progress = round($dones / $id_lessons->count() * 100, 0);
                 }
 
                 if ($access) {
@@ -277,19 +277,19 @@ class CourseController extends Controller
         $top_students = collect($course->students()->get()->filter(function (User $student) {
             return $student->dones()->whereNot('mark')->count() > 0;
         }))->sort(
-                function (User $a, User $b) {
-                    $scoreComparison = $b->average_score() <=> $a->average_score();
+                function (User $a, User $b) use ($id): int {
+                    $scoreComparison = $b->average_score($id) <=> $a->average_score($id);
                     if ($scoreComparison === 0) {
                         return $b->created_at <=> $a->created_at;
                     }
                     return $scoreComparison;
                 }
-            )->values()->map(function (User $user) {
+            )->values()->map(function (User $user) use ($id) {
                 return [
                     "first_name" => $user->first_name,
                     "last_name" => $user->last_name,
                     "middle_name" => $user->middle_name,
-                    'score' => $user->average_score()
+                    'score' => $user->average_score($id)
                 ];
             })->all();
 
@@ -323,16 +323,17 @@ class CourseController extends Controller
         $file = $request->file('image');
 
         if ($file) {
-            $name = Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $path = $_SERVER['HTTP_HOST'] . '/images/' . $name;
-            Storage::putFileAs('images', $file, $name);
+            $imageName = Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $request->file('image')->move(public_path('uploads'), $imageName);
+            $imageUrl = 'https://' . $_SERVER['HTTP_HOST'] . '/uploads/' . $imageName;
             $course = Course::where('id_course', $id)->get()->first();
-            $course->image = $path;
+            $course->image = $imageUrl;
             $course->save();
         } else {
             $course = Course::where('id_course', $id)->get()->first();
             $course->update($request->all());
         }
+
         return $this->show($id);
     }
 

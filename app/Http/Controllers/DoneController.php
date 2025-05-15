@@ -39,7 +39,7 @@ class DoneController extends Controller
         }
 
         try {
-            $progress = $dones->count() / $lessons * 100;
+            $progress = round($dones->count() / $lessons * 100, 0);
         } catch (DivisionByZeroError $e) {
             $progress = 0;
         }

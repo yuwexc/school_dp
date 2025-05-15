@@ -72,7 +72,7 @@ const Filter: FC<Props> = ({ setLevel, setCategory }) => {
                 <Select ref={categoryRef} id="category" onChange={(e) => setCategory(Number(e.target.value))}>
                     <option value={''}></option>
                     {
-                        categories && categories.map((category) => <option value={category.id_category} key={category.id_category}>{category.category_name} ({category.count})</option>)
+                        categories && categories.filter((category) => category.count! > 0).map((category) => <option value={category.id_category!} key={category.id_category}>{category.category_name} ({category.count})</option>)
                     }
                 </Select>
             }

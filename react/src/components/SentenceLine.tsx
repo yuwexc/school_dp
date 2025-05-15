@@ -40,7 +40,7 @@ const SentenceLine: FC<Props> = ({ id, sentenceLines, setSentenceLines, register
                         value: true, message: t('sign_up.empty')
                     },
                     pattern: {
-                        value: /^[а-яА-ЯёЁ\s-\d]+$/i,
+                        value: /^[А-Яа-яЁё\s,.!?;:—"'’()-]+$/,
                         message: t('sign_up.incorrect')
                     }
                 })}

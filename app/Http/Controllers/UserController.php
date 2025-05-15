@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function generate()
     {
-        $users = User::factory()->count(3)->create();
+        $users = User::factory()->count(6)->create();
         return $users;
     }
     /**

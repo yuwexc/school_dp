@@ -23,8 +23,8 @@ const CourseTeacherView = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        if (user.role?.role_code != 'teacher') navigate('/courses' + id);
-        
+        if (user && user.role && user.role.role_code != 'teacher') navigate('/courses' + id);
+
         window.scrollTo({
             top: 0,
             left: 0,
@@ -33,7 +33,7 @@ const CourseTeacherView = () => {
 
         dispatch(fetchMyCoursesItem(id!));
 
-    }, [dispatch, id]);
+    }, [dispatch, id, navigate, user]);
 
     const [studentLimit, setStudentLimit] = useState<number>(3);
     const [requestLimit, setRequestLimit] = useState<number>(3);
@@ -340,7 +340,7 @@ const IMG = styled.div <{ $src: string | null }>`
     position: relative;
     width: 200px;
     aspect-ratio: 9 / 12;
-    background-image: url(${props => props.$src == null ? '/images/4.jpeg' : '/images/4.jpeg'});
+    background-image: url(${props => props.$src == null ? '/images/4.jpeg' : props.$src});
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

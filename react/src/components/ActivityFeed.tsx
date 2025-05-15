@@ -111,7 +111,7 @@ export const ActivityFeed = ({ activities }: ActivityFeedProps) => {
                 ))
             ) : (
                 <div style={{ color: '#64748b', textAlign: 'center', padding: '1rem' }}>
-                    Нет последних действий
+                    Блок находится в стадии разработки
                 </div>
             )}
         </ActivitiesList>

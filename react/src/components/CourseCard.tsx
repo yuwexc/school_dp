@@ -15,7 +15,12 @@ const CourseCard: FC<Props> = ({ course }) => {
             <IMG $src={course.image} />
             <Info>
                 <p style={{ color: "#9e9e9e" }}>{course.level.level_title.toUpperCase()}</p>
-                <Link to={'/my-courses/' + course.id_course} style={{ textTransform: 'capitalize', fontWeight: 'bold', fontSize: '24px' }}>{course.course_name.toString()}</Link>
+                <Link to={'/my-courses/' + course.id_course} style={{
+                    textTransform: 'capitalize', fontWeight: 'bold', fontSize: '24px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 1,
+                    WebkitBoxOrient: 'vertical'
+                }}>{course.course_name.toString()}</Link>
                 <Description>{course.course_description}</Description>
                 <Characteristics>
                     <LinkToResources
