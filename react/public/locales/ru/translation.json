@@ -51,7 +51,7 @@
     "header": {
         "main": "Главная",
         "courses": "Курсы",
-        "topics": "Категории",
+        "dictionary": "Словарь",
         "profile": "Личный кабинет",
         "admin": "Admin"
     },

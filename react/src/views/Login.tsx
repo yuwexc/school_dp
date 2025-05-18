@@ -113,7 +113,6 @@ const Login = () => {
 export default Login;
 
 export const Form = styled.form`
-    margin-top: 25%;
     width: calc(100% - 60px);
     display: flex;
     flex-direction: column;
@@ -179,7 +178,7 @@ export const FormBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
 
     @media (width <= 1100px) {
         & {

@@ -326,10 +326,6 @@ const Lessons = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
-
-    @media (max-width: 767px) {
-        gap: 8px;
-    }
 `
 
 const Program = styled.section`

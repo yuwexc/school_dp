@@ -398,6 +398,7 @@ const FullFormBlock = styled(FormBlock)`
     min-width: 452px;
     max-width: 1024px;
     align-items: stretch;
+    justify-content: flex-start;
 `
 
 const StyledSwiper = styled(Swiper)`

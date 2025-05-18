@@ -16,8 +16,8 @@ const Header = () => {
     const links = [
         { id: 1, link: '/', text: t('header.main') },
         { id: 2, link: '/courses', text: t('header.courses') },
-        { id: 3, link: '/dashboard', text: t('header.profile') },
-        //{ id: 3, link: '/topics', text: t('header.topics') },
+        { id: 3, link: '/dictionary', text: t('header.dictionary') },
+        { id: 4, link: '/dashboard', text: t('header.profile') },
     ]
 
     return (

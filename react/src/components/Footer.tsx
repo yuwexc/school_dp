@@ -12,6 +12,7 @@ const Footer = () => {
                 <NavLink to={'/'}>{t('header.main')}</NavLink>
                 <NavLink to={'/courses'}>{t('header.courses')}</NavLink>
                 <NavLink to={'/dashboard'}>{t('header.profile')}</NavLink>
+                <NavLink to={'/dictionary'}>{t('header.dictionary')}</NavLink>
             </FooterSection>
             <FooterSection>
                 <p style={{ color: 'white' }}>limn@englishschool.com</p>

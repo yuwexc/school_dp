@@ -51,7 +51,7 @@
     "header": {
         "main": "Home",
         "courses": "Courses",
-        "topics": "Topics",
+        "dictionary": "Dictionary",
         "profile": "Profile",
         "admin": "Admin"
     },
