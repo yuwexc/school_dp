@@ -108,7 +108,23 @@ const Settings = () => {
             data.phone = '+7' + data.phone!.split('').splice(1).join('');
         }
 
-        dispatch(updateUser(data));
+        const formData = new FormData();
+        formData.append('id_user', user.id_user!);
+        formData.append('first_name', data.first_name!);
+        formData.append('last_name', data.last_name!);
+        formData.append('middle_name', data.middle_name || '');
+        formData.append('phone', data.phone!);
+        formData.append('email', data.email!);
+
+        if (data.level?.id_level) {
+            formData.append('level.id_level', data.level.id_level.toString());
+        }
+
+        if (data.photo && data.photo[0]) {
+            formData.append('photo', data.photo[0]);
+        }
+
+        dispatch(updateUser(formData));
     }
 
     const changeLanguage = (language: string) => {
@@ -196,6 +212,20 @@ const Settings = () => {
                         }
                         {
                             errors && <Message>{errors.email?.message}</Message>
+                        }
+                    </div>
+                    <div>
+                        <label htmlFor="photo">{t('sign_up.photo')}</label>
+                        <Input  {...register('photo', {
+                            validate: {
+                                acceptedFormats: (files) =>
+                                    !files || !(files instanceof FileList || Array.isArray(files)) || !files[0]
+                                    || ['image/jpeg', 'image/png'].includes(files[0].type)
+                                    || t('sign_up.incorrect')
+                            }
+                        })} accept="image/png, image/jpeg" id="photo" type="file" />
+                        {
+                            errors && <Message>{errors.photo?.message}</Message>
                         }
                     </div>
                 </InfoBlock>

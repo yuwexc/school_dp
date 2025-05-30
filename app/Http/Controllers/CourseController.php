@@ -165,7 +165,7 @@ class CourseController extends Controller
             $course->category_id = $request->category_id;
             $course->author = $user->id_user;
             $course->save();
-            $this->show($course->id_course);
+            return $this->show($course->id_course);
         } else {
             return response(["message" => "User not found"], 404);
         }
@@ -230,7 +230,8 @@ class CourseController extends Controller
                     return [
                         "first_name" => $user->first_name,
                         "last_name" => $user->last_name,
-                        "progress" => $user->progress($course)
+                        "progress" => $user->progress($course),
+                        "photo" =>$user->photo
                     ];
                 }
             )->all();
@@ -289,7 +290,8 @@ class CourseController extends Controller
                     "first_name" => $user->first_name,
                     "last_name" => $user->last_name,
                     "middle_name" => $user->middle_name,
-                    'score' => $user->average_score($id)
+                    'score' => $user->average_score($id),
+                    "photo" =>$user->photo
                 ];
             })->all();
 
@@ -300,7 +302,7 @@ class CourseController extends Controller
             "level" => $course->level()->select(['level_code', 'level_title', 'level_name'])->get()->first(),
             "category" => $category ? $category : null,
             "image" => $course->image,
-            "author" => $course->user()->select(['id_user', 'first_name', 'last_name'])->get()->first(),
+            "author" => $course->user()->select(['id_user', 'first_name', 'last_name', 'photo'])->get()->first(),
             "access" => [
                 "id_course_access" => $id_course_access,
                 "access_status" => $status

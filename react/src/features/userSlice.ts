@@ -85,12 +85,12 @@ export const postUser = createAsyncThunk<string | null, User>(
     }
 )
 
-export const updateUser = createAsyncThunk<User, User>(
+export const updateUser = createAsyncThunk<User, FormData>(
     'user/updateUser',
-    async (user, { rejectWithValue }) => {
+    async (formData, { rejectWithValue }) => {
         try {
 
-            const { data } = await axios.post<User>(PROJECT_URL + '/user/update', user, {
+            const { data } = await axios.post<User>(PROJECT_URL + '/user/update', formData, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
                 }

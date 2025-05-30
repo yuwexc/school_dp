@@ -70,8 +70,6 @@ const SignUp = () => {
         if (data.phone![0] === '8') {
             data.phone = '+7' + data.phone!.split('').splice(1).join('');
         }
-        /*const key = CryptoJS.lib.WordArray.random(16);
-        data.password = CryptoJS.AES.encrypt(data.password!, key, { iv: key }).toString();*/
         await dispatch(postUser(data));
     }
 

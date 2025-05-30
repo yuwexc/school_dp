@@ -46,7 +46,8 @@
         "phone": "Phone",
         "phone_placeholder": "+79991112233",
         "phone_existence": "The phone has already been taken",
-        "level": "Your language proficiency"
+        "level": "Your language proficiency",
+        "photo": "Your photo"
     },
     "header": {
         "main": "Home",

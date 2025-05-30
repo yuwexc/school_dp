@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -126,11 +124,32 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::where('id_user', $request->id_user)->get()->first();
-        $user->update($request->all());
-        $user->level = $user->level()->get()->first();
-        $user->role = $user->role()->get()->first();
-        unset($user->email_verified_at, $user->level_id, $user->role_id, $user->updated_at, $user->api_token);
+        $user = User::where('id_user', $request->id_user)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $imageName = Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads'), $imageName);
+            $imageUrl = url('/uploads/' . $imageName);
+            $user->photo = $imageUrl;
+        }
+
+        $user->fill($request->except('photo'));
+        $user->save();
+        $user->load(['level', 'role']);
+
+        unset(
+            $user->email_verified_at,
+            $user->level_id,
+            $user->role_id,
+            $user->updated_at,
+            $user->api_token
+        );
+
         return response($user, 200);
     }
 

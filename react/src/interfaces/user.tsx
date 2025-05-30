@@ -8,7 +8,7 @@ export interface User {
     middle_name: string | null,
     phone: string | null,
     email: string | null,
-    photo: string | null,
+    photo: File[] | string | null,
     level?: Level | null,
     role?: Role | null,
     score: number | null,

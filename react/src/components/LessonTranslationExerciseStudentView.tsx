@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button, Input } from "../styles/forms";
+import { Button, Input, Message } from "../styles/forms";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Exercise } from "../interfaces/lesson";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -16,9 +16,11 @@ interface Props {
 const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, done }) => {
 
     const { register, handleSubmit } = useForm();
+    const [isSaved, setIsSaved] = useState<boolean>(false);
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
         if (done) return;
+        setIsSaved(true);
         Object.values(data).forEach((answer, index) => {
             const current_task = exercise.tasks[index];
             if (current_task) {
@@ -59,7 +61,7 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
                             </Task>
                             {
                                 doneBody.length == 0 && !doneBody.find(item => item.id == exercise.id) ?
-                                    <Input {...register(`english-${task.id}`)} type="text" placeholder="Ваш ответ" id={'english-' + task.id} />
+                                    <Input disabled={isSaved} {...register(`english-${task.id}`)} type="text" placeholder="Ваш ответ" id={'english-' + task.id} />
                                     :
                                     <>
                                         <Input disabled value={doneBody.find(item => item.id == exercise.id)?.tasks[task.id].answer || 'Ответ отсутствует'} type="text" id={'english-' + task.id} />
@@ -77,6 +79,9 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
                             }
                         </div>
                     )
+                }
+                {
+                    doneBody.length == 0 && feedback.length == 0 && !isSaved && <Message style={{ fontWeight: '600' }}>Обязательно сохраните данные!</Message>
                 }
                 {
                     feedback && feedback.length == 0 && <Button style={{ backgroundColor: '#fa8231' }} type="submit">Сохранить</Button>
