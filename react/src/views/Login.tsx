@@ -37,7 +37,10 @@ const Login = () => {
     const { status, error } = useSelector((state: State) => state.user);
 
     const onSubmit: SubmitHandler<LoginInterface> = async (data) => {
-        await dispatch(loginUser(data)).then(async () => await dispatch(fetchUser()));
+        const loginResult = await dispatch(loginUser(data));
+        if (loginUser.fulfilled.match(loginResult)) {
+            await dispatch(fetchUser());
+        }
     }
 
     useEffect(() => {
@@ -90,11 +93,11 @@ const Login = () => {
                                 errors && <Message>{errors.password?.message}</Message>
                             }
                             {
-                                status === 'failed' && <Error>{t('error')}</Error>
+                                status === 'failed' && error && <Error>{t(error)}</Error>
                             }
-                            {
+                            {/* {
                                 error && <Error>{t('login.failed_login')}</Error>
-                            }
+                            } */}
                         </div>
                         {
                             status === 'loading' ? <Button disabled><Loader /></Button>

@@ -85,7 +85,7 @@ export const postUser = createAsyncThunk<string | null, User>(
     }
 )
 
-export const updateUser = createAsyncThunk<User, FormData>(
+export const updateUser = createAsyncThunk<User, FormData | User>(
     'user/updateUser',
     async (formData, { rejectWithValue }) => {
         try {
@@ -114,13 +114,13 @@ export const loginUser = createAsyncThunk<string | null, LoginInterface>(
 
         } catch (error: unknown) {
             if (isAxiosError(error)) {
-                if (error.status === 404) {
-                    return rejectWithValue(null)
+                if (error.response?.status === 404 || error.response?.status === 401) {
+                    return rejectWithValue("login.failed_login");
                 } else {
-                    return rejectWithValue("Не удалось войти в систему!");
+                    return rejectWithValue("error");
                 }
             }
-            return rejectWithValue(null);
+            return rejectWithValue("error");
         }
     }
 )
@@ -238,11 +238,11 @@ const userSlice = createSlice({
                 state.token = action.payload;
             })
             .addCase(loginUser.rejected, (state, action: PayloadAction<unknown>) => {
+                state.status = 'failed';
                 if (typeof action.payload === 'string') {
                     state.error = action.payload;
-                    state.status = null;
                 } else {
-                    state.status = 'failed';
+                    state.error = 'error';
                 }
             })
 

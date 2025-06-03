@@ -117,8 +117,11 @@
         "go": "View",
         "check": "We're checking your work!",
         "top": "TOP STUDENTS",
+        "nontop": "Where are the rockstar students at?!",
         "more": "Show more",
-        "score": "average grade"
+        "score": "avg. grade",
+        "lessons": "COURSE CONTENT",
+        "nonlessons": "Lessons coming soon! Watch this space!"
     },
     "home": {
         "title": "The best platform enroll in your special course",

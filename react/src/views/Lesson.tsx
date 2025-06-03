@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Exercise, LessonInterface, Theory, TheoryBodyItem } from "../interfaces/lesson";
 import { AppDispatch, RootState } from "../store";
@@ -11,12 +11,15 @@ import LessonLoader from "../components/LessonLoader";
 import LessonWords from "../components/LessonWords";
 import LessonTheoryStudentView from "../components/LessonTheoryStudentView";
 import LessonTranslationExerciseStudentView from "../components/LessonTranslationExerciseStudentView";
-import { Button, Title } from "../styles/forms";
+import { Button, Message, Title } from "../styles/forms";
+import { User } from "../interfaces/user";
+import { fetchUser } from "../features/userSlice";
 
 const Lesson = () => {
 
     const parameters = useParams();
 
+    const user = useSelector<RootState, User>((state) => state.user.user);
     const lesson = useSelector<RootState, LessonInterface>((state) => state.lesson.lesson);
     const status = useSelector((state: State) => state.lesson.status);
     const dispatch = useDispatch<AppDispatch>();
@@ -25,23 +28,46 @@ const Lesson = () => {
     const isTranslationExercise = (item: TheoryBodyItem): item is Exercise => item.type === 'TRANSLATION_EXERCISE';
 
     const [time_start, setTime_start] = useState<string>();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(fetchLesson(parameters.id!));
-    }, [dispatch, parameters.id]);
+        const loadLesson = async () => {
+            try {
+                await dispatch(fetchLesson(parameters.id!)).unwrap().then(() => dispatch(fetchUser()));
+            } catch {
+                navigate(-1);
+            }
+        };
+
+        loadLesson();
+    }, [dispatch, navigate, parameters.id]);
 
     const [done, setDone] = useState<Exercise[]>([]);
 
+    const [savedExercises, setSavedExercises] = useState<Set<number>>(new Set());
+
     const _completeLesson = () => {
+
+        const allExercises = lessonBody[0].filter((item: Exercise) => item.type === 'TRANSLATION_EXERCISE');
+        const allSaved = allExercises.every((ex: Exercise) => savedExercises.has(ex.id));
+
+        if (!allSaved) {
+            return;
+        }
+
         dispatch(completeLesson({
             lesson_id: lesson.id_lesson!,
             st_answer: JSON.parse(JSON.stringify((done))),
             time_start: time_start!,
-            time_end: new Date().toISOString().split('T').join(' ').slice(0, 19)
+            time_end: formatISODate(new Date())
         })).then(() => window.location.reload());
     }
 
-    useEffect(() => setTime_start(new Date().toISOString().split('T').join(' ').slice(0, 19)), []);
+    const formatISODate = (date: Date) => date.toISOString().replace('T', ' ').slice(0, 19);
+
+    useEffect(() => setTime_start(formatISODate(new Date())), []);
+
+    const lessonBody = lesson.lesson_body ? JSON.parse(lesson.lesson_body) : null;
 
     return (
         <Main>
@@ -53,23 +79,28 @@ const Lesson = () => {
                 <>
                     <LessonIntro lesson={lesson} />
                     {
-                        JSON.parse(lesson.lesson_body!).lesson_words && <LessonWords words={JSON.parse(lesson.lesson_body!).lesson_words} />
+                        lessonBody?.lesson_words && <LessonWords words={lessonBody?.lesson_words} />
                     }
                     {
-                        lesson.lesson_body && JSON.parse(lesson.lesson_body)[0].map((item: TheoryBodyItem) => isTheory(item) ?
+                        lesson.lesson_body && lessonBody[0].map((item: TheoryBodyItem) => isTheory(item) ?
                             <LessonTheoryStudentView theory={item} key={item.id} />
                             :
                             isTranslationExercise(item) && <LessonTranslationExerciseStudentView
-                                exercise={item} key={item.id} setDone={setDone} done={lesson.done!}
+                                exercise={item} key={item.id} setDone={setDone} done={lesson.done!} savedExercises={savedExercises} setSavedExercises={setSavedExercises}
                             />)
                     }
                     {
-                        !lesson.done &&
+                        !lesson.done && user.role?.role_code != 'teacher' &&
                         <Section>
                             <Flex style={{ justifyContent: 'space-between' }}>
                                 <Title>Готово?</Title>
-                                <Button onClick={_completeLesson}>Завершить урок</Button>
+                                <Button onClick={_completeLesson} disabled={!Array.from(savedExercises).length}>Завершить урок</Button>
                             </Flex>
+                            {!Array.from(savedExercises).length && (
+                                <Message style={{ alignSelf: 'center' }}>
+                                    Необходимо сохранить все упражнения!
+                                </Message>
+                            )}
                         </Section>
                     }
                 </>

@@ -19,10 +19,10 @@ const LessonWords: FC<{ words: Word[] }> = ({ words }) => {
                         <div key={word.id}>
                             <Number>{(word.id + 1).toString().padStart(2, '0')}</Number>
                             <WordLine>
-                                <p style={{ textWrap: 'nowrap' }}>{word.russian} —</p>
+                                <p>{word.russian} —</p>
                                 {
                                     learn ?
-                                        <p style={{ textWrap: 'nowrap' }}><span style={{ fontWeight: 'bold' }}>{word.english}</span> {word.transcription}</p>
+                                        <p><span style={{ fontWeight: 'bold' }}>{word.english}</span> {word.transcription}</p>
                                         :
                                         <FieldLoader />
                                 }

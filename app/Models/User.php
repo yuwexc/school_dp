@@ -137,7 +137,7 @@ class User extends Authenticatable
         $dones = $this->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
 
         if ($id_lessons && $dones) {
-            return round($dones / count($id_lessons) * 100, 0);
+            return round($dones / count($id_lessons) * 100, 1);
         } else {
             return 0;
         }

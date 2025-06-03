@@ -6,16 +6,24 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FormData } from "./LessonWordsSection";
 import { Done, Feedback } from "../interfaces/done";
 import { LessonSectionTitle } from "../styles/lesson";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { User } from "../interfaces/user";
 
 interface Props {
     exercise: Exercise
     setDone?: Dispatch<SetStateAction<Exercise[]>>,
-    done?: Done
+    done?: Done,
+    savedExercises: Set<number>,
+    setSavedExercises: Dispatch<SetStateAction<Set<number>>>
+
 }
 
-const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, done }) => {
+const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, done, savedExercises, setSavedExercises }) => {
 
-    const { register, handleSubmit } = useForm();
+    const user = useSelector<RootState, User>((state) => state.user.user);
+
+    const { register, handleSubmit } = useForm<FormData>();
     const [isSaved, setIsSaved] = useState<boolean>(false);
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
@@ -35,6 +43,8 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
         });
 
         setDone!(prevState => [...prevState.filter(item => item.id != exercise.id), exercise]);
+
+        setSavedExercises(prev => new Set(prev).add(exercise.id));
     }
 
     const [doneBody, setDoneBody] = useState<Exercise[]>([]);
@@ -50,7 +60,14 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
     return (
         <Section>
             <LessonSectionTitle style={{ color: '#fa8231' }}>PRACTICE</LessonSectionTitle>
-            <Name>{exercise.name}. {exercise.description}</Name>
+            {
+                user.role?.role_code != 'teacher' && !done ?
+                    <Name style={{
+                        color: savedExercises.has(exercise.id) ? 'unset' : 'red'
+                    }}>{exercise.name}. {exercise.description} {!savedExercises.has(exercise.id) && '(не сохранено)'}</Name>
+                    :
+                    <Name >{exercise.name}. {exercise.description}</Name>
+            }
             <Form onSubmit={handleSubmit(onSubmit)}>
                 {
                     exercise.tasks.map(task =>
@@ -73,7 +90,7 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
                                             </>
                                         }
                                         {
-                                            feedback && <p style={{ color: '#6c5ce7' }}>Балл: {feedback.find(item => item[0].id == exercise.id)?.find(element => feedback.find(item => item[0].id == exercise.id)?.indexOf(element) == task.id)?.student_score}</p>
+                                            feedback && <p style={{ color: '#6c5ce7' }}>Балл: {feedback.find(item => item[0].id == exercise.id)?.find(element => feedback.find(item => item[0].id == exercise.id)?.indexOf(element) == task.id)?.student_score} из {task.score}</p>
                                         }
                                     </>
                             }
@@ -81,10 +98,10 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
                     )
                 }
                 {
-                    doneBody.length == 0 && feedback.length == 0 && !isSaved && <Message style={{ fontWeight: '600' }}>Обязательно сохраните данные!</Message>
+                    user.role?.role_code != 'teacher' && doneBody.length == 0 && feedback.length == 0 && !isSaved && <Message style={{ fontWeight: '600' }}>Обязательно сохраните данные!</Message>
                 }
                 {
-                    feedback && feedback.length == 0 && <Button style={{ backgroundColor: '#fa8231' }} type="submit">Сохранить</Button>
+                    user.role?.role_code != 'teacher' && !isSaved && feedback && feedback.length == 0 && <Button style={{ backgroundColor: '#fa8231' }} type="submit">Сохранить</Button>
                 }
             </Form>
         </Section>

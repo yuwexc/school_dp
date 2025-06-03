@@ -32,9 +32,18 @@ const CourseItem = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        dispatch(fetchMyCoursesItem(id!));
 
-    }, [dispatch, id]);
+        const loadCourse = async () => {
+            try {
+                await dispatch(fetchMyCoursesItem(id!)).unwrap();
+            } catch {
+                navigate(-1);
+            }
+        };
+
+        loadCourse();
+
+    }, [dispatch, id, navigate]);
 
     useEffect(() => {
         const pathname = window.location.pathname.slice(1);
@@ -143,7 +152,7 @@ const CourseItem = () => {
                     </HeaderSection>
                     <Flex>
                         <Program>
-                            {course.lessons &&
+                            {course.lessons && course.lessons.length > 0 ?
                                 <Lessons>
                                     {
                                         course.lessons
@@ -167,6 +176,11 @@ const CourseItem = () => {
                                                 key={i} />)
                                     }
                                 </Lessons>
+                                :
+                                <>
+                                    <h2>{t('course.lessons')}</h2>
+                                    <p style={{ color: 'gray' }}>{t('course.nonlessons')}</p>
+                                </>
                             }
                             <ShowMore
                                 style={{ display: (limit >= course.lessons!.filter(item => item.lesson_status === 2).length) ? 'none' : 'block' }}
@@ -178,7 +192,7 @@ const CourseItem = () => {
                         <TopStudents>
                             <h2>{t('course.top')}</h2>
                             {
-                                course.top_students && course.top_students.slice(-course.lessons!.length || 0).map((student, i) =>
+                                course.top_students && course.top_students.length > 0 ? course.top_students.slice(-course.lessons!.length || 0).map((student, i) =>
                                     <div key={i} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', alignItems: 'center', gap: '12px' }}>
                                         {
                                             student.photo && typeof student.photo === 'string' ?
@@ -189,8 +203,10 @@ const CourseItem = () => {
                                         <div style={{ display: 'flex', gap: '4px' }}>
                                             <p style={{ fontSize: '14px', color: 'gray' }}>{t('course.score')}: {student.score}</p>
                                         </div>
-                                    </div>
-                                )
+                                    </div>)
+                                    :
+                                    <p style={{ color: 'gray' }}>{t('course.nontop')}</p>
+
                             }
                         </TopStudents>
                     </Flex>
@@ -353,7 +369,7 @@ const Program = styled.section`
     flex-direction: column;
     justify-content: space-between;
     background-color: white;
-    gap: 20px;
+    gap: 14px;
     padding: 30px;
     border-radius: 20px;
     box-shadow: 0px 10px 10px 0 #d3d3d35c;

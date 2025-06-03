@@ -118,7 +118,7 @@ class CourseController extends Controller
                 $dones = $user->dones()->whereNot('mark')->whereIn('lesson_id', $id_lessons)->get()->count();
 
                 if ($id_lessons && $dones) {
-                    $progress = round($dones / $id_lessons->count() * 100, 0);
+                    $progress = round($dones / $id_lessons->count() * 100, 1);
                 }
 
                 if ($access) {

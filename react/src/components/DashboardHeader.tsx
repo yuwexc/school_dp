@@ -18,7 +18,7 @@ const DashboardHeader = () => {
 
     useEffect(() => {
         dispatch(fetchUser());
-    }, []);
+    }, [dispatch]);
 
     return (
         <StyledDashboardHeader>
@@ -32,7 +32,7 @@ const DashboardHeader = () => {
                         </p>
                         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                             {
-                                user.score != null && <p>&#11088;{user.score}</p>
+                                user.score != null && user.role?.role_code == 'student' && <p>&#11088;{user.score}</p>
                             }
                             {
                                 user.photo && typeof user.photo === 'string' ?
