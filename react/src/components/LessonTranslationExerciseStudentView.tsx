@@ -78,15 +78,15 @@ const LessonTranslationExerciseStudentView: FC<Props> = ({ exercise, setDone, do
                             </Task>
                             {
                                 doneBody.length == 0 && !doneBody.find(item => item.id == exercise.id) ?
-                                    <Input disabled={isSaved} {...register(`english-${task.id}`)} type="text" placeholder="Ваш ответ" id={'english-' + task.id} />
+                                    <Input disabled={isSaved} spellCheck={false} {...register(`english-${task.id}`)} type="text" placeholder="Ваш ответ" id={'english-' + task.id} />
                                     :
                                     <>
                                         <Input disabled value={doneBody.find(item => item.id == exercise.id)?.tasks[task.id].answer || 'Ответ отсутствует'} type="text" id={'english-' + task.id} />
                                         {
-                                            feedback && feedback.find(item => item[0].id == exercise.id)?.find(item => item.id == task.id)?.english &&
+                                            feedback && feedback.find(item => item[0].id == exercise.id)?.find((item, _, array) => array.indexOf(item) == task.id)?.english &&
                                             <>
                                                 <p>Комментарий преподавателя:</p>
-                                                <Input disabled value={feedback.find(item => item[0].id == exercise.id)?.find(item => item.id == task.id)?.english || ''} type="text" id={'feedback-' + task.id} />
+                                                <Input disabled value={feedback.find(item => item[0].id == exercise.id)?.find((item, _, array) => array.indexOf(item) == task.id)?.english || ''} type="text" id={'feedback-' + task.id} />
                                             </>
                                         }
                                         {

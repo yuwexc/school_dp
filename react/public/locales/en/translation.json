@@ -112,6 +112,7 @@
     "course": {
         "progress": "studied",
         "start": "GETTING STARTED WITH THE SCHOOL \"LIMN\"",
+        "startButton": "START COURSE",
         "expelled": "You have been dismissed",
         "lesson": "LESSON",
         "go": "View",

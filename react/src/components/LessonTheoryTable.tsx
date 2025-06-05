@@ -30,7 +30,7 @@ const LessonTheoryTable: FC<Props> = ({ id, color, deleteHeaderElement, setTheor
         if (columns.length === 1) return;
         setColumns(prevState => prevState.filter(column => column.id !== id));
 
-        unregister(`title-${id}`);
+        unregister(`title-${id}-${id}`);
 
         rows.forEach(row => {
             unregister(`cell-${id}-${row.id}`);
@@ -113,7 +113,7 @@ const LessonTheoryTable: FC<Props> = ({ id, color, deleteHeaderElement, setTheor
                                             style={{ backgroundColor: 'transparent', border: '2px solid white', width: 'calc(100% - 24px)' }}
                                             type="text" placeholder={"Введите название столбца"} id={'title-' + column.id} />
                                         {
-                                            errors[`title-${column.id}`] && <StyledMessage>{errors[`title-${column.id}`]?.message}</StyledMessage>
+                                            errors[`title-${column.id}-${column.id}`] && <StyledMessage>{errors[`title-${column.id}-${column.id}`]?.message}</StyledMessage>
                                         }
                                     </th>
                                 )

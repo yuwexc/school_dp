@@ -19,7 +19,7 @@ const LessonWords: FC<{ words: Word[] }> = ({ words }) => {
                         <div key={word.id}>
                             <Number>{(word.id + 1).toString().padStart(2, '0')}</Number>
                             <WordLine>
-                                <p>{word.russian} —</p>
+                                <p style={{ textWrap: 'nowrap' }}>{word.russian} —</p>
                                 {
                                     learn ?
                                         <p><span style={{ fontWeight: 'bold' }}>{word.english}</span> {word.transcription}</p>

@@ -169,14 +169,14 @@ const CreateLessonView = () => {
                     <Title>Готово?</Title>
                     {
                         status == 'loading' ? <Button disabled><Loader /></Button> :
-                            <Button onClick={saveLesson}>Сохранить урок*</Button>
+                            <Button onClick={saveLesson}>Сохранить урок</Button>
                     }
                     {
                         status === 'failed' && <Error>{t('error')}</Error>
                     }
                 </Flex>
             </Intro>
-            <p>*перед публикацией урок проверяется модераторами, он будет доступен в ближайшее время</p>
+            {/* <p>*перед публикацией урок проверяется модераторами, он будет доступен в ближайшее время</p> */}
         </StyledMain >
     )
 }

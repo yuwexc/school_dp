@@ -16,7 +16,7 @@ export interface CourseItemInterface {
     lessons: LessonInterface[] | null,
     top_students?: User[],
     students?: (User & { progress?: number })[],
-    requests?: (CourseAccessItemInterface & { student: { first_name: string, last_name: string } })[],
+    requests?: (CourseAccessItemInterface & { student: { first_name: string, last_name: string, photo: string } })[],
     progress: number,
     created_at: Date,
     updated_at: Date | null

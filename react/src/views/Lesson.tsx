@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Exercise, LessonInterface, Theory, TheoryBodyItem } from "../interfaces/lesson";
 import { AppDispatch, RootState } from "../store";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { completeLesson, fetchLesson } from "../features/lessonSlice";
 import LessonIntro from "../components/LessonIntro";
 import { State } from "../interfaces/requests";
@@ -46,10 +46,15 @@ const Lesson = () => {
 
     const [savedExercises, setSavedExercises] = useState<Set<number>>(new Set());
 
+
     const _completeLesson = () => {
 
-        const allExercises = lessonBody[0].filter((item: Exercise) => item.type === 'TRANSLATION_EXERCISE');
-        const allSaved = allExercises.every((ex: Exercise) => savedExercises.has(ex.id));
+        const translationExercises = lessonBody[0].filter((item: TheoryBodyItem) =>
+            isTranslationExercise(item)).map((ex: Exercise) => ex.id);
+
+        const allSaved = translationExercises.every((id: number) =>
+            savedExercises.has(id)
+        );
 
         if (!allSaved) {
             return;
@@ -68,6 +73,13 @@ const Lesson = () => {
     useEffect(() => setTime_start(formatISODate(new Date())), []);
 
     const lessonBody = lesson.lesson_body ? JSON.parse(lesson.lesson_body) : null;
+
+    const translationExercisesCount = useMemo(() => {
+        if (!lesson.lesson_body || !lessonBody) return 0;
+        return lessonBody[0].filter((item: TheoryBodyItem) =>
+            isTranslationExercise(item)
+        ).length;
+    }, [lesson.lesson_body, lessonBody]);
 
     return (
         <Main>
@@ -94,11 +106,14 @@ const Lesson = () => {
                         <Section>
                             <Flex style={{ justifyContent: 'space-between' }}>
                                 <Title>Готово?</Title>
-                                <Button onClick={_completeLesson} disabled={!Array.from(savedExercises).length}>Завершить урок</Button>
+                                <Button onClick={_completeLesson} disabled={savedExercises.size !== translationExercisesCount}
+                                >Завершить урок</Button>
                             </Flex>
-                            {!Array.from(savedExercises).length && (
+                            {savedExercises.size !== translationExercisesCount && (
                                 <Message style={{ alignSelf: 'center' }}>
-                                    Необходимо сохранить все упражнения!
+                                    {translationExercisesCount === 0
+                                        ? "Нет упражнений для сохранения"
+                                        : `Сохраните все упражнения (${savedExercises.size}/${translationExercisesCount})`}
                                 </Message>
                             )}
                         </Section>

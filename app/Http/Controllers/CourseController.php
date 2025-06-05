@@ -242,7 +242,7 @@ class CourseController extends Controller
                     function (CourseAccess $access) {
                         return [
                             "id_course_access" => $access->id_course_access,
-                            "student" => $access->user()->select(['first_name', 'last_name'])->get()->first()
+                            "student" => $access->user()->select(['first_name', 'last_name', 'photo'])->get()->first()
                         ];
                     }
                 )->all();

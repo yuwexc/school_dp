@@ -146,7 +146,7 @@ const CourseItem = () => {
                             }
                             {
                                 course.access?.access_status == '' &&
-                                <Button onClick={() => handleClick()}>START COURSE</Button>
+                                <Button onClick={() => handleClick()}>{t('course.startButton')}</Button>
                             }
                         </CourseInfo>
                     </HeaderSection>

@@ -23,18 +23,19 @@ const LessonTheoryText: FC<Props> = ({ id, color, deleteHeaderElement, displayed
     const [isSaved, setIsSaved] = useState<boolean>(false);
 
     const deleteText = () => {
-        unregister('text' + id)
+        unregister('text-' + id)
         setTheory(prevState => prevState.filter(item => item.id != id));
     }
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
-        setTheory(prevState => prevState.filter(item => item.id != id));
-
-        setTheory(prevState => [...prevState, {
-            id: displayedHeaderElements.length,
-            type: 'TEXT',
-            text: data['text-' + id]
-        }]);
+        setTheory(prevState => [
+            ...prevState.filter(item => item.id !== id),
+            {
+                id: displayedHeaderElements.length,
+                type: 'TEXT',
+                text: data[`text-${id}`]
+            }
+        ]);
 
         setIsSaved(true);
     }
